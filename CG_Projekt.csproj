@@ -50,12 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enemy.cs" />
-    <Compile Include="KeyboardState.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Model\Enemy.cs" />
+    <Compile Include="Controller\KeyboardState.cs" />
+    <Compile Include="Controller\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Window.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="View\Window.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
