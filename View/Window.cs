@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CG_Projekt.Model;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -13,6 +14,8 @@ namespace CG_Projekt
         private KeyboardState _keyboard;
         private Player player = new Player();
         private List<Enemy> Enemies = new List<Enemy>();
+        private List<Obstacle> Obstacles = new List<Obstacle>();
+        private List<Pickup> Pickups = new List<Pickup>();
         private Random _random = new Random();
         public Window()
         {
@@ -21,6 +24,9 @@ namespace CG_Projekt
             for (int i = 0; i < 5; i++)
             {
                 Enemies.Add(new Enemy(new Vector2((float)_random.NextDouble()*2 -1, (float)_random.NextDouble() * 2 - 1)));
+                Obstacles.Add(new Obstacle(new Vector2((float)_random.NextDouble() * 2 - 1, (float)_random.NextDouble() * 2 - 1)));
+                Pickups.Add(new Pickup(new Vector2((float)_random.NextDouble() * 2 - 1, (float)_random.NextDouble() * 2 - 1)));
+
             }
         }
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -73,6 +79,15 @@ namespace CG_Projekt
             foreach(Enemy enemy in Enemies)
             {
                 enemy.DrawEnemy(enemy._position);
+                
+            }
+            foreach (Obstacle obstacle in Obstacles)
+            {
+                obstacle.DrawObstacle(obstacle._position);
+            }
+            foreach (Pickup pickup in Pickups)
+            {
+                pickup.DrawPickup(pickup._position);
             }
         }
     }
