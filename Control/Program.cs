@@ -32,4 +32,6 @@ namespace CG_Projekt
  * - die LevelGrids sind noch etwas zuklein. Das dient nur dazu das man sie sieht.
  * - Intersections Fehlen noch.
  * - Zugriffsklassen sind noch nicht optimal gesetzt.
+ * - Steuerung sollte auch mit WASD tasten möglich gemacht werden.
+ * - Rotation der Camera mit E und Q wäre auch noch nice.
  */
