@@ -27,8 +27,8 @@ namespace CG_Projekt
         internal void UpdatePlayerPosition(float deltaTime)
         {
             var keyboard = Keyboard.GetState(); // Holt den Zustand des Keyboards
-            float moveLR = keyboard.IsKeyDown(Key.Left) ? -0.2f : keyboard.IsKeyDown(Key.Right) ? 0.2f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
-            float moveUD = keyboard.IsKeyDown(Key.Down) ? -0.2f : keyboard.IsKeyDown(Key.Up) ? 0.2f : 0.0f;
+            float moveLR = keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A) ? -0.2f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.2f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
+            float moveUD = keyboard.IsKeyDown(Key.Down) || keyboard.IsKeyDown(Key.S) ? -0.2f : keyboard.IsKeyDown(Key.Up) || keyboard.IsKeyDown(Key.W) ? 0.2f : 0.0f;
             model.player._position += deltaTime * new Vector2(moveLR, moveUD);
         }
         internal void ScrollControl(float deltaTime)
