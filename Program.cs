@@ -30,8 +30,9 @@ namespace CG_Projekt
  * - Die Gameobjects Überlappen sich noch.
  * - ist die Klasse Intersections im richtigen Ordner? oder ist sie teil der Models?
  * - die LevelGrids sind noch etwas zuklein. Das dient nur dazu das man sie sieht.
- * - Intersections Fehlen noch.
+ * - Intersections nur Teilweiße implementiert(Spieler kann noch durch Obstacles laufen; GameObject Spawnen evlt. noch auf Spieler;Bei Intersection mit Gegner Passiert noch nichts;Intersection zwischen GameObjects während des Loop noch nicht implementiert).
  * - Zugriffsklassen sind noch nicht optimal gesetzt.
- * - Steuerung sollte auch mit WASD tasten möglich gemacht werden.
- * - Rotation der Camera mit E und Q wäre auch noch nice.
+ * - Rotation der Camera mit E und Q wäre auch noch nice(ist Drinne aber irgendwie Strange).
+ * - Man könnte eine Safezone um den Spawn des Spielers errichten, sodass dort keine Gegner spawnen können.
+ * - Lösung für die Intersections ist ziemlich ugly. Eine Mögliche lösung dafür wären Eneties.
  */

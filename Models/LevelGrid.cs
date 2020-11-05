@@ -1,13 +1,16 @@
 ﻿using OpenTK;
+using System.Drawing;
 
 namespace CG_Projekt
 {
     class LevelGrid
     {
-        internal Vector2 _Position;
-        internal LevelGrid(Vector2 Position)
+        internal Vector2 _position;
+        internal Color _color;
+        internal LevelGrid(Vector2 position, Color color)
         {
-            _Position = Position;
+            _position = position;
+            _color = color;
         }
     }
 }

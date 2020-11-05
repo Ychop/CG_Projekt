@@ -7,6 +7,8 @@ namespace CG_Projekt
     {
         View view;
         Model model;
+        public Intersection intersection { get; } = new Intersection();
+        public Camera camera { get; } = new Camera();
         internal int oldScrollValue = 0;
         internal float axisZoom = 0f;
 
@@ -22,14 +24,30 @@ namespace CG_Projekt
             ScrollControl(deltaTime);
             //Bewegt den Spieler
             UpdatePlayerPosition(deltaTime);
+            //Checkt die Collisons
+            UpdateCheckCollision();
+            //Rotiert die Camera
+            UpdateRotateCamera(deltaTime);
+        }
+
+        internal void UpdateRotateCamera(float deltaTime)
+        {
+            var keyboard = Keyboard.GetState();
+            float rotateQE = keyboard.IsKeyDown(Key.Q) ? -1f : keyboard.IsKeyDown(Key.E) ? 1f : 0f;
+            view.camera.rotate += deltaTime * rotateQE; 
+
         }
 
         internal void UpdatePlayerPosition(float deltaTime)
         {
-            var keyboard = Keyboard.GetState(); // Holt den Zustand des Keyboards
-            float moveLR = keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A) ? -0.2f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.2f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
-            float moveUD = keyboard.IsKeyDown(Key.Down) || keyboard.IsKeyDown(Key.S) ? -0.2f : keyboard.IsKeyDown(Key.Up) || keyboard.IsKeyDown(Key.W) ? 0.2f : 0.0f;
-            model.player._position += deltaTime * new Vector2(moveLR, moveUD);
+          
+                var keyboard = Keyboard.GetState(); // Holt den Zustand des Keyboards
+                float moveLR = keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A) ? -0.15f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
+                float moveUD = keyboard.IsKeyDown(Key.Down) || keyboard.IsKeyDown(Key.S) ? -0.2f : keyboard.IsKeyDown(Key.Up) || keyboard.IsKeyDown(Key.W) ? 0.2f : 0.0f;
+
+                model.player._position += deltaTime * new Vector2(moveLR, moveUD);
+            
+      
         }
         internal void ScrollControl(float deltaTime)
         {
@@ -54,5 +72,12 @@ namespace CG_Projekt
             // zoom = MathHelper.Clamp(zoom, 0.9f, 1f); //setzt Zoom Grenze, also bis wie weit man rein/raus zoomen kann
             view.camera.Scale = zoom;
         }
+
+        internal void UpdateCheckCollision()
+        {
+            intersection.CheckPlayerBorderCollision(model.player);
+            intersection.CheckPlayerCollisionWithGameobject(model.player, model.Enemies, model.Obstacles,model.PickUps);
+        }
+
     }
 }

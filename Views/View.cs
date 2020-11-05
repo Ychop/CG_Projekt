@@ -46,12 +46,12 @@ namespace CG_Projekt
             var i = 0;
             foreach (LevelGrid levelGrid in model.LevelGrids)
             {
-                GL.Color3(Color.Blue);
+                GL.Color3(model.LevelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.LevelGrids[i]._Position);
-                GL.Vertex2(model.LevelGrids[i]._Position + new Vector2(0.017f, 0));
-                GL.Vertex2(model.LevelGrids[i]._Position + new Vector2(0.017f, 0.017f));
-                GL.Vertex2(model.LevelGrids[i]._Position + new Vector2(0, 0.017f));
+                GL.Vertex2(model.LevelGrids[i]._position);
+                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0.017f, 0));
+                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0.017f, 0.017f));
+                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0, 0.017f));
                 GL.End();
                 i++;
             }
@@ -59,12 +59,12 @@ namespace CG_Projekt
 
         internal void DrawPlayer(Model model)
         {
-            GL.Color3(Color.Green);
+            GL.Color3(model.player._color);
             GL.Begin(PrimitiveType.Quads);
-            GL.Vertex2(model.player._position + new Vector2(-0.01f, -0.01f));
-            GL.Vertex2(model.player._position + new Vector2(0.01f, -0.01f));
-            GL.Vertex2(model.player._position + new Vector2(0.01f, 0.01f));
-            GL.Vertex2(model.player._position + new Vector2(-0.01f, 0.01f));
+            GL.Vertex2(model.player._position + new Vector2(-model.player._size, -model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(model.player._size, -model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(model.player._size, model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(-model.player._size, model.player._size));
             GL.End();
         }
 
@@ -75,10 +75,10 @@ namespace CG_Projekt
             {
                 GL.Color3(Color.Red);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(-0.01f, -0.01f));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(0.01f, -0.01f));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(0.01f, 0.01f));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(-0.01f, 0.01f));
+                GL.Vertex2(model.Enemies[i]._position + new Vector2(-model.Enemies[i]._size, -model.Enemies[i]._size));
+                GL.Vertex2(model.Enemies[i]._position + new Vector2(model.Enemies[i]._size, -model.Enemies[i]._size));
+                GL.Vertex2(model.Enemies[i]._position + new Vector2(model.Enemies[i]._size, model.Enemies[i]._size));
+                GL.Vertex2(model.Enemies[i]._position + new Vector2(-model.Enemies[i]._size, model.Enemies[i]._size));
                 GL.End();
                 i++;
             }
@@ -87,10 +87,10 @@ namespace CG_Projekt
             {
                 GL.Color3(Color.Brown);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-0.01f, -0.01f));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(0.01f, -0.01f));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(0.01f, 0.01f));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-0.01f, 0.01f));
+                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-model.Obstacles[i]._size, -model.Obstacles[i]._size));
+                GL.Vertex2(model.Obstacles[i]._position + new Vector2(model.Obstacles[i]._size, -model.Obstacles[i]._size));
+                GL.Vertex2(model.Obstacles[i]._position + new Vector2(model.Obstacles[i]._size, model.Obstacles[i]._size));
+                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-model.Obstacles[i]._size, model.Obstacles[i]._size));
                 GL.End();
                 i++;
             }
@@ -99,10 +99,10 @@ namespace CG_Projekt
             {
                 GL.Color3(Color.Yellow);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(-0.01f, -0.01f));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(0.01f, -0.01f));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(0.01f, 0.01f));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(-0.01f, 0.01f));
+                GL.Vertex2(model.PickUps[i]._position + new Vector2(-model.PickUps[i]._size, -model.PickUps[i]._size));
+                GL.Vertex2(model.PickUps[i]._position + new Vector2(model.PickUps[i]._size, -model.PickUps[i]._size));
+                GL.Vertex2(model.PickUps[i]._position + new Vector2(model.PickUps[i]._size, model.PickUps[i]._size));
+                GL.Vertex2(model.PickUps[i]._position + new Vector2(-model.PickUps[i]._size, model.PickUps[i]._size));
                 GL.End();
                 i++;
             }

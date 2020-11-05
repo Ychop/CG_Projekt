@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
+    <Compile Include="Control\Intersection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Models\Enemy.cs" />
     <Compile Include="Models\LevelGrid.cs" />

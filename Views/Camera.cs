@@ -11,6 +11,7 @@ namespace CG_Projekt
         private float _scale = 0.2f; // Setzt den Start Zoom auf den spieler
         private float _invWindowAspectRatio = 1f;
         private Vector2 _center;
+        private float _rotate;
         internal Vector2 Center // Zentrum der Camera
         {
             get => _center;
@@ -30,6 +31,17 @@ namespace CG_Projekt
                 UpdateMatrix();
             }
         }
+
+        internal float rotate
+        {
+            get => _rotate;
+            set
+            {
+                _rotate = value;
+                UpdateMatrix();
+            }
+        }
+
         public Matrix4 InvViewportMatrix { get; private set; } //ist fürs Clicken
 
         public Camera()
@@ -51,10 +63,11 @@ namespace CG_Projekt
 
         private void UpdateMatrix()
         {
+            var rotate = Transformation.Rotation(_rotate);
             var translate = Transformation.Translate(-Center);
             var scale = Transformation.Scale(1f / Scale);
             var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
-            cameraMatrix = Transformation.Combine(translate, scale, aspect);
+            cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);
         }
 
     }
