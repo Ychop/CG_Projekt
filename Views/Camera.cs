@@ -10,6 +10,7 @@ namespace CG_Projekt
         private Matrix4 cameraMatrix = Matrix4.Identity;
         private float _scale = 0.2f; // Setzt den Start Zoom auf den spieler
         private float _invWindowAspectRatio = 1f;
+     
         private Vector2 _center;
         private float _rotate;
         internal Vector2 Center // Zentrum der Camera
@@ -52,6 +53,7 @@ namespace CG_Projekt
         {
             GL.Viewport(0, 0, width, height); // tell OpenGL to use the whole window for drawing
             _invWindowAspectRatio = height / (float)width;
+          
             InvViewportMatrix = Transformation.Combine(Transformation.Scale(2f / width, 2f / height), Transformation.Translate(-Vector2.One));
             UpdateMatrix();
         }
@@ -63,10 +65,11 @@ namespace CG_Projekt
 
         private void UpdateMatrix()
         {
-            var rotate = Transformation.Rotation(_rotate);
+            
             var translate = Transformation.Translate(-Center);
             var scale = Transformation.Scale(1f / Scale);
             var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
+            var rotate = Transformation.Rotation(_rotate);
             cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);
         }
 

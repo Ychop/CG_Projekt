@@ -1,5 +1,7 @@
-﻿using OpenTK;
+﻿using CG_Projekt.Models;
+using OpenTK;
 using OpenTK.Input;
+using System;
 
 namespace CG_Projekt
 {
@@ -28,13 +30,19 @@ namespace CG_Projekt
             UpdateCheckCollision();
             //Rotiert die Camera
             UpdateRotateCamera(deltaTime);
+            //Position der Mouse
+            UpdateMousePosition();
         }
 
         internal void UpdateRotateCamera(float deltaTime)
         {
             var keyboard = Keyboard.GetState();
-            float rotateQE = keyboard.IsKeyDown(Key.Q) ? -1f : keyboard.IsKeyDown(Key.E) ? 1f : 0f;
+            float rotateQE = keyboard.IsKeyDown(Key.Q) ? 1f : keyboard.IsKeyDown(Key.E) ? -1f : 0f;
             view.camera.rotate += deltaTime * rotateQE; 
+            if (view.camera.rotate <= -6.3 || view.camera.rotate >= 6.3)
+            {
+                view.camera.rotate = 0;
+            }
 
         }
 
@@ -42,10 +50,11 @@ namespace CG_Projekt
         {
           
                 var keyboard = Keyboard.GetState(); // Holt den Zustand des Keyboards
-                float moveLR = keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A) ? -0.15f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
+                float moveLR = (keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A)) ? -0.15f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
                 float moveUD = keyboard.IsKeyDown(Key.Down) || keyboard.IsKeyDown(Key.S) ? -0.2f : keyboard.IsKeyDown(Key.Up) || keyboard.IsKeyDown(Key.W) ? 0.2f : 0.0f;
-
                 model.player._position += deltaTime * new Vector2(moveLR, moveUD);
+
+
             
       
         }
@@ -56,12 +65,12 @@ namespace CG_Projekt
 
             if (scrollValue < oldScrollValue)
             {
-                axisZoom = -2f;
+                axisZoom = 2f;
                 oldScrollValue = scrollValue;
             }
             else if (scrollValue > oldScrollValue)
             {
-                axisZoom = 2f;
+                axisZoom = -2f;
                 oldScrollValue = scrollValue;
             }
             else if (scrollValue == oldScrollValue)
@@ -73,10 +82,22 @@ namespace CG_Projekt
             view.camera.Scale = zoom;
         }
 
+        internal void UpdateMousePosition()
+        {
+            var mouse = Mouse.GetState();
+          //  Console.WriteLine("MouseX: " + mouse.X + "MouseY: " + mouse.Y);
+            if(mouse.X < 0)
+            {
+               
+            }
+        }
+
+
         internal void UpdateCheckCollision()
         {
+          
             intersection.CheckPlayerBorderCollision(model.player);
-            intersection.CheckPlayerCollisionWithGameobject(model.player, model.Enemies, model.Obstacles,model.PickUps);
+            intersection.CheckPlayerCollisionWithGameobject(model.player, model.enemies, model.obstacles, model.pickUps);
         }
 
     }

@@ -15,5 +15,7 @@ namespace CG_Projekt.Models
             _size = 0.01f;
             _color = Color.Green;
         }
+
+        
     }
 }

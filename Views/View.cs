@@ -23,6 +23,7 @@ namespace CG_Projekt
             DrawGameObjects(model);
             camera.Draw();
             camera.Center = model.player._position;
+            
         }
 
         internal void Resize(int width, int height)
@@ -44,14 +45,14 @@ namespace CG_Projekt
         internal void DrawLevelGrid(Model model)
         {
             var i = 0;
-            foreach (LevelGrid levelGrid in model.LevelGrids)
+            foreach (LevelGrid levelGrid in model.levelGrids)
             {
-                GL.Color3(model.LevelGrids[i]._color);
+                GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.LevelGrids[i]._position);
-                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0.017f, 0));
-                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0.017f, 0.017f));
-                GL.Vertex2(model.LevelGrids[i]._position + new Vector2(0, 0.017f));
+                GL.Vertex2(model.levelGrids[i]._position);
+                GL.Vertex2(model.levelGrids[i]._position + new Vector2(0.017f, 0));
+                GL.Vertex2(model.levelGrids[i]._position + new Vector2(0.017f, 0.017f));
+                GL.Vertex2(model.levelGrids[i]._position + new Vector2(0, 0.017f));
                 GL.End();
                 i++;
             }
@@ -61,48 +62,48 @@ namespace CG_Projekt
         {
             GL.Color3(model.player._color);
             GL.Begin(PrimitiveType.Quads);
-            GL.Vertex2(model.player._position + new Vector2(-model.player._size, -model.player._size));
-            GL.Vertex2(model.player._position + new Vector2(model.player._size, -model.player._size));
-            GL.Vertex2(model.player._position + new Vector2(model.player._size, model.player._size));
-            GL.Vertex2(model.player._position + new Vector2(-model.player._size, model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(-model.player._size  , -model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(model.player._size , -model.player._size));
+            GL.Vertex2(model.player._position + new Vector2(model.player._size , model.player._size ));
+            GL.Vertex2(model.player._position + new Vector2(-model.player._size, model.player._size ));
             GL.End();
         }
 
         internal void DrawGameObjects(Model model)
         {
             var i = 0;
-            foreach (Enemy enemy in model.Enemies)
+            foreach (Enemy enemy in model.enemies)
             {
                 GL.Color3(Color.Red);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(-model.Enemies[i]._size, -model.Enemies[i]._size));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(model.Enemies[i]._size, -model.Enemies[i]._size));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(model.Enemies[i]._size, model.Enemies[i]._size));
-                GL.Vertex2(model.Enemies[i]._position + new Vector2(-model.Enemies[i]._size, model.Enemies[i]._size));
+                GL.Vertex2(model.enemies[i]._position + new Vector2(-model.enemies[i]._size, -model.enemies[i]._size));
+                GL.Vertex2(model.enemies[i]._position + new Vector2(model.enemies[i]._size, -model.enemies[i]._size));
+                GL.Vertex2(model.enemies[i]._position + new Vector2(model.enemies[i]._size, model.enemies[i]._size));
+                GL.Vertex2(model.enemies[i]._position + new Vector2(-model.enemies[i]._size, model.enemies[i]._size));
                 GL.End();
                 i++;
             }
             i = 0;
-            foreach (Obstacle obstacle in model.Obstacles)
+            foreach (Obstacle obstacle in model.obstacles)
             {
                 GL.Color3(Color.Brown);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-model.Obstacles[i]._size, -model.Obstacles[i]._size));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(model.Obstacles[i]._size, -model.Obstacles[i]._size));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(model.Obstacles[i]._size, model.Obstacles[i]._size));
-                GL.Vertex2(model.Obstacles[i]._position + new Vector2(-model.Obstacles[i]._size, model.Obstacles[i]._size));
+                GL.Vertex2(model.obstacles[i]._position + new Vector2(-model.obstacles[i]._size, -model.obstacles[i]._size));
+                GL.Vertex2(model.obstacles[i]._position + new Vector2(model.obstacles[i]._size, -model.obstacles[i]._size));
+                GL.Vertex2(model.obstacles[i]._position + new Vector2(model.obstacles[i]._size, model.obstacles[i]._size));
+                GL.Vertex2(model.obstacles[i]._position + new Vector2(-model.obstacles[i]._size, model.obstacles[i]._size));
                 GL.End();
                 i++;
             }
             i = 0;
-            foreach (PickUp pickup in model.PickUps)
+            foreach (PickUp pickup in model.pickUps)
             {
                 GL.Color3(Color.Yellow);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(-model.PickUps[i]._size, -model.PickUps[i]._size));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(model.PickUps[i]._size, -model.PickUps[i]._size));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(model.PickUps[i]._size, model.PickUps[i]._size));
-                GL.Vertex2(model.PickUps[i]._position + new Vector2(-model.PickUps[i]._size, model.PickUps[i]._size));
+                GL.Vertex2(model.pickUps[i]._position + new Vector2(-model.pickUps[i]._size, -model.pickUps[i]._size));
+                GL.Vertex2(model.pickUps[i]._position + new Vector2(model.pickUps[i]._size, -model.pickUps[i]._size));
+                GL.Vertex2(model.pickUps[i]._position + new Vector2(model.pickUps[i]._size, model.pickUps[i]._size));
+                GL.Vertex2(model.pickUps[i]._position + new Vector2(-model.pickUps[i]._size, model.pickUps[i]._size));
                 GL.End();
                 i++;
             }

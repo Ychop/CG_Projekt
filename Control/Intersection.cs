@@ -1,5 +1,6 @@
 ﻿using CG_Projekt.Models;
 using OpenTK;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 namespace CG_Projekt
@@ -8,6 +9,8 @@ namespace CG_Projekt
     {
         Random random = new Random();
         float playerRechteKante, playerLinkeKante, playerObereKante, playerUntereKante, obstacleRechteKante, obstacleLinkeKante, obstacleObereKante, obstacleUntereKante;
+
+
         public void CheckPlayerBorderCollision(Player player)
         {
             playerRechteKante = player._position.X + player._size;
@@ -52,17 +55,37 @@ namespace CG_Projekt
                 i++;
             }
             i = 0;
+            Vector2 resetPos = player._position;
             foreach (Obstacle obstacle in obstacles) // Checkt Collision mit Spieler und Obstacle
             {
                 obstacleRechteKante = obstacles[i]._position.X + obstacles[i]._size;
                 obstacleLinkeKante = obstacles[i]._position.X - obstacles[i]._size;
                 obstacleObereKante = obstacles[i]._position.Y + obstacles[i]._size;
                 obstacleUntereKante = obstacles[i]._position.Y - obstacles[i]._size;
+
                 bool xCollision = playerRechteKante >= obstacleLinkeKante && playerLinkeKante <= obstacleRechteKante;
                 bool yCollision = playerObereKante >= obstacleUntereKante && playerUntereKante <= obstacleObereKante;
+
                 if (xCollision && yCollision)
                 {
-                    //TODO: Was tuen, damit der Player nicht in das Obstacle fahren kann ?
+                    //TODO: Was tun, damit der Player nicht in das Obstacle fahren kann ?    
+                    if (playerRechteKante >= obstacleLinkeKante && playerLinkeKante < obstacleLinkeKante && playerLinkeKante < (obstacles[i]._position.X - (obstacles[i]._size + (1.5f*player._size))))
+                    {
+                        player._position = new Vector2(obstacles[i]._position.X - (player._size + obstacles[i]._size), player._position.Y);
+                    }
+                    else if (playerObereKante >= obstacleUntereKante && playerUntereKante < obstacleUntereKante && playerUntereKante < (obstacles[i]._position.Y - (obstacles[i]._size + (1.5f * player._size))))
+                    {
+                        player._position = new Vector2(player._position.X, obstacles[i]._position.Y - (player._size + obstacles[i]._size));
+                    }
+                    else if (playerUntereKante <= obstacleObereKante && playerObereKante > obstacleObereKante && playerObereKante > (obstacles[i]._position.Y + (obstacles[i]._size + (1.5f * player._size))))
+                    {
+                        player._position = new Vector2(player._position.X , obstacles[i]._position.Y + (player._size + obstacles[i]._size));
+                    }
+                    else if (playerLinkeKante <= obstacleRechteKante && playerRechteKante > obstacleRechteKante)
+                    {
+                        player._position = new Vector2(obstacles[i]._position.X + (player._size + obstacles[i]._size), player._position.Y);
+                    }
+
                 }
                 i++;
             }
@@ -123,21 +146,7 @@ namespace CG_Projekt
             }
             return false;
         }
-        public bool CheckEnemyCollision(Enemy newEnemy, List<Obstacle> obstacles, float ranX, float ranY) // Setzt die Gegner so, dass sie nicht in einen anderen Object plaziert werden (Player Ausgenommen)
-        {
-            int i = 0;
-            foreach (Obstacle obstacle in obstacles)
-            {
-                bool xCollision = ranX + newEnemy._size >= obstacles[i]._position.X - obstacles[i]._size && ranX - newEnemy._size <= obstacles[i]._position.X + obstacles[i]._size;
-                bool yCollision = ranY + newEnemy._size >= obstacles[i]._position.Y - obstacles[i]._size && ranY - newEnemy._size <= obstacles[i]._position.Y + obstacles[i]._size;
-                if (xCollision && yCollision)
-                {
-                    return true;
-                }
-                i++;
-            }
-            return false;
-        }
+
         public bool CheckObstacleCollision(Obstacle newObstacle, List<Obstacle> obstacles, float ranX, float ranY) // Setzt die Obstacles so, dass sie nicht in einen Anderen Objekt landen (Player Ausgenommen)
         {
             int i = 0;
@@ -154,4 +163,6 @@ namespace CG_Projekt
             return false;
         }
     }
+
 }
+
