@@ -10,7 +10,6 @@ namespace CG_Projekt
         Random random = new Random();
         float playerRechteKante, playerLinkeKante, playerObereKante, playerUntereKante, obstacleRechteKante, obstacleLinkeKante, obstacleObereKante, obstacleUntereKante;
 
-
         public void CheckPlayerBorderCollision(Player player)
         {
             playerRechteKante = player._position.X + player._size;
@@ -39,10 +38,14 @@ namespace CG_Projekt
         {
             // Man könnte evlt. die Ganzen Gameobjects in eine Liste Packen und dann so die Collisions abfragen, wäre vlt schöner und performanter.
             var i = 0;
+            var j = 0;
+
+
             playerRechteKante = player._position.X + player._size;
             playerLinkeKante = player._position.X - player._size;
             playerObereKante = player._position.Y + player._size;
             playerUntereKante = player._position.Y - player._size;
+
             foreach (Enemy enemy in enemies) // Checkt Collision mit Spieler und Enemy
             {
                 bool xCollision = playerRechteKante >= enemies[i]._position.X - enemies[i]._size && enemies[i]._position.X + enemies[i]._size >= playerLinkeKante;
@@ -50,12 +53,28 @@ namespace CG_Projekt
                 if (xCollision && yCollision)
                 {
                     Console.WriteLine("Player Collision mit:" + i + "Gegner.");
-                    //TODO: Hier könnte man noch eine Funktion hinzufügen was dann passiert wenn der spieler den Gegner berührt.
+                    //TODO: Hier könnte man noch eine Funktion hinzufügen was dann passiert wenn der spieler den Gegner berührt. (Gamefrezze oder gameover Bild) 
+
+                }
+                if ((enemies[i]._position.Y + enemies[i]._size) > 0.9f) //Obere Levelgrenze
+                {
+                    enemies[i]._position = new OpenTK.Vector2(enemies[i]._position.X, 0.89f);
+                }
+                if ((enemies[i]._position.Y - enemies[i]._size) < -0.9f) //Untere Levelgrenze
+                {
+                    enemies[i]._position = new OpenTK.Vector2(enemies[i]._position.X, -0.89f);
+                }
+                if ((enemies[i]._position.X + enemies[i]._size) > 0.9f) //Rechte Levelgrenze
+                {
+                    enemies[i]._position = new OpenTK.Vector2(0.89f, enemies[i]._position.Y);
+                }
+                if ((enemies[i]._position.X - enemies[i]._size) < -0.9f) //Linke Levelgrenze
+                {
+                    enemies[i]._position = new OpenTK.Vector2(-0.89f, enemies[i]._position.Y);
                 }
                 i++;
             }
             i = 0;
-            Vector2 resetPos = player._position;
             foreach (Obstacle obstacle in obstacles) // Checkt Collision mit Spieler und Obstacle
             {
                 obstacleRechteKante = obstacles[i]._position.X + obstacles[i]._size;
@@ -66,10 +85,10 @@ namespace CG_Projekt
                 bool xCollision = playerRechteKante >= obstacleLinkeKante && playerLinkeKante <= obstacleRechteKante;
                 bool yCollision = playerObereKante >= obstacleUntereKante && playerUntereKante <= obstacleObereKante;
 
+
                 if (xCollision && yCollision)
                 {
-                    //TODO: Was tun, damit der Player nicht in das Obstacle fahren kann ?    
-                    if (playerRechteKante >= obstacleLinkeKante && playerLinkeKante < obstacleLinkeKante && playerLinkeKante < (obstacles[i]._position.X - (obstacles[i]._size + (1.5f*player._size))))
+                    if (playerRechteKante >= obstacleLinkeKante && playerLinkeKante < obstacleLinkeKante && playerLinkeKante < (obstacles[i]._position.X - (obstacles[i]._size + (1.5f * player._size))))
                     {
                         player._position = new Vector2(obstacles[i]._position.X - (player._size + obstacles[i]._size), player._position.Y);
                     }
@@ -79,7 +98,7 @@ namespace CG_Projekt
                     }
                     else if (playerUntereKante <= obstacleObereKante && playerObereKante > obstacleObereKante && playerObereKante > (obstacles[i]._position.Y + (obstacles[i]._size + (1.5f * player._size))))
                     {
-                        player._position = new Vector2(player._position.X , obstacles[i]._position.Y + (player._size + obstacles[i]._size));
+                        player._position = new Vector2(player._position.X, obstacles[i]._position.Y + (player._size + obstacles[i]._size));
                     }
                     else if (playerLinkeKante <= obstacleRechteKante && playerRechteKante > obstacleRechteKante)
                     {
@@ -162,7 +181,64 @@ namespace CG_Projekt
             }
             return false;
         }
-    }
 
+        public bool CheckEnemyCollision(List<Obstacle> obstacles, Enemy enemy, float ranX, float ranY) // Schaut das Enemyies nicht in Obstacle landen
+        {
+            int i = 0;
+            foreach (Obstacle obstacle in obstacles)
+            {
+
+                bool xCollision = ranX + enemy._size >= obstacles[i]._position.X - obstacles[i]._size && ranX - enemy._size <= obstacles[i]._position.X + obstacles[i]._size;
+                bool yCollision = ranY + enemy._size >= obstacles[i]._position.Y - obstacles[i]._size && ranY - enemy._size <= obstacles[i]._position.Y + obstacles[i]._size;
+                if (xCollision && yCollision)
+                {
+                    return true;
+                }
+                i++;
+            }
+            return false;
+        }
+
+        public void CheckEnemyObstacleCollision(List<Enemy> enemies, List<Obstacle> obstacles)
+        {
+            var j = 0;
+            foreach (Enemy enemy in enemies)
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    obstacleRechteKante = obstacles[i]._position.X + obstacles[i]._size;
+                    obstacleLinkeKante = obstacles[i]._position.X - obstacles[i]._size;
+                    obstacleObereKante = obstacles[i]._position.Y + obstacles[i]._size;
+                    obstacleUntereKante = obstacles[i]._position.Y - obstacles[i]._size;
+                    // Hier wird noch als Size die vom player angegeben, da beide NOCH gleich groß sind
+                    bool enemyXCollision = (enemies[j]._position.X + 0.01f) >= obstacleLinkeKante && (enemies[j]._position.X - 0.01f) <= obstacleRechteKante;
+                    bool enemyYCollision = (enemies[j]._position.Y + 0.01f) >= obstacleUntereKante && (enemies[j]._position.Y - 0.01f) <= obstacleObereKante;
+
+                    if (enemyXCollision && enemyYCollision)
+                    {
+                        if ((enemies[j]._position.X + 0.01f) >= obstacleLinkeKante && (enemies[j]._position.X - 0.01f) < obstacleLinkeKante && (enemies[j]._position.X - enemies[j]._size) < (obstacles[i]._position.X - (obstacles[i]._size + (1.5f * 0.01f))))
+                        {
+                            enemies[j]._position = new Vector2(obstacles[i]._position.X - (0.01f + obstacles[i]._size), enemies[j]._position.Y);
+                        }
+                        else if ((enemies[j]._position.Y + 0.01f) >= obstacleUntereKante && (enemies[j]._position.Y - 0.01f) < obstacleUntereKante && (enemies[j]._position.Y - enemies[j]._size) < (obstacles[i]._position.Y - (obstacles[i]._size + (1.5f * 0.01f))))
+                        {
+                            enemies[j]._position = new Vector2(enemies[j]._position.X, obstacles[i]._position.Y - (0.01f + obstacles[i]._size));
+                        }
+                        else if ((enemies[j]._position.Y - 0.01f) <= obstacleObereKante && (enemies[j]._position.Y + 0.01f) > obstacleObereKante && (enemies[j]._position.Y + enemies[j]._size) > (obstacles[i]._position.Y + (obstacles[i]._size + (1.5f * 0.01f))))
+                        {
+                            enemies[j]._position = new Vector2(enemies[j]._position.X, obstacles[i]._position.Y + (0.01f + obstacles[i]._size));
+                        }
+                        else if ((enemies[j]._position.X - 0.01f) <= obstacleRechteKante && (enemies[j]._position.X + 0.01f) > obstacleRechteKante)
+                        {
+                            enemies[j]._position = new Vector2(obstacles[i]._position.X + (0.01f + obstacles[i]._size), enemies[j]._position.Y);
+                        }
+                    }
+
+                }
+                j++;
+            }
+        }
+    }
 }
+
 

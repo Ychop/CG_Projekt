@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System.Collections.Generic;
 
 namespace CG_Projekt.Models
 {
@@ -6,13 +7,16 @@ namespace CG_Projekt.Models
     {
         public Vector2 _position { get; set; }
         public float _size { get; }
+       
 
         internal Enemy(Vector2 position,float size)
         {
-
+           
             _position = position;
             _size = size;
         }
+
+       
 
     }
 }

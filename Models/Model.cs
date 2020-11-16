@@ -62,8 +62,15 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
+              
+                while (i > 0 && intersection.CheckEnemyCollision(obstacles,enemies[i-1],ranX,ranY))
+                {
 
+                    ranX = (float)random.NextDouble() * 1.8f - 0.9f;
+                    ranY = (float)random.NextDouble() * 1.8f - 0.9f;
+                }
                 enemies.Add(new Enemy(new Vector2(ranX, ranY), 0.01f));
+
             }
             for (int i = 0; i < 50; i++)
             {
