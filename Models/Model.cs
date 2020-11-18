@@ -24,6 +24,7 @@ namespace CG_Projekt
             GenerateLevelGrid();
             GenerateGameObjects();
         }
+    
 
         internal void GenerateLevelGrid()
         {

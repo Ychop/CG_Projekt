@@ -16,19 +16,28 @@ namespace CG_Projekt
 
         internal void Draw(Model model)
         {
+
             GL.Clear(ClearBufferMask.ColorBufferBit);
+
             DrawLevel();
             DrawLevelGrid(model);
             DrawPlayer(model);
             DrawGameObjects(model);
-            camera.Draw();
+          
             camera.Center = model.player._position;
-            
+
+            camera.Draw();
+            model.player.AglignPlayer(model.player);
+           
+
+
+
+
         }
 
         internal void Resize(int width, int height)
         {
-            GL.Viewport(0, 0, width, height);
+            camera.Resize(width,height);
         }
 
         internal void DrawLevel()
@@ -60,6 +69,7 @@ namespace CG_Projekt
 
         internal void DrawPlayer(Model model)
         {
+            
             GL.Color3(model.player._color);
             GL.Begin(PrimitiveType.Quads);
             GL.Vertex2(model.player._position + new Vector2(-model.player._size  , -model.player._size));
@@ -67,6 +77,7 @@ namespace CG_Projekt
             GL.Vertex2(model.player._position + new Vector2(model.player._size , model.player._size ));
             GL.Vertex2(model.player._position + new Vector2(-model.player._size, model.player._size ));
             GL.End();
+            
         }
 
         internal void DrawGameObjects(Model model)

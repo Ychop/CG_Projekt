@@ -7,6 +7,12 @@ namespace CG_Projekt
 {
     class Intersection
     {
+        
+        public Intersection()
+        {
+          
+        }
+
         Random random = new Random();
         float playerRechteKante, playerLinkeKante, playerObereKante, playerUntereKante, obstacleRechteKante, obstacleLinkeKante, obstacleObereKante, obstacleUntereKante;
 
@@ -54,6 +60,8 @@ namespace CG_Projekt
                 {
                     Console.WriteLine("Player Collision mit:" + i + "Gegner.");
                     //TODO: Hier könnte man noch eine Funktion hinzufügen was dann passiert wenn der spieler den Gegner berührt. (Gamefrezze oder gameover Bild) 
+                    
+
 
                 }
                 if ((enemies[i]._position.Y + enemies[i]._size) > 0.9f) //Obere Levelgrenze

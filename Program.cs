@@ -9,6 +9,7 @@ namespace CG_Projekt
             var model = new Model();
             var view = new View();
             var controller = new Controller(view, model);
+           
 
             window.UpdateFrame += (_, __) =>
             {
@@ -35,4 +36,7 @@ namespace CG_Projekt
  * - Rotation der Camera mit E und Q wäre auch noch nice(ist Drinne aber irgendwie Strange).
  * - Man könnte eine Safezone um den Spawn des Spielers errichten, sodass dort keine Gegner spawnen können.
  * - Lösung für die Intersections ist ziemlich ugly. Eine Mögliche lösung dafür wären Eneties.
+ * - lauf variable i für foreach evlt. redundant.
+ * - Highscore in der Console asugeben ...vorerst
+ * - Wenn auf gegner geklickt dann verschwindet der gegner
  */

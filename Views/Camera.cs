@@ -54,23 +54,25 @@ namespace CG_Projekt
             GL.Viewport(0, 0, width, height); // tell OpenGL to use the whole window for drawing
             _invWindowAspectRatio = height / (float)width;
           
-            InvViewportMatrix = Transformation.Combine(Transformation.Scale(2f / width, 2f / height), Transformation.Translate(-Vector2.One));
+            InvViewportMatrix = Transformation.Combine(Transformation.Scale(1f / width, 1f / height), Transformation.Translate(-Vector2.One));
             UpdateMatrix();
         }
 
         public void Draw()
         {
             GL.LoadMatrix(ref cameraMatrix);
+
+           
         }
 
         private void UpdateMatrix()
-        {
-            
+        {      
             var translate = Transformation.Translate(-Center);
             var scale = Transformation.Scale(1f / Scale);
             var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
             var rotate = Transformation.Rotation(_rotate);
             cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);
+              
         }
 
     }
