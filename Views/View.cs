@@ -18,21 +18,18 @@ namespace CG_Projekt
         {
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
-
             DrawLevel();
             DrawLevelGrid(model);
             DrawPlayer(model);
-            DrawGameObjects(model);
-          
+            DrawGameObjects(model);         
             camera.Center = model.player._position;
-
             camera.Draw();
-            model.player.AglignPlayer(model.player);
-           
+            model.player.AglignPlayer(model.player);         
+        }
 
-
-
-
+        internal void DrawGameOber()
+        {                   
+           //TODO: Draw Gameover Screen
         }
 
         internal void Resize(int width, int height)

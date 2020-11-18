@@ -11,6 +11,7 @@ namespace CG_Projekt
         Model model;
         public Intersection intersection { get; } = new Intersection();
         public Camera camera { get; } = new Camera();
+ 
         internal int oldScrollValue = 0;
         internal float axisZoom = 0f;
 
@@ -22,6 +23,11 @@ namespace CG_Projekt
 
         internal void Update(float deltaTime)
         {
+            if (intersection.gameOver)
+            {
+                return;
+                //wenn spieler Enemy berührt => Frezze
+            }
             //Zoom mit dem Mausrad
             ScrollControl(deltaTime);
             //Updatet den Spieler
@@ -33,6 +39,8 @@ namespace CG_Projekt
             // Updatet die Enemies
             UpdateEnemy(model.enemies, deltaTime);
         }
+
+       
 
         internal void UpdateRotateCamera(float deltaTime)
         {

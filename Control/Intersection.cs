@@ -12,7 +12,7 @@ namespace CG_Projekt
         {
           
         }
-
+        internal bool gameOver = false;
         Random random = new Random();
         float playerRechteKante, playerLinkeKante, playerObereKante, playerUntereKante, obstacleRechteKante, obstacleLinkeKante, obstacleObereKante, obstacleUntereKante;
 
@@ -60,7 +60,7 @@ namespace CG_Projekt
                 {
                     Console.WriteLine("Player Collision mit:" + i + "Gegner.");
                     //TODO: Hier könnte man noch eine Funktion hinzufügen was dann passiert wenn der spieler den Gegner berührt. (Gamefrezze oder gameover Bild) 
-                    
+                    gameOver = true;
 
 
                 }
