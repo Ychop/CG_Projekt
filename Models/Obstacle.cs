@@ -4,14 +4,14 @@ namespace CG_Projekt.Models
 {
     class Obstacle
     {
-        public Vector2 _position { get;}
-        public float _size { get; }
+        public Vector2 Position { get;}
+        public float Size { get; }
 
 
-        public Obstacle(Vector2 position, float size)
+        public Obstacle(Vector2 position_, float size_)
         {
-            _position = position;
-            _size = size;
+            Position = position_;
+            Size = size_;
         }
     }
 }

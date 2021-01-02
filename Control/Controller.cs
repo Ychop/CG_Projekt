@@ -55,15 +55,53 @@ namespace CG_Projekt
 
         internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung sdasdwsadSpieler
         {
+        for(int i = 0; i< enemies.Count; i++)
+            {
+                if (enemies[i].Health < 0)
+                {
+                    enemies.RemoveAt(i);
+                }
+            }
+      
+           
             foreach (Enemy enemy in enemies)
             {
+                enemy.EnemyCollision(enemies);
                 enemy.EnemyAI(enemy, deltaTime, model.player);
+
+         
             }
         }
         internal void UpdatePlayer(float deltaTime)
         {
+            if(model.player.Health > 1)
+            {
+                model.player.Health = 1f;
+            }
             model.player.MovePlayer(model.player, deltaTime);
+            model.player.AglignPlayer();
+            if(model.player.Shoot())
+            {
+                model.bullets.Add(new Bullet(model.player.Position));
+                model.player.Ammo--;
+            }
+            for (int x = 0; x < model.bullets.Count; x++)
+            {
+                if (intersection.BulletCollision(model.bullets, model.enemies, model.obstacles))
+                {
+                    model.bullets.RemoveAt(x);
+                }
 
+            }
+            int i = 0;
+            foreach(Bullet bullet in model.bullets)
+            {
+                model.bullets[i].MoveBullet(deltaTime, model.bullets[i]);
+                i++;
+               
+            }
+            
+            
         }
 
         internal void ScrollControl(float deltaTime)
@@ -85,7 +123,16 @@ namespace CG_Projekt
             {
                 axisZoom = 0f;
             }
+         
             var zoom = view.camera.Scale * (1 + deltaTime * axisZoom);
+            if (zoom > 0.5f)
+            {
+                zoom = 0.5f;
+            }
+            if(zoom < 0.1f)
+            {
+                zoom = 0.1f;
+            }
             // zoom = MathHelper.Clamp(zoom, 0.9f, 1f); //setzt Zoom Grenze, also bis wie weit man rein/raus zoomen kann
             view.camera.Scale = zoom;
         }
