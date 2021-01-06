@@ -6,11 +6,9 @@ namespace CG_Projekt
 {
     class Camera
     {
-        public Matrix4 CameraMatrix => cameraMatrix;
         private Matrix4 cameraMatrix = Matrix4.Identity;
         private float _scale = 0.2f; // Setzt den Start Zoom auf den spieler
-        private float _invWindowAspectRatio = 1f;
-     
+        private float _invWindowAspectRatio = 1f;    
         private Vector2 _center;
         private float _rotate;
         internal Vector2 Center // Zentrum der Camera
@@ -42,27 +40,20 @@ namespace CG_Projekt
                 UpdateMatrix();
             }
         }
-
-        public Matrix4 InvViewportMatrix { get; private set; } //ist fürs Clicken
-
         public Camera()
         {
 
         }
-        public void Resize(int width, int height)
+        public void Resize(int width_, int height_)
         {
-            GL.Viewport(0, 0, width, height); // tell OpenGL to use the whole window for drawing
-            _invWindowAspectRatio = height / (float)width;
-          
-            InvViewportMatrix = Transformation.Combine(Transformation.Scale(1f / width, 1f / height), Transformation.Translate(-Vector2.One));
+            GL.Viewport(0, 0, width_, height_); // tell OpenGL to use the whole window for drawing
+            _invWindowAspectRatio = height_ / (float)width_;    
             UpdateMatrix();
         }
 
         public void Draw()
         {
-            GL.LoadMatrix(ref cameraMatrix);
-
-           
+            GL.LoadMatrix(ref cameraMatrix);                  
         }
 
         private void UpdateMatrix()
@@ -71,9 +62,7 @@ namespace CG_Projekt
             var scale = Transformation.Scale(1f / Scale);
             var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
             var rotate = Transformation.Rotation(_rotate);
-            cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);
-              
+            cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);              
         }
-
     }
 }

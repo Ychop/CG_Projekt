@@ -12,6 +12,8 @@ namespace CG_Projekt
         internal List<Enemy> enemies = new List<Enemy>();
         internal List<Obstacle> obstacles = new List<Obstacle>();
         internal List<PickUp> pickUps = new List<PickUp>();
+        internal List<Bullet> bullets = new List<Bullet>();
+
 
 
 
@@ -24,7 +26,7 @@ namespace CG_Projekt
             GenerateLevelGrid();
             GenerateGameObjects();
         }
-    
+
 
         internal void GenerateLevelGrid()
         {
@@ -46,12 +48,13 @@ namespace CG_Projekt
         {
             float ranX, ranY, ranS;
 
+
             for (int i = 0; i < 50; i++)
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranS = (float)random.NextDouble() * 0.09f + 0.01f;
-                while (i > 0 && intersection.CheckObstacleCollision(obstacles[i - 1], obstacles, ranX, ranY) && (ranS + ranX > 0.9 || ranS + ranY > 0.9 || -ranS - ranX < -0.9 || -ranS - ranY < -0.9))
+                while (i > 0 && intersection.CheckObstacleCollision(obstacles[i - 1], obstacles, ranX, ranY) && (ranS + ranX > 0.9f || ranS + ranY > 0.9f || -ranS - ranX < -0.9f || -ranS - ranY < -0.9f))
                 {
                     ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                     ranY = (float)random.NextDouble() * 1.8f - 0.9f;
@@ -63,8 +66,8 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-              
-                while (i > 0 && intersection.CheckEnemyCollision(obstacles,enemies[i-1],ranX,ranY))
+
+                while (i > 0 && intersection.CheckEnemyCollision(obstacles, enemies[i - 1], ranX, ranY))
                 {
 
                     ranX = (float)random.NextDouble() * 1.8f - 0.9f;
@@ -82,8 +85,9 @@ namespace CG_Projekt
                     ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                     ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 }
-                pickUps.Add(new PickUp(new Vector2(ranX, ranY), 0.01f));
+                pickUps.Add(new PickUp(new Vector2(ranX, ranY), 0.01f, random.Next(2)));
             }
         }
+
     }
 }
