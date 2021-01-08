@@ -26,7 +26,7 @@ namespace CG_Projekt
             if (intersection.gameOver)
             {
                 return;
-                //wenn spieler Enemy berührt => Frezze
+                //wenn spieler Enemy berührt => Freeze
             }
             //Zoom mit dem Mausrad
             ScrollControl(deltaTime);
