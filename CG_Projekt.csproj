@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,8 +32,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Magick.NET-Q8-AnyCPU, Version=7.22.3.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>packages\Magick.NET-Q8-AnyCPU.7.22.3\lib\net40\Magick.NET-Q8-AnyCPU.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET.Core, Version=5.3.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>packages\Magick.NET.Core.5.3.0\lib\net40\Magick.NET.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -99,6 +107,8 @@
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
     <Compile Include="Control\Intersection.cs" />
+    <Compile Include="Framework\Resource.cs" />
+    <Compile Include="Framework\Texture.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Program.cs" />
@@ -120,6 +130,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Res\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\grass.jpg" />
+    <EmbeddedResource Include="Content\player.jpg" />
+    <EmbeddedResource Include="Content\rocks.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

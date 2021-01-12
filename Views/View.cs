@@ -3,14 +3,23 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using System.Drawing;
-
+using CG_Projekt.Framework;
+using GL = OpenTK.Graphics.OpenGL.GL;
 
 namespace CG_Projekt
 {
     internal class View
     {
+
+        private readonly int texPlayer;
+
         public View()
         {
+            var content = $"{nameof(CG_Projekt)}.Content.";
+            texPlayer = Texture.Load(Resource.LoadStream(content + "player.jpg"));
+            GL.Enable(EnableCap.Texture2D);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.Blend);
 
         }
 
@@ -61,7 +70,7 @@ namespace CG_Projekt
             //TODO: Highscore
             //TODO: Ammo count
         }
-        internal void DrawGameOber()
+        internal void DrawGameOver()
         {
             //TODO: Draw Gameover Screen
         }
@@ -75,9 +84,13 @@ namespace CG_Projekt
         {
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.White);
+            GL.TexCoord2(-0.9f, -0.9f);
             GL.Vertex2(-0.9f, -0.9f);
+            GL.TexCoord2(0.9f, -0.9f);
             GL.Vertex2(0.9f, -0.9f);
+            GL.TexCoord2(0.9f, 0.9f);
             GL.Vertex2(0.9f, 0.9f);
+            GL.TexCoord2(-0.9f, 0.9f);
             GL.Vertex2(-0.9f, 0.9f);
             GL.End();
         }
@@ -89,9 +102,13 @@ namespace CG_Projekt
             {
                 GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(model.levelGrids[i]._position);
                 GL.Vertex2(model.levelGrids[i]._position);
+                GL.TexCoord2(model.levelGrids[i]._position + new Vector2(0.017f, 0));
                 GL.Vertex2(model.levelGrids[i]._position + new Vector2(0.017f, 0));
+                GL.TexCoord2(model.levelGrids[i]._position + new Vector2(0.017f, 0.017f));
                 GL.Vertex2(model.levelGrids[i]._position + new Vector2(0.017f, 0.017f));
+                GL.TexCoord2(model.levelGrids[i]._position + new Vector2(0, 0.017f));
                 GL.Vertex2(model.levelGrids[i]._position + new Vector2(0, 0.017f));
                 GL.End();
 
@@ -106,9 +123,13 @@ namespace CG_Projekt
             GL.Rotate(model.player.Angle, new Vector3d(0, 0, -1));
             GL.Color3(model.player.Color);
             GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(new Vector2(-model.player.Size, -model.player.Size));
             GL.Vertex2(new Vector2(-model.player.Size, -model.player.Size));
+            GL.TexCoord2(new Vector2(model.player.Size, -model.player.Size));
             GL.Vertex2(new Vector2(model.player.Size, -model.player.Size));
+            GL.TexCoord2(new Vector2(model.player.Size, model.player.Size));
             GL.Vertex2(new Vector2(model.player.Size, model.player.Size));
+            GL.TexCoord2(new Vector2(-model.player.Size, model.player.Size));
             GL.Vertex2(new Vector2(-model.player.Size, model.player.Size));
             GL.End();
             GL.PopMatrix();
