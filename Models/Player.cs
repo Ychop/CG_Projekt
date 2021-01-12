@@ -3,31 +3,28 @@ using OpenTK;
 using System.Drawing;
 using OpenTK.Input;
 using System;
-using OpenTK.Graphics.OpenGL;
 
 
 namespace CG_Projekt.Models
 {
-    internal class Player
+    internal class Player : GameObject
     {
         public double Angle { get; set; }
-        public Vector2 Position { get; set; }
-        public float Size { get; }
-        public float Velocity { get; set; }
         public int Ammo { get; set; }
-        public float Health { get; set; }
+        public float ShotCoolDown { get; set; }
 
-      
-
-        public Color Color { get; set; }
         public Vector2 Direction;
-        public Player()
+        public Player(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_,int id_) : base (color_,position_,size_,velocity_,hitpoints_,id_)
         {
-            Position = new Vector2(0, 0.89f);
-            Size = 0.01f;
-            Color = Color.Green;
+           
+            this.Color = color_;
+            this.Position = position_;
+            this.Size = size_;
+            this.Hitpoints = hitpoints_;
+            this.Velocity = velocity_;
+            this.Id = id_;
             Ammo = 100;
-            Health = 1f;
+            ShotCoolDown = 1f;
         }
 
         public void MovePlayer(Player player, float deltaTime)
@@ -40,31 +37,27 @@ namespace CG_Projekt.Models
         }
         public void AglignPlayer()
         {
-            Vector2 yAxis = new Vector2(0, 1);
             MouseState mouseState = Mouse.GetState();
             Direction = new Vector2(mouseState.X - Position.X, mouseState.Y - Position.Y);
-           
             double _anglerad = Math.Atan2(Direction.Y, Direction.X);
             Angle = _anglerad * (180 / Math.PI);
             if (Angle > 180 || Angle < -180)
             {
                 Angle = 0;
             }
-            Console.WriteLine("Winkel: " + Angle);
+            // Console.WriteLine("Winkel: " + Angle);
         }
         public bool Shoot()
         {
             var mouse = Mouse.GetState();
-
-            if (mouse.IsButtonDown(MouseButton.Left) && Ammo > 0)
+            //Console.WriteLine("Cooldown:" + shotCoolDown);
+            if (mouse.IsButtonDown(MouseButton.Left) && Ammo > 0 && ShotCoolDown < 0)
             {
-                Console.WriteLine("es Wird scharf geschossen!");
-
+                // Console.WriteLine("es Wird scharf geschossen!");
+                this.ShotCoolDown = 0.125f;
                 return true;
             }
             return false;
-
-
         }
     }
 }

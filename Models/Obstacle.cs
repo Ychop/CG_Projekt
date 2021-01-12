@@ -1,17 +1,18 @@
 ﻿using OpenTK;
+using System.Drawing;
 
 namespace CG_Projekt.Models
 {
-    class Obstacle
+    class Obstacle : GameObject
     {
-        public Vector2 Position { get;}
-        public float Size { get; }
-
-
-        public Obstacle(Vector2 position_, float size_)
+        public Obstacle(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
         {
-            Position = position_;
-            Size = size_;
+            this.Color = color_;
+            this.Position = position_;
+            this.Size = size_;
+            this.Hitpoints = hitpoints_;
+            this.Velocity = velocity_;
+            this.Id = id_;
         }
     }
 }

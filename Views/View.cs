@@ -1,6 +1,7 @@
 ﻿using CG_Projekt.Models;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using System.Drawing;
 using CG_Projekt.Framework;
 using GL = OpenTK.Graphics.OpenGL.GL;
@@ -28,7 +29,6 @@ namespace CG_Projekt
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
             camera.Center = model.player.Position;
-
             DrawLevel();
             DrawLevelGrid(model);
             DrawGameObjects(model);
@@ -42,25 +42,27 @@ namespace CG_Projekt
 
 
         }
+
+
         internal void DrawUI(Model model)
         {
 
-            Vector2 HeathbarPosition = (model.player.Position + new Vector2(0,-0.3f));
+            Vector2 HeathbarPosition = (model.player.Position + (camera.Scale * new Vector2(0, -0.92f)));
             //Helathbar
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.White);
-            GL.Vertex2(HeathbarPosition + new Vector2(-0.2f, -0.01f));
-            GL.Vertex2(HeathbarPosition + new Vector2(0.2f, -0.01f));
-            GL.Vertex2(HeathbarPosition + new Vector2(0.2f, 0.01f));
-            GL.Vertex2(HeathbarPosition + new Vector2(-0.2f, 0.01f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.2f, -0.01f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.2f, -0.01f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.2f, 0.01f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.2f, 0.01f));
             GL.End();
 
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.Green);
-            GL.Vertex2(HeathbarPosition + new Vector2(-0.199f * model.player.Health, -0.009f));
-            GL.Vertex2(HeathbarPosition + new Vector2(0.199f * model.player.Health, -0.009f));
-            GL.Vertex2(HeathbarPosition + new Vector2(0.199f * model.player.Health, 0.009f));
-            GL.Vertex2(HeathbarPosition + new Vector2(-0.199f * model.player.Health, 0.009f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.199f * model.player.Hitpoints, -0.009f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.199f * model.player.Hitpoints, -0.009f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.199f * model.player.Hitpoints, 0.009f));
+            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.199f * model.player.Hitpoints, 0.009f));
             GL.End();
             //TODO: Position der Helthbar ist noch nicht richtig
 
@@ -131,7 +133,6 @@ namespace CG_Projekt
             GL.Vertex2(new Vector2(-model.player.Size, model.player.Size));
             GL.End();
             GL.PopMatrix();
-            model.player.Shoot();
         }
         internal void DrawBullets(Model model)
         {
@@ -139,10 +140,10 @@ namespace CG_Projekt
             {
                 GL.Color3(Color.Black);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(bullet.Position + new Vector2(-0.001f, -0.001f));
-                GL.Vertex2(bullet.Position + new Vector2(0.001f, -0.001f));
-                GL.Vertex2(bullet.Position + new Vector2(0.001f, 0.001f));
-                GL.Vertex2(bullet.Position + new Vector2(-0.001f, 0.001f));
+                GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, -bullet.Size));
+                GL.Vertex2(bullet.Position + new Vector2(bullet.Size, -bullet.Size));
+                GL.Vertex2(bullet.Position + new Vector2(bullet.Size, bullet.Size));
+                GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, bullet.Size));
                 GL.End();
             }
         }
@@ -152,7 +153,7 @@ namespace CG_Projekt
             foreach (Enemy enemy in model.enemies)
             {
 
-                GL.Color3(Color.Red);
+                GL.Color3(enemy.Color);
                 GL.Begin(PrimitiveType.Quads);
                 GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, -model.enemies[i].Size));
                 GL.Vertex2(model.enemies[i].Position + new Vector2(model.enemies[i].Size, -model.enemies[i].Size));
@@ -166,7 +167,7 @@ namespace CG_Projekt
             i = 0;
             foreach (Obstacle obstacle in model.obstacles)
             {
-                GL.Color3(Color.Brown);
+                GL.Color3(obstacle.Color);
                 GL.Begin(PrimitiveType.Quads);
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(-model.obstacles[i].Size, -model.obstacles[i].Size));
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(model.obstacles[i].Size, -model.obstacles[i].Size));
@@ -178,12 +179,12 @@ namespace CG_Projekt
             i = 0;
             foreach (PickUp pickup in model.pickUps)
             {
-                GL.Color3(Color.Yellow);
+                GL.Color3(pickup.Color);
                 GL.Begin(PrimitiveType.Quads);
-                GL.Vertex2(model.pickUps[i]._position + new Vector2(-model.pickUps[i]._size, -model.pickUps[i]._size));
-                GL.Vertex2(model.pickUps[i]._position + new Vector2(model.pickUps[i]._size, -model.pickUps[i]._size));
-                GL.Vertex2(model.pickUps[i]._position + new Vector2(model.pickUps[i]._size, model.pickUps[i]._size));
-                GL.Vertex2(model.pickUps[i]._position + new Vector2(-model.pickUps[i]._size, model.pickUps[i]._size));
+                GL.Vertex2(model.pickUps[i].Position + new Vector2(-model.pickUps[i].Size, -model.pickUps[i].Size));
+                GL.Vertex2(model.pickUps[i].Position + new Vector2(model.pickUps[i].Size, -model.pickUps[i].Size));
+                GL.Vertex2(model.pickUps[i].Position + new Vector2(model.pickUps[i].Size, model.pickUps[i].Size));
+                GL.Vertex2(model.pickUps[i].Position + new Vector2(-model.pickUps[i].Size, model.pickUps[i].Size));
                 GL.End();
                 i++;
             }

@@ -13,13 +13,14 @@ namespace CG_Projekt
         internal List<Obstacle> obstacles = new List<Obstacle>();
         internal List<PickUp> pickUps = new List<PickUp>();
         internal List<Bullet> bullets = new List<Bullet>();
+        internal List<GameObject> gameObjects = new List<GameObject>();
+
+        internal Player player { get; set; }
 
 
-
-
-        internal Player player { get; } = new Player();
         internal Intersection intersection = new Intersection();
         private Random random = new Random();
+        private int ObjectsLimit = 50; // sets the Limit for all Gameobjects each.
 
         public Model()
         {
@@ -46,46 +47,64 @@ namespace CG_Projekt
 
         internal void GenerateGameObjects()
         {
+
+            //TODO: Overlapping still exists
+
             float ranX, ranY, ranS;
 
-
-            for (int i = 0; i < 50; i++)
+            //Generate Obstacles
+            for (int i = 0; i < ObjectsLimit; i++)
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranS = (float)random.NextDouble() * 0.09f + 0.01f;
-                while (i > 0 && intersection.CheckObstacleCollision(obstacles[i - 1], obstacles, ranX, ranY) && (ranS + ranX > 0.9f || ranS + ranY > 0.9f || -ranS - ranX < -0.9f || -ranS - ranY < -0.9f))
-                {
-                    ranX = (float)random.NextDouble() * 1.8f - 0.9f;
-                    ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                    ranS = (float)random.NextDouble() * 0.09f + 0.01f;
-                }
-                obstacles.Add(new Obstacle(new Vector2(ranX, ranY), ranS));
+                obstacles.Add(new Obstacle(Color.Gray, new Vector2(ranX, ranY), ranS, 0f, 1000f, i));
+                gameObjects.Add(obstacles[i]);
+                Console.WriteLine(obstacles.Count + ". Obstacles erzeugt.");
             }
-            for (int i = 0; i < 50; i++) // Limit gibt die Anzahl der Gegner an, kann später durch einen Dynamischen Wert ersetzt werden (höherer Schwiergkeitsgrad => mehr gegner || Random).
+
+            //Generate Enemies
+            for (int i = 0; i < ObjectsLimit; i++)
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-
-                while (i > 0 && intersection.CheckEnemyCollision(obstacles, enemies[i - 1], ranX, ranY))
+                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + i));
+                gameObjects.Add(enemies[i]);
+                for (int j = 0; j < gameObjects.Count - 1; j++)
                 {
-
-                    ranX = (float)random.NextDouble() * 1.8f - 0.9f;
-                    ranY = (float)random.NextDouble() * 1.8f - 0.9f;
+                    if (intersection.IsIntersecting(enemies[i], gameObjects[j]))
+                    {
+                        enemies[i].Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
+                        j = 0;
+                    }
                 }
-                enemies.Add(new Enemy(new Vector2(ranX, ranY), 0.01f));
-
             }
-            for (int i = 0; i < 50; i++)
+
+            //Generate Pickups
+            for (int i = 0; i < ObjectsLimit; i++)
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                while (intersection.CheckPickUpCollision(enemies, obstacles, pickUps, ranX, ranY))
+                pickUps.Add(new PickUp(Color.Yellow, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + i, random.Next(2)));
+                gameObjects.Add(pickUps[i]);
+                for (int j = 0; j < gameObjects.Count - 1; j++)
                 {
-                    ranX = (float)random.NextDouble() * 1.8f - 0.9f;
-                    ranY = (float)random.NextDouble() * 1.8f - 0.9f;
+                    if (intersection.IsIntersecting(pickUps[i], gameObjects[j]))
+                    {
+                        pickUps[i].Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
+                        j = 0;
+                    }
                 }
-                pickUps.Add(new PickUp(new Vector2(ranX, ranY), 0.01f, random.Next(2)));
+            }
+
+            //Generate Player
+            player = new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
+            for (int j = 0; j < gameObjects.Count - 1; j++)
+            {
+                while (intersection.IsIntersecting(player, gameObjects[j]))
+                {
+                    player.Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
+                }
             }
         }
 

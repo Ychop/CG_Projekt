@@ -109,6 +109,7 @@
     <Compile Include="Control\Intersection.cs" />
     <Compile Include="Framework\Resource.cs" />
     <Compile Include="Framework\Texture.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Models\Enemy.cs" />
