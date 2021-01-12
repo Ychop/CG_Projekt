@@ -1,27 +1,32 @@
 ﻿
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
+using System;
 using System.Drawing;
 
 namespace CG_Projekt.Models
 {
-    public class Bullet
+    public class Bullet : GameObject
     {
         public Vector2 Direction { get; set; }
-        public float Velocity { get; set; }
-        public Vector2 Position { get; set; }
 
-        public Bullet(Vector2 position_)
+        public Bullet(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
         {
-            Position = position_ ;
+            this.Color = color_;
+            this.Position = position_;
+            this.Size = size_;
+            this.Hitpoints = hitpoints_;
+            this.Velocity = velocity_;
+            this.Id = id_;
         }
-        public void MoveBullet(float deltaTime, Bullet bullet)
+
+        public void CreateBullet()
         {
-            //Bullet bewegen sich noch seltsam
-            MouseState mouseState = Mouse.GetState();
-            Velocity = deltaTime * 0.005f;
-            bullet.Direction = new Vector2(mouseState.X - bullet.Position.X,mouseState.Y - bullet.Position.Y);
+
+        }
+        public void MoveBullet(Bullet bullet, Vector2 direction_)
+        {
+            //Bullet bewegen sich noch seltsam          
+            bullet.Direction = direction_;
             bullet.Direction.Normalized();
             bullet.Position += bullet.Direction * Velocity;
         }

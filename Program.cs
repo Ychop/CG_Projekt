@@ -8,15 +8,17 @@ namespace CG_Projekt
 
         static void Main()
         {
+      
             var window = new GameWindow();
             var model = new Model();
             var view = new View();
-            var controller = new Controller(view, model);
-            
+            var controller = new Controller(view, model, window);
+
            
             window.UpdateFrame += (_, __) =>
             {
                 controller.Update((float)__.Time);
+       
 
             };
             window.WindowState = WindowState.Maximized;

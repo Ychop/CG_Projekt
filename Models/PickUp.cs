@@ -1,19 +1,22 @@
 ﻿using OpenTK;
-using System;
+using System.Drawing;
 
 namespace CG_Projekt.Models
 {
-    class PickUp
+    class PickUp : GameObject
     {
-        public Vector2 _position { get; set; }
-        public float _size { get; }
+
         public int Type { get; set; }
 
-        public PickUp(Vector2 position, float size, int type_)
+        public PickUp(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_, int type_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
         {
-            _position = position;
-            _size = size;
-            Type = type_; // zahl 0 gibt ammo, zahl 1 gibt Leben
+            this.Color = color_;
+            this.Position = position_;
+            this.Size = size_;
+            this.Hitpoints = hitpoints_;
+            this.Velocity = velocity_;
+            this.Id = id_;
+            this.Type = type_;
         }
     }
 }
