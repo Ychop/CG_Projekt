@@ -107,6 +107,8 @@
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
     <Compile Include="Control\Intersection.cs" />
+    <Compile Include="Framework\IReadOnlyRectangle.cs" />
+    <Compile Include="Framework\Rect.cs" />
     <Compile Include="Framework\Resource.cs" />
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="GameObject.cs" />
@@ -135,6 +137,12 @@
     <EmbeddedResource Include="Content\grass.jpg" />
     <EmbeddedResource Include="Content\player.jpg" />
     <EmbeddedResource Include="Content\rocks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\monster.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\collectible.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

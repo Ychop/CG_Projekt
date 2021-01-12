@@ -12,14 +12,13 @@ namespace CG_Projekt.Models
         public double Angle { get; set; }
         public int Ammo { get; set; }
         public float ShotCoolDown { get; set; }
-
         public Vector2 Direction;
-        public Player(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_,int id_) : base (color_,position_,size_,velocity_,hitpoints_,id_)
+        //TODO: Vector2 position_ vielleicht entfernen weil redundant
+        public Player(Color color_, Vector2 position_, float posX, float posY, float width, float velocity_, float hitpoints_,int id_) : base (color_,position_, posX, posY, width, width, velocity_,hitpoints_,id_)
         {
-           
-            this.Color = color_;
             this.Position = position_;
-            this.Size = size_;
+            this.Color = color_;
+            this.Size = width;
             this.Hitpoints = hitpoints_;
             this.Velocity = velocity_;
             this.Id = id_;

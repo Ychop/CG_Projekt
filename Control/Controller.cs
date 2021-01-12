@@ -25,7 +25,7 @@ namespace CG_Projekt
             view = view_;
             model = model_;
             window = window_;
-            player = model.player;
+            player = model.players[0];
 
         }
 
@@ -80,25 +80,25 @@ namespace CG_Projekt
             MouseState mouseState = Mouse.GetState();
 
            // Console.WriteLine("Mouse X" + mouseState.X + "\n" + "Mouse Y " + mouseState.Y);
-            model.player.ShotCoolDown -= deltaTime;
+            model.players[0].ShotCoolDown -= deltaTime;
 
-            if (model.player.Hitpoints > 1)
+            if (model.players[0].Hitpoints > 1)
             {
-                model.player.Hitpoints = 1f;
+                model.players[0].Hitpoints = 1f;
             }
-            model.player.MovePlayer(model.player, deltaTime);
-            model.player.AglignPlayer();
+            model.players[0].MovePlayer(model.players[0], deltaTime);
+            model.players[0].AglignPlayer();
 
-            if (model.player.Shoot())
+            if (model.players[0].Shoot())
             {
-                model.bullets.Add(new Bullet(Color.Black, model.player.Position, 0.001f, 0f, 2f,0));
-                model.player.Ammo--;
+                model.bullets.Add(new Bullet(Color.Black, model.players[0].Position, model.players[0].MinX, model.players[0].MinY, model.players[0].SizeX, 0f, 2f,0));
+                model.players[0].Ammo--;
             }
             int i = 0;
             foreach (Bullet bullet in model.bullets)
             {
                 model.bullets[i].Velocity = deltaTime * 0.0005f;
-                model.bullets[i].MoveBullet(model.bullets[i], model.player.Direction);
+                model.bullets[i].MoveBullet(model.bullets[i], model.players[0].Direction);
                 model.bullets[i].Hitpoints -= deltaTime;
                 //Console.WriteLine("Lifetime:" + model.bullets[i].Lifetime); i++;
             }
@@ -148,11 +148,11 @@ namespace CG_Projekt
             //Check Enemy and Player collision
             for (int i = 0; i < model.enemies.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.enemies[i]))
+                if (intersection.IsIntersecting(model.players[0], model.enemies[i]))
                 {
                     Console.WriteLine("Player Collision mit:" + i + "Gegner.");
-                    model.player.Hitpoints -= 0.001f;
-                    if (model.player.Hitpoints < 0)
+                    model.players[0].Hitpoints -= 0.001f;
+                    if (model.players[0].Hitpoints < 0)
                     {
                         GameOver = true;
                     }
@@ -169,7 +169,7 @@ namespace CG_Projekt
             //Check Pickup with Player collision
             for (int i = 0; i < model.pickUps.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.pickUps[i]))
+                if (intersection.IsIntersecting(model.players[0], model.pickUps[i]))
                 {
                     Console.WriteLine("Player Collision mit:" + i + "Pickup.");
                     float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
