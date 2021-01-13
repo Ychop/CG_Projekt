@@ -6,11 +6,13 @@ namespace CG_Projekt
 {
     class Camera
     {
+
+        public Matrix4 CameraMatrix => cameraMatrix;
+        public Matrix4 InvViewportMatrix { get; private set; }
         private Matrix4 cameraMatrix = Matrix4.Identity;
         private float _scale = 0.2f; // Setzt den Start Zoom auf den spieler
-        private float _invWindowAspectRatio = 1f;    
+        private float _invWindowAspectRatio = 1f;
         private Vector2 _center;
-        private float _rotate;
         internal Vector2 Center // Zentrum der Camera
         {
             get => _center;
@@ -31,38 +33,25 @@ namespace CG_Projekt
             }
         }
 
-        internal float rotate
-        {
-            get => _rotate;
-            set
-            {
-                _rotate = value;
-                UpdateMatrix();
-            }
-        }
-        public Camera()
-        {
-
-        }
         public void Resize(int width_, int height_)
         {
             GL.Viewport(0, 0, width_, height_); // tell OpenGL to use the whole window for drawing
-            _invWindowAspectRatio = height_ / (float)width_;    
+            _invWindowAspectRatio = height_ / (float)width_;
+            InvViewportMatrix = Transformation.Combine(Transformation.Scale(2f / width_, 2f / height_), Transformation.Translate(-Vector2.One));
             UpdateMatrix();
         }
 
         public void Draw()
         {
-            GL.LoadMatrix(ref cameraMatrix);                  
+            GL.LoadMatrix(ref cameraMatrix);
         }
 
         private void UpdateMatrix()
-        {      
+        {
             var translate = Transformation.Translate(-Center);
             var scale = Transformation.Scale(1f / Scale);
             var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
-            var rotate = Transformation.Rotation(_rotate);
-            cameraMatrix = Transformation.Combine(translate, scale, aspect, rotate);              
+            cameraMatrix = Transformation.Combine(translate, scale, aspect);
         }
     }
 }

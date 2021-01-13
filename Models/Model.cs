@@ -51,7 +51,6 @@ namespace CG_Projekt
             //TODO: Overlapping still exists
 
             float ranX, ranY, ranS;
-
             //Generate Obstacles
             for (int i = 0; i < ObjectsLimit; i++)
             {
@@ -60,9 +59,8 @@ namespace CG_Projekt
                 ranS = (float)random.NextDouble() * 0.09f + 0.01f;
                 obstacles.Add(new Obstacle(Color.Gray, new Vector2(ranX, ranY), ranS, 0f, 1000f, i));
                 gameObjects.Add(obstacles[i]);
-                Console.WriteLine(obstacles.Count + ". Obstacles erzeugt.");
+                Console.WriteLine("Obstacle " + i + ". erzeugt.");
             }
-
             //Generate Enemies
             for (int i = 0; i < ObjectsLimit; i++)
             {
@@ -70,14 +68,14 @@ namespace CG_Projekt
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + i));
                 gameObjects.Add(enemies[i]);
-                for (int j = 0; j < gameObjects.Count - 1; j++)
+                for(int j = 0; j < gameObjects.Count; j++)
                 {
                     if (intersection.IsIntersecting(enemies[i], gameObjects[j]))
                     {
                         enemies[i].Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
-                        j = 0;
                     }
-                }
+                }                                
+                Console.WriteLine("Enemy "  + gameObjects.Count + ". erzeugt.");
             }
 
             //Generate Pickups
@@ -95,6 +93,7 @@ namespace CG_Projekt
                         j = 0;
                     }
                 }
+                Console.WriteLine("Pickup " + gameObjects.Count +  ". erzeugt.");
             }
 
             //Generate Player

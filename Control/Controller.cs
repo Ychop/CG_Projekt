@@ -9,28 +9,36 @@ namespace CG_Projekt
 {
     class Controller
     {
-        View view;
-        Model model;
-        GameWindow window;
         public Intersection intersection { get; } = new Intersection();
-        public Camera camera { get; } = new Camera();
+        public Camera Camera { get; }
+
+        internal View view;
+        internal Model model;
+        internal GameWindow window;
         internal int oldScrollValue = 0;
         internal float axisZoom = 0f;
         internal bool GameOver;
         internal Player player;
-
         private Random rng = new Random();
+        internal Vector2 mousePosition;
+
+
+
         internal Controller(View view_, Model model_, GameWindow window_)
         {
             view = view_;
             model = model_;
             window = window_;
             player = model.player;
-
+            Camera = view.Camera;
         }
-
         internal void Update(float deltaTime)
         {
+
+            if (GameOver)
+            {
+                return;
+            }
             //Menu
             MenuUpdate();
             //Zoom mit dem Mausrad
@@ -38,10 +46,11 @@ namespace CG_Projekt
             //Updatet den Spieler
             UpdatePlayer(deltaTime);
             //Checkt die Collisons
-             UpdateCheckCollision();
+            UpdateCheckCollision();
             // Updatet die Enemies
             UpdateEnemy(model.enemies, deltaTime);
         }
+
 
         internal void MenuUpdate()
         {
@@ -70,37 +79,19 @@ namespace CG_Projekt
                     enemies.RemoveAt(i);
                 }
             }
-            foreach (Enemy enemy in enemies)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                enemy.EnemyAI(enemy, player);
+                enemies[i].EnemyAI(enemies[i], player, deltaTime);
             }
         }
         internal void UpdatePlayer(float deltaTime)
         {
-            MouseState mouseState = Mouse.GetState();
-
-           // Console.WriteLine("Mouse X" + mouseState.X + "\n" + "Mouse Y " + mouseState.Y);
-            model.player.ShotCoolDown -= deltaTime;
-
-            if (model.player.Hitpoints > 1)
+            player.MovePlayer(model.player, deltaTime);
+            player.AglignPlayer(mousePosition);
+            player.Shoot(model.bullets, deltaTime);
+            if(player.Hitpoints < 0)
             {
-                model.player.Hitpoints = 1f;
-            }
-            model.player.MovePlayer(model.player, deltaTime);
-            model.player.AglignPlayer();
-
-            if (model.player.Shoot())
-            {
-                model.bullets.Add(new Bullet(Color.Black, model.player.Position, 0.001f, 0f, 2f,0));
-                model.player.Ammo--;
-            }
-            int i = 0;
-            foreach (Bullet bullet in model.bullets)
-            {
-                model.bullets[i].Velocity = deltaTime * 0.0005f;
-                model.bullets[i].MoveBullet(model.bullets[i], model.player.Direction);
-                model.bullets[i].Hitpoints -= deltaTime;
-                //Console.WriteLine("Lifetime:" + model.bullets[i].Lifetime); i++;
+                GameOver = true;
             }
         }
 
@@ -123,7 +114,7 @@ namespace CG_Projekt
             {
                 axisZoom = 0f;
             }
-            var zoom = view.camera.Scale * (1 + deltaTime * axisZoom);
+            var zoom = view.Camera.Scale * (1 + deltaTime * axisZoom);
             if (zoom > 0.5f)
             {
                 zoom = 0.5f;
@@ -133,16 +124,16 @@ namespace CG_Projekt
                 zoom = 0.1f;
             }
             // zoom = MathHelper.Clamp(zoom, 0.9f, 1f); //setzt Zoom Grenze, also bis wie weit man rein/raus zoomen kann
-            view.camera.Scale = zoom;
+            view.Camera.Scale = zoom;
         }
 
         internal void UpdateCheckCollision()
         {
             //Checkt Enemy/Player with LeverBorder Collision
-            intersection.ObjCollidingWithLeverBorder(player);
+            intersection.ObjectCollidingWithLeverBorder(player);
             for (int i = 0; i < model.enemies.Count; i++)
             {
-                intersection.ObjCollidingWithLeverBorder(model.enemies[i]);
+                intersection.ObjectCollidingWithLeverBorder(model.enemies[i]);
             }
 
             //Check Enemy and Player collision
@@ -150,7 +141,7 @@ namespace CG_Projekt
             {
                 if (intersection.IsIntersecting(model.player, model.enemies[i]))
                 {
-                    Console.WriteLine("Player Collision mit:" + i + "Gegner.");
+                    Console.WriteLine("Player Collision mit Enemy: " + i);
                     model.player.Hitpoints -= 0.001f;
                     if (model.player.Hitpoints < 0)
                     {
@@ -161,9 +152,12 @@ namespace CG_Projekt
 
             //Check Obstacle with Player collision
             for (int i = 0; i < model.obstacles.Count; i++)
-            {             
-                    Console.WriteLine("Player Collision mit:" + i + "Obstacle.");
-                intersection.CheckPlayerCollisionWithObstacle(player, model.obstacles);                
+            {
+                if (intersection.IsIntersecting(player, model.obstacles[i]))
+                {
+                    Console.WriteLine("Player Collision mit Obstacle: " + i);
+                    intersection.ResetGameObjectPosition(player, model.obstacles[i]);
+                }
             }
 
             //Check Pickup with Player collision
@@ -171,21 +165,21 @@ namespace CG_Projekt
             {
                 if (intersection.IsIntersecting(model.player, model.pickUps[i]))
                 {
-                    Console.WriteLine("Player Collision mit:" + i + "Pickup.");
+                    Console.WriteLine("Player Collision mit Pickup: " + i);
                     float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
                     float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    for(int j = 0; j < model.gameObjects.Count; j++)
+                    for (int j = 0; j < model.gameObjects.Count; j++)
                     {
-                        if(model.pickUps[i].Id == model.gameObjects[j].Id)
+                        if (model.pickUps[i].Id == model.gameObjects[j].Id)
                         {
                             j++;
                         }
-                        while (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]))
+                        if (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]))
                         {
                             ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
                             ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
                         }
-                    }                 
+                    }
                     model.pickUps[i].Position = new Vector2(ranX, ranY);
 
                     if (model.pickUps[i].Type == 1)
@@ -193,7 +187,7 @@ namespace CG_Projekt
                         player.Ammo += 100;
                         Console.WriteLine("Ammo: +100");
                     }
-                    if (model.pickUps[i].Type == 0)
+                    if (model.pickUps[i].Type == 0 && player.Hitpoints < 1)
                     {
                         player.Hitpoints += 0.1f;
                         Console.WriteLine("Leben: +100");
@@ -201,21 +195,44 @@ namespace CG_Projekt
                 }
             }
             //Check Enemy with Obstacle Collision
-            intersection.CheckEnemyObstacleCollision(model.enemies, model.obstacles);
-
-            //   intersection.EnemyWithEnemyCollision(model.enemies);
-
-
-
-            //TODO: Bullet collison refacor
-            for (int x = 0; x < model.bullets.Count; x++)
+            for (int i = 0; i < model.enemies.Count; i++)
             {
-                if (intersection.BulletCollision(model.bullets, model.enemies, model.obstacles) || model.bullets[x].Hitpoints < 0)
+                for (int j = 0; j < model.obstacles.Count; j++)
                 {
-                    model.bullets.RemoveAt(x);
+                    if (intersection.IsIntersecting(model.enemies[i], model.obstacles[j]))
+                    {
+                        intersection.ResetGameObjectPosition(model.enemies[i], model.obstacles[j]);
+                    }
+                }
+
+            }
+
+            //Check Bullet collision with GameObjects
+            for (int i = 0; i < model.gameObjects.Count; i++)
+            {
+                for (int j = 0; j < model.bullets.Count; j++)
+                {
+                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]))
+                    {
+                        model.bullets.RemoveAt(j);
+
+                        model.gameObjects[i].Hitpoints -= 0.1f;
+
+                    }
+
                 }
             }
+
+            //TODO: EnemyWithEnemyCollision
         }
 
+        internal void TranslateMouseCoordinates(int x, int y)
+        {
+            var fromViewportToWorld = Transformation.Combine(Camera.InvViewportMatrix, Camera.CameraMatrix.Inverted());
+            var mouseVector = new Vector2(x, y);
+            mousePosition = mouseVector.Transform(fromViewportToWorld);
+            //  Console.WriteLine("Mouse X " + test.X + "\n" + "Mouse Y " + test.Y);
+        }
     }
+
 }

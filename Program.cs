@@ -10,11 +10,12 @@ namespace CG_Projekt
         {
       
             var window = new GameWindow();
+            var camera = new Camera();
             var model = new Model();
-            var view = new View();
+            var view = new View(camera);
             var controller = new Controller(view, model, window);
 
-           
+            window.MouseMove += (_, args) => controller.TranslateMouseCoordinates(args.X, window.Height - 1 - args.Y);
             window.UpdateFrame += (_, __) =>
             {
                 controller.Update((float)__.Time);
