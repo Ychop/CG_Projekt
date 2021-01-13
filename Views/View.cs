@@ -17,8 +17,9 @@ namespace CG_Projekt
         private readonly int texObstacle;
         private readonly int texCollectible;
 
-        public View()
+        public View(Camera camera_)
         {
+            Camera = camera_;
             var content = $"{nameof(CG_Projekt)}.Content.";
             texPlayer = Texture.Load(Resource.LoadStream(content + "player.jpg"));
             texEnemy = Texture.Load(Resource.LoadStream(content + "monster.jpg"));
@@ -30,12 +31,12 @@ namespace CG_Projekt
             
         }
 
-        public Camera camera { get; } = new Camera();
+        public Camera Camera { get; } 
 
         internal void Draw(Model model)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            camera.Center = model.players[0].Position;
+            Camera.Center = model.players[0].Position;
             DrawLevel();
             DrawLevelGrid(model);
             DrawPlayerNew(model.players);
@@ -44,13 +45,13 @@ namespace CG_Projekt
             DrawEnemy(model.enemies);
             DrawObstacles(model.obstacles);
             DrawPickUps(model.pickUps);
-            camera.Draw();
+            Camera.Draw();
         }
 
         internal void DrawUI(Model model)
         {
 
-            Vector2 HeathbarPosition = (model.players[0].Position + (camera.Scale * new Vector2(0, -0.92f)));
+            Vector2 HeathbarPosition = (model.players[0].Position + (Camera.Scale * new Vector2(0, -0.92f)));
             //Helathbar
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.White);
@@ -62,10 +63,10 @@ namespace CG_Projekt
 
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.Green);
-            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.199f * model.players[0].Hitpoints, -0.009f));
-            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.199f * model.players[0].Hitpoints, -0.009f));
-            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(0.199f * model.players[0].Hitpoints, 0.009f));
-            GL.Vertex2(HeathbarPosition + camera.Scale * new Vector2(-0.199f * model.players[0].Hitpoints, 0.009f));
+            GL.Vertex2(HeathbarPosition + Camera.Scale * new Vector2(-0.199f * model.players[0].Hitpoints, -0.009f));
+            GL.Vertex2(HeathbarPosition + Camera.Scale * new Vector2(0.199f * model.players[0].Hitpoints, -0.009f));
+            GL.Vertex2(HeathbarPosition + Camera.Scale * new Vector2(0.199f * model.players[0].Hitpoints, 0.009f));
+            GL.Vertex2(HeathbarPosition + Camera.Scale * new Vector2(-0.199f * model.players[0].Hitpoints, 0.009f));
             GL.End();
             //TODO: Position der Helthbar ist noch nicht richtig
 
@@ -80,7 +81,7 @@ namespace CG_Projekt
 
         internal void Resize(int width, int height)
         {
-            Camera.Resize(width, height);
+           Camera.Resize(width, height);
         }
 
         internal void DrawLevel()
@@ -143,15 +144,16 @@ namespace CG_Projekt
         private void DrawPlayerNew(IEnumerable<Player> players)
         {
             // bind the texture
-            GL.BindTexture(TextureTarget.Texture2D, texPlayer);
+           
             foreach (var player in players)
             {
-                //GL.PushMatrix();
-                //GL.Translate(new Vector3(player.Position.X, player.Position.Y, 0));
-                //GL.Rotate(player.Angle, new Vector3d(0, 0, -1));
-
+                GL.PushMatrix();
+                GL.BindTexture(TextureTarget.Texture2D, texPlayer);
+                GL.Translate(new Vector3(player.Position.X, player.Position.Y, 0));
+                GL.Rotate(player.Angle, new Vector3d(0, 0, -1));
+             
                 Draw(player, new Rect(0f, 0f, 1f, 1f));
-                //GL.PopMatrix();
+                GL.PopMatrix();
             }
 
         }

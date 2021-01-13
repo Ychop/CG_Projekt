@@ -9,7 +9,7 @@ namespace CG_Projekt.Models
     {
         public Vector2 Direction { get; set; }
 
-        public Bullet(Color color_, Vector2 position_, float posX, float posY, float width, float velocity_, float hitpoints_, int id_) : base(color_,position_, posX, posY, width, width, velocity_, hitpoints_, id_)
+        public Bullet(Color color_, Vector2 position_, float posX, float posY, float width, float height,float velocity_, float hitpoints_, int id_, Vector2 direction_) : base(color_,position_, posX, posY, width, height, velocity_, hitpoints_, id_)
         {
             this.Position = position_;
             this.Color = color_;

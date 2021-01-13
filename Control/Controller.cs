@@ -86,28 +86,12 @@ namespace CG_Projekt
         }
         internal void UpdatePlayer(float deltaTime)
         {
-            player.MovePlayer(model.player, deltaTime);
+            player.MovePlayer(deltaTime);
             player.AglignPlayer(mousePosition);
             player.Shoot(model.bullets, deltaTime);
             if(player.Hitpoints < 0)
             {
                 GameOver = true;
-            }
-            model.player.MovePlayer(model.player, deltaTime);
-            model.player.AglignPlayer();
-
-            if (model.player.Shoot())
-            {
-                model.bullets.Add(new Bullet(Color.Black, model.player.Position, 0.001f, 0f, 2f,0));
-                model.player.Ammo--;
-            }
-            int i = 0;
-            foreach (Bullet bullet in model.bullets)
-            {
-                model.bullets[i].Velocity = deltaTime * 0.0005f;
-                model.bullets[i].MoveBullet(model.bullets[i], model.player.Direction);
-                model.bullets[i].Hitpoints -= deltaTime;
-                //Console.WriteLine("Lifetime:" + model.bullets[i].Lifetime); i++;
             }
         }
 
@@ -158,8 +142,8 @@ namespace CG_Projekt
                 if (intersection.IsIntersecting(model.players[0], model.enemies[i]))
                 {
                     Console.WriteLine("Player Collision mit Enemy: " + i);
-                    model.player.Hitpoints -= 0.001f;
-                    if (model.player.Hitpoints < 0)
+                    player.Hitpoints -= 0.001f;
+                    if (player.Hitpoints < 0)
                     {
                         GameOver = true;
                     }
@@ -188,7 +172,7 @@ namespace CG_Projekt
                     {
                         if (model.pickUps[i].Id == model.gameObjects[j].Id)
                         {
-                            j++;
+                            continue;
                         }
                         if (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]))
                         {
