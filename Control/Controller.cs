@@ -29,7 +29,7 @@ namespace CG_Projekt
             view = view_;
             model = model_;
             window = window_;
-            player = model.player;
+            player = model.players[0];
             Camera = view.Camera;
         }
         internal void Update(float deltaTime)
@@ -93,6 +93,22 @@ namespace CG_Projekt
             {
                 GameOver = true;
             }
+            model.player.MovePlayer(model.player, deltaTime);
+            model.player.AglignPlayer();
+
+            if (model.player.Shoot())
+            {
+                model.bullets.Add(new Bullet(Color.Black, model.player.Position, 0.001f, 0f, 2f,0));
+                model.player.Ammo--;
+            }
+            int i = 0;
+            foreach (Bullet bullet in model.bullets)
+            {
+                model.bullets[i].Velocity = deltaTime * 0.0005f;
+                model.bullets[i].MoveBullet(model.bullets[i], model.player.Direction);
+                model.bullets[i].Hitpoints -= deltaTime;
+                //Console.WriteLine("Lifetime:" + model.bullets[i].Lifetime); i++;
+            }
         }
 
         internal void ScrollControl(float deltaTime)
@@ -139,7 +155,7 @@ namespace CG_Projekt
             //Check Enemy and Player collision
             for (int i = 0; i < model.enemies.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.enemies[i]))
+                if (intersection.IsIntersecting(model.players[0], model.enemies[i]))
                 {
                     Console.WriteLine("Player Collision mit Enemy: " + i);
                     model.player.Hitpoints -= 0.001f;
@@ -163,7 +179,7 @@ namespace CG_Projekt
             //Check Pickup with Player collision
             for (int i = 0; i < model.pickUps.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.pickUps[i]))
+                if (intersection.IsIntersecting(model.players[0], model.pickUps[i]))
                 {
                     Console.WriteLine("Player Collision mit Pickup: " + i);
                     float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;

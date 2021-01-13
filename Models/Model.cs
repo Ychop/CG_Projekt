@@ -13,9 +13,10 @@ namespace CG_Projekt
         internal List<Obstacle> obstacles = new List<Obstacle>();
         internal List<PickUp> pickUps = new List<PickUp>();
         internal List<Bullet> bullets = new List<Bullet>();
+        internal List<Player> players= new List<Player>();
         internal List<GameObject> gameObjects = new List<GameObject>();
 
-        internal Player player { get; set; }
+        //internal Player player { get; set; }
 
 
         internal Intersection intersection = new Intersection();
@@ -57,7 +58,7 @@ namespace CG_Projekt
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranS = (float)random.NextDouble() * 0.09f + 0.01f;
-                obstacles.Add(new Obstacle(Color.Gray, new Vector2(ranX, ranY), ranS, 0f, 1000f, i));
+                obstacles.Add(new Obstacle(Color.Gray,new Vector2(ranX,ranY), ranX, ranY, ranS, 0f, 1000f, i));
                 gameObjects.Add(obstacles[i]);
                 Console.WriteLine("Obstacle " + i + ". erzeugt.");
             }
@@ -66,7 +67,7 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + i));
+                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), ranX, ranY, 0.02f,0, 1f, gameObjects.Count + i));
                 gameObjects.Add(enemies[i]);
                 for(int j = 0; j < gameObjects.Count; j++)
                 {
@@ -83,7 +84,7 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                pickUps.Add(new PickUp(Color.Yellow, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + i, random.Next(2)));
+                pickUps.Add(new PickUp(Color.Yellow, new Vector2(ranX,ranY), ranX, ranY, 0.02f, 0f, 1f, gameObjects.Count + i, random.Next(2)));
                 gameObjects.Add(pickUps[i]);
                 for (int j = 0; j < gameObjects.Count - 1; j++)
                 {
@@ -97,14 +98,16 @@ namespace CG_Projekt
             }
 
             //Generate Player
-            player = new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
+            players.Add( new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), (float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f, 0.02f, 0f, 1f, 1));
             for (int j = 0; j < gameObjects.Count - 1; j++)
             {
-                while (intersection.IsIntersecting(player, gameObjects[j]))
+                while (intersection.IsIntersecting(players[0], gameObjects[j]))
                 {
-                    player.Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
+                    players[0].Position = new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f);
                 }
             }
+            //gameObjects.Add(players[0]);
+
         }
 
     }
