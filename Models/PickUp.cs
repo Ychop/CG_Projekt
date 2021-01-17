@@ -8,9 +8,8 @@ namespace CG_Projekt.Models
 
         public int Type { get; set; }
 
-        public PickUp(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_, int type_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
+        public PickUp(Vector2 position_, float size_, float velocity_, float hitpoints_, int id_, int type_) : base(position_, size_, velocity_, hitpoints_, id_)
         {
-            this.Color = color_;
             this.Position = position_;
             this.Size = size_;
             this.Hitpoints = hitpoints_;

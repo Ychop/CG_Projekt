@@ -7,9 +7,8 @@ namespace CG_Projekt.Models
 {
     class Enemy : GameObject
     {
-        internal Enemy(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
+        internal Enemy(Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base(position_, size_, velocity_, hitpoints_, id_)
         {
-            this.Color = color_;
             this.Position = position_;
             this.Size = size_;
             this.Hitpoints = hitpoints_;
@@ -30,22 +29,6 @@ namespace CG_Projekt.Models
 
 
 
-        public void EnemyHelath(Enemy enemy)
-        {
-            GL.LineWidth(5f);
-            GL.Begin(PrimitiveType.Lines);
-            GL.Color3(Color.White);
-            GL.Vertex2(enemy.Position + new Vector2(-Size, Size + 0.002f));
-            GL.Vertex2(enemy.Position + new Vector2(Size, Size + 0.002f));
-            GL.End();
-
-            GL.LineWidth(4f);
-            GL.Begin(PrimitiveType.Lines);
-            GL.Color3(Color.Green);
-            GL.Vertex2(enemy.Position + new Vector2(-Size * enemy.Hitpoints, Size + 0.002f));
-            GL.Vertex2(enemy.Position + new Vector2(Size * enemy.Hitpoints, Size + 0.002f));
-            GL.End();
-        }
 
        
 

@@ -146,5 +146,8 @@
     <EmbeddedResource Include="Content\bullet.png" />
     <EmbeddedResource Include="Content\grass.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\healthbar.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

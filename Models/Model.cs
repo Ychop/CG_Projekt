@@ -40,7 +40,7 @@ namespace CG_Projekt
                 x = -0.9f;
                 for (int j = 0; j < 100; j++)
                 {
-                    levelGrids.Add(new LevelGrid(new Vector2(x, y), Color.White));
+                    levelGrids.Add(new LevelGrid(new Vector2(x, y)));
                     x += 0.018f;
                 }
                 y += 0.018f;
@@ -69,7 +69,7 @@ namespace CG_Projekt
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranS = (float)random.NextDouble() * 0.09f + 0.01f;
-                obstacles.Add(new Obstacle(Color.Gray, new Vector2(ranX, ranY), ranS, 0f, 1000f, i));
+                obstacles.Add(new Obstacle( new Vector2(ranX, ranY), ranS, 0f, 1000f, i));
                 gameObjects.Add(obstacles[i]);
                 if (Math.Pow(obstacles[i].Position.X - player.Position.X, 2) + Math.Pow(obstacles[i].Position.Y - player.Position.Y, 2) < 0.09f)
                 {
@@ -85,7 +85,7 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0.007f, 1f, gameObjects.Count));
+                enemies.Add(new Enemy(new Vector2(ranX, ranY), 0.01f, 0.007f, 1f, gameObjects.Count));
                 gameObjects.Add(enemies[i]);
                 for (int j = 0; j < gameObjects.Count ; j++)
                 {
@@ -104,7 +104,7 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                pickUps.Add(new PickUp(Color.Yellow, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + 1, random.Next(2)));
+                pickUps.Add(new PickUp( new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count + 1, random.Next(2)));
                 gameObjects.Add(pickUps[i]);
                 for (int j = 0; j < gameObjects.Count - 1; j++)
                 {
@@ -122,7 +122,7 @@ namespace CG_Projekt
 
         internal void GeneratePlayer()
         {
-            player = new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
+            player = new Player( new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
         }
         internal void GenerateObstacles()
         {
