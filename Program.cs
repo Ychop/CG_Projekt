@@ -39,8 +39,8 @@ namespace CG_Projekt
  * Zugriffsklassen sind noch nicht optimal gesetzt.
  * Heathbar für Spieler und Gegner.
  * Highscore.
- * Bugs Fixen (Spawn der Gameobjects , Enemy KI).
+ * Bugs Fixen (Spawn der Gameobjects , Enemy KI, Shogun, Durchsichtige Texturen).
  * Enemy/Bullet Aglinment.
  * HauptMenü/GameoverScreen.
- * 
+ * Sprites hinzufügen
  */
