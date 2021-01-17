@@ -35,7 +35,6 @@ namespace CG_Projekt
         }
         internal void Update(float deltaTime)
         {
-
             if (GameOver)
             {
                 return;
@@ -50,8 +49,6 @@ namespace CG_Projekt
             UpdateCheckCollision();
             // Updatet die Enemies
             UpdateEnemy(model.enemies, deltaTime);
-            // Check WeaponSelection
-           
         }
 
 
@@ -71,7 +68,7 @@ namespace CG_Projekt
             }
         }
         internal void WepaonSelection(char key_)
-        {         
+        {
             switch (key_)
             {
                 case '1':
@@ -118,7 +115,7 @@ namespace CG_Projekt
                             model.enemies[i].Position = new Vector2(ranX, ranY);
                             model.enemies[i].Hitpoints = 1f;
                         }
-                    }                  
+                    }
                 }
             }
             for (int i = 0; i < enemies.Count; i++)
@@ -131,7 +128,7 @@ namespace CG_Projekt
             player.MovePlayer(model.player, deltaTime);
             player.AglignPlayer(mousePosition);
             player.Shoot(model.bullets, deltaTime, this.weapon);
-            if(player.Hitpoints < 0)
+            if (player.Hitpoints < 0)
             {
                 GameOver = true;
             }
@@ -225,7 +222,7 @@ namespace CG_Projekt
                         {
                             model.pickUps[i].Position = new Vector2(ranX, ranY);
                         }
-                    }              
+                    }
                     if (model.pickUps[i].Type == 1)
                     {
                         player.Ammo += 100;
@@ -238,7 +235,7 @@ namespace CG_Projekt
                     }
                 }
             }
-            //Check Enemy with Obstacle Collision
+            //Check Enemy with Obstacle/Enemy Collision
             for (int i = 0; i < model.enemies.Count; i++)
             {
                 for (int j = 0; j < model.obstacles.Count; j++)
@@ -248,7 +245,6 @@ namespace CG_Projekt
                         intersection.ResetGameObjectPosition(model.enemies[i], model.obstacles[j]);
                     }
                 }
-
             }
 
             //Check Bullet collision with GameObjects
@@ -259,7 +255,7 @@ namespace CG_Projekt
                     if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]) && model.gameObjects[i].Id < 101)
                     {
                         model.bullets.RemoveAt(j);
-                       model.gameObjects[i].Hitpoints -= weapon.Damage;
+                        model.gameObjects[i].Hitpoints -= weapon.Damage;
                     }
 
                 }
