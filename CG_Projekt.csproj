@@ -133,21 +133,20 @@
     <Folder Include="Res\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\grass.jpg" />
     <EmbeddedResource Include="Content\rocks.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\bullet.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\collectible.jpg" />
-    <EmbeddedResource Include="Content\monster.jpg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\bullet.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\player.png" />
+    <EmbeddedResource Include="Content\coin.png" />
+    <EmbeddedResource Include="Content\enemyNew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\playerNew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\grass.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

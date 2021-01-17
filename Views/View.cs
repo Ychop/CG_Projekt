@@ -22,14 +22,16 @@ namespace CG_Projekt
         {
             Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
-            texPlayer = Texture.Load(Resource.LoadStream(content + "player.png"));
-            texEnemy = Texture.Load(Resource.LoadStream(content + "monster.jpg"));
+            texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
+            texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
-            texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.jpg"));
+            texCollectible = Texture.Load(Resource.LoadStream(content + "coin.png"));
             texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
-            texFloor = Texture.Load(Resource.LoadStream(content + "grass.jpg"));
+            texFloor = Texture.Load(Resource.LoadStream(content + "grass.png"));
             GL.Enable(EnableCap.Texture2D);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); 
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.Enable(EnableCap.Blend);
         }
 
@@ -93,7 +95,7 @@ namespace CG_Projekt
         internal void DrawLevel()
         {
             GL.Begin(PrimitiveType.Quads);
-            //GL.Color3(Color.White);
+            GL.Color3(Color.White);
             GL.Vertex2(-0.9f, -0.9f);
             GL.Vertex2(0.9f, -0.9f);
             GL.Vertex2(0.9f, 0.9f);
@@ -107,7 +109,7 @@ namespace CG_Projekt
             foreach (LevelGrid levelGrid in model.levelGrids)
             {
                 GL.BindTexture(TextureTarget.Texture2D, texFloor);
-                //GL.Color3(model.levelGrids[i]._color);
+                GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.levelGrids[i]._position);
@@ -129,7 +131,7 @@ namespace CG_Projekt
             GL.PushMatrix();
             GL.Translate(new Vector3(model.player.Position.X, model.player.Position.Y, 0));
             GL.Rotate(model.player.Angle, new Vector3d(0, 0, -1));
-            //GL.Color3(model.player.Color);
+            GL.Color3(model.player.Color);
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(new Vector2(1, 1));
             GL.Vertex2(new Vector2(-model.player.Size, -model.player.Size));
@@ -140,6 +142,7 @@ namespace CG_Projekt
             GL.TexCoord2(new Vector2(1, 0));
             GL.Vertex2(new Vector2(-model.player.Size, model.player.Size));
             GL.End();
+
             GL.PopMatrix();
         }
         internal void DrawBullets(Model model)

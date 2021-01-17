@@ -40,7 +40,7 @@ namespace CG_Projekt
                 x = -0.9f;
                 for (int j = 0; j < 100; j++)
                 {
-                    levelGrids.Add(new LevelGrid(new Vector2(x, y), Color.Blue));
+                    levelGrids.Add(new LevelGrid(new Vector2(x, y), Color.White));
                     x += 0.018f;
                 }
                 y += 0.018f;
