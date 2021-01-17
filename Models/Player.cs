@@ -15,9 +15,8 @@ namespace CG_Projekt.Models
         public float rpm { get; set; }
 
         public Vector2 Direction;
-        public Player(Color color_, Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base(color_, position_, size_, velocity_, hitpoints_, id_)
+        public Player( Vector2 position_, float size_, float velocity_, float hitpoints_, int id_) : base( position_, size_, velocity_, hitpoints_, id_)
         {
-            this.Color = color_;
             this.Position = position_;
             this.Size = size_;
             this.Hitpoints = hitpoints_;
@@ -52,7 +51,7 @@ namespace CG_Projekt.Models
             rpm -= deltaTime;
             if (mouse.IsButtonDown(MouseButton.Left) && Ammo > 0 && rpm < 0)
             {
-                bullets.Add(new Bullet(Color.Black, this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
+                bullets.Add(new Bullet( this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
                 Ammo--;
                 rpm = weapon_.RPM;
             }
