@@ -61,7 +61,6 @@ namespace CG_Projekt
 
             Vector2 HeathbarPosition = (model.player.Position + (Camera.Scale * new Vector2(0, -0.92f)));
             //Helathbar
-            GL.Color3(Color.White);
             GL.BindTexture(TextureTarget.Texture2D, texHealth);
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.White);
@@ -76,7 +75,7 @@ namespace CG_Projekt
             GL.End();
 
             GL.Begin(PrimitiveType.Quads);
-            GL.Color3(Color.Red);
+            GL.Color3(Color.Green);
             GL.TexCoord2(new Vector2(0, 0));
             GL.Vertex2(HeathbarPosition + Camera.Scale * new Vector2(-0.3f * model.player.Hitpoints, -0.017f));
             GL.TexCoord2(new Vector2(1, 0));
@@ -91,6 +90,28 @@ namespace CG_Projekt
 
             //TODO: Highscore
             //TODO: Ammo count
+        }
+
+        public void EnemyHelath(Enemy enemy)
+        {
+            GL.BindTexture(TextureTarget.Texture2D, texHealth);
+            GL.LineWidth(5f);
+            GL.Begin(PrimitiveType.Lines);
+            //GL.Color3(Color.White);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size, enemy.Size + 0.002f));
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Size, enemy.Size + 0.002f));
+            GL.End();
+
+            GL.LineWidth(4f);
+            GL.Begin(PrimitiveType.Lines);
+            // GL.Color3(Color.Green);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size * enemy.Hitpoints, enemy.Size + 0.002f));
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Size * enemy.Hitpoints, enemy.Size + 0.002f));
+            GL.End();
         }
         internal void DrawGameOver()
         {
@@ -120,7 +141,6 @@ namespace CG_Projekt
             {
 
                 GL.BindTexture(TextureTarget.Texture2D, texFloor);
-                GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.levelGrids[i]._position);
@@ -142,7 +162,6 @@ namespace CG_Projekt
             GL.PushMatrix();
             GL.Translate(new Vector3(model.player.Position.X, model.player.Position.Y, 0));
             GL.Rotate(model.player.Angle, new Vector3d(0, 0, -1));
-            GL.Color3(model.player.Color);
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(new Vector2(1, 1));
             GL.Vertex2(new Vector2(-model.player.Size, -model.player.Size));
@@ -183,7 +202,6 @@ namespace CG_Projekt
             foreach (Enemy enemy in model.enemies)
             {
 
-                GL.Color3(enemy.Color);
                 GL.BindTexture(TextureTarget.Texture2D, texEnemy);
 
                 GL.Begin(PrimitiveType.Quads);
@@ -197,7 +215,7 @@ namespace CG_Projekt
                 GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, model.enemies[i].Size));
 
                 GL.End();
-                model.enemies[i].EnemyHelath(model.enemies[i]);
+                EnemyHelath(model.enemies[i]);
                 i++;
             }
             i = 0;
@@ -221,7 +239,6 @@ namespace CG_Projekt
             i = 0;
             foreach (PickUp pickup in model.pickUps)
             {
-                GL.Color3(pickup.Color);
                 GL.BindTexture(TextureTarget.Texture2D, texCollectible);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));

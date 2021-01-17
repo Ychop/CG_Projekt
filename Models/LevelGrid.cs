@@ -6,11 +6,9 @@ namespace CG_Projekt
     class LevelGrid
     {
         internal Vector2 _position;
-        internal Color _color;
-        internal LevelGrid(Vector2 position, Color color)
+        internal LevelGrid(Vector2 position)
         {
             _position = position;
-            _color = color;
         }
     }
 }
