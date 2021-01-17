@@ -16,6 +16,7 @@ namespace CG_Projekt
             var controller = new Controller(view, model, window);
 
             window.MouseMove += (_, args) => controller.TranslateMouseCoordinates(args.X, window.Height - 1 - args.Y);
+            window.KeyPress += (_, args) => controller.WepaonSelection(args.KeyChar);
             window.UpdateFrame += (_, __) =>
             {
                 controller.Update((float)__.Time);

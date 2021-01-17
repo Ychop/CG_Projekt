@@ -3,7 +3,6 @@ using OpenTK;
 using OpenTK.Input;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace CG_Projekt
 {
@@ -16,6 +15,7 @@ namespace CG_Projekt
         internal Model model;
         internal GameWindow window;
         internal int oldScrollValue = 0;
+        internal Weapon weapon;
         internal float axisZoom = 0f;
         internal bool GameOver;
         internal Player player;
@@ -31,6 +31,7 @@ namespace CG_Projekt
             window = window_;
             player = model.player;
             Camera = view.Camera;
+            weapon = model.weapons[0];
         }
         internal void Update(float deltaTime)
         {
@@ -49,6 +50,8 @@ namespace CG_Projekt
             UpdateCheckCollision();
             // Updatet die Enemies
             UpdateEnemy(model.enemies, deltaTime);
+            // Check WeaponSelection
+           
         }
 
 
@@ -66,9 +69,30 @@ namespace CG_Projekt
             {
                 window.Exit();
             }
-
-
-
+        }
+        internal void WepaonSelection(char key_)
+        {         
+            switch (key_)
+            {
+                case '1':
+                    weapon = model.weapons[0];
+                    Console.WriteLine("Pistole ausgewählt.");
+                    break;
+                case '2':
+                    weapon = model.weapons[1];
+                    Console.WriteLine("UZI ausgewählt.");
+                    break;
+                case '3':
+                    weapon = model.weapons[2];
+                    Console.WriteLine("Shotgun ausgewählt.");
+                    break;
+                case '4':
+                    weapon = model.weapons[3];
+                    Console.WriteLine("RPG ausgewählt.");
+                    break;
+                default:
+                    break;
+            }
         }
         internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung sdasdwsadSpieler
         {
@@ -76,7 +100,25 @@ namespace CG_Projekt
             {
                 if (enemies[i].Hitpoints < 0)
                 {
-                    enemies.RemoveAt(i);
+                    float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
+                    float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+                    for (int j = 0; j < model.gameObjects.Count; j++)
+                    {
+                        if (model.enemies[i].Id == model.gameObjects[j].Id)
+                        {
+                            j++;
+                        }
+                        if (intersection.IsIntersecting(model.enemies[i], model.gameObjects[j]) && Math.Pow(enemies[i].Position.X - player.Position.X, 2) + Math.Pow(enemies[i].Position.Y - player.Position.Y, 2) > 0.2f)
+                        {
+                            ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
+                            ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+                        }
+                        else
+                        {
+                            model.enemies[i].Position = new Vector2(ranX, ranY);
+                            model.enemies[i].Hitpoints = 1f;
+                        }
+                    }                  
                 }
             }
             for (int i = 0; i < enemies.Count; i++)
@@ -88,7 +130,7 @@ namespace CG_Projekt
         {
             player.MovePlayer(model.player, deltaTime);
             player.AglignPlayer(mousePosition);
-            player.Shoot(model.bullets, deltaTime);
+            player.Shoot(model.bullets, deltaTime, this.weapon);
             if(player.Hitpoints < 0)
             {
                 GameOver = true;
@@ -141,7 +183,7 @@ namespace CG_Projekt
             {
                 if (intersection.IsIntersecting(model.player, model.enemies[i]))
                 {
-                    Console.WriteLine("Player Collision mit Enemy: " + i);
+                    Console.WriteLine("Player Collision mit Enemy: " + model.enemies[i].Id);
                     model.player.Hitpoints -= 0.001f;
                     if (model.player.Hitpoints < 0)
                     {
@@ -155,7 +197,7 @@ namespace CG_Projekt
             {
                 if (intersection.IsIntersecting(player, model.obstacles[i]))
                 {
-                    Console.WriteLine("Player Collision mit Obstacle: " + i);
+                    Console.WriteLine("Player Collision mit Obstacle: " + model.obstacles[i].Id);
                     intersection.ResetGameObjectPosition(player, model.obstacles[i]);
                 }
             }
@@ -165,23 +207,25 @@ namespace CG_Projekt
             {
                 if (intersection.IsIntersecting(model.player, model.pickUps[i]))
                 {
-                    Console.WriteLine("Player Collision mit Pickup: " + i);
+                    Console.WriteLine("Player Collision mit Pickup: " + model.pickUps[i].Id);
                     float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
                     float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
                     for (int j = 0; j < model.gameObjects.Count; j++)
                     {
-                        if (model.pickUps[i].Id == model.gameObjects[j].Id)
+                        if (model.gameObjects[j].Id > 100)
                         {
-                            j++;
+                            continue;
                         }
-                        if (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]))
+                        if (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]) && Math.Pow(model.pickUps[i].Position.X - model.gameObjects[j].Position.X, 2) + Math.Pow(model.pickUps[i].Position.Y - model.gameObjects[j].Position.Y, 2) < model.pickUps[i].Size + model.gameObjects[j].Size)
                         {
                             ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
                             ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
                         }
-                    }
-                    model.pickUps[i].Position = new Vector2(ranX, ranY);
-
+                        else
+                        {
+                            model.pickUps[i].Position = new Vector2(ranX, ranY);
+                        }
+                    }              
                     if (model.pickUps[i].Type == 1)
                     {
                         player.Ammo += 100;
@@ -212,12 +256,10 @@ namespace CG_Projekt
             {
                 for (int j = 0; j < model.bullets.Count; j++)
                 {
-                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]))
+                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]) && model.gameObjects[i].Id < 101)
                     {
                         model.bullets.RemoveAt(j);
-
-                        model.gameObjects[i].Hitpoints -= 0.1f;
-
+                       model.gameObjects[i].Hitpoints -= weapon.Damage;
                     }
 
                 }

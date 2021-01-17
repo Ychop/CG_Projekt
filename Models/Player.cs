@@ -43,15 +43,24 @@ namespace CG_Projekt.Models
             Angle = angleRad * (180 / Math.PI);
 
         }
-        public void Shoot(List<Bullet> bullets, float deltaTime)
+        public void Shoot(List<Bullet> bullets, float deltaTime, Weapon weapon_)
         {
             var mouse = Mouse.GetState();
+           
+
+
             rpm -= deltaTime;
             if (mouse.IsButtonDown(MouseButton.Left) && Ammo > 0 && rpm < 0)
             {
-                bullets.Add(new Bullet(Color.Black, this.Position, 0.001f, deltaTime * 0.5f, 5f, bullets.Count + 1, this.Direction));
+                {
+                    bullets.Add(new Bullet(Color.Black, this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
+                    Ammo--;
+                    rpm = weapon_.RPM;
+                }
+
+                bullets.Add(new Bullet(Color.Black, this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
                 Ammo--;
-                rpm = 0.4f;
+                rpm = weapon_.RPM;
             }
             for (int i = 0; i < bullets.Count; i++)
             {
