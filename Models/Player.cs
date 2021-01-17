@@ -52,12 +52,6 @@ namespace CG_Projekt.Models
             rpm -= deltaTime;
             if (mouse.IsButtonDown(MouseButton.Left) && Ammo > 0 && rpm < 0)
             {
-                {
-                    bullets.Add(new Bullet(Color.Black, this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
-                    Ammo--;
-                    rpm = weapon_.RPM;
-                }
-
                 bullets.Add(new Bullet(Color.Black, this.Position, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.Direction));
                 Ammo--;
                 rpm = weapon_.RPM;
