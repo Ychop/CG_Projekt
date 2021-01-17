@@ -106,10 +106,9 @@ namespace CG_Projekt
             var i = 0;
             foreach (LevelGrid levelGrid in model.levelGrids)
             {
-                GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
 
                 GL.BindTexture(TextureTarget.Texture2D, texFloor);
-                GL.Color3(model.levelGrids[i]._color);
+                //GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.levelGrids[i]._position);
@@ -120,7 +119,6 @@ namespace CG_Projekt
                 GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(model.levelGrids[i]._position + new Vector2(0, 0.018f));
                 GL.End();
-                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
                 i++;
             }
@@ -173,7 +171,7 @@ namespace CG_Projekt
             foreach (Enemy enemy in model.enemies)
             {
 
-                //GL.Color3(enemy.Color);
+                GL.Color3(enemy.Color);
                 GL.BindTexture(TextureTarget.Texture2D, texEnemy);
 
                 GL.Begin(PrimitiveType.Quads);
