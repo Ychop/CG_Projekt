@@ -25,13 +25,11 @@ namespace CG_Projekt
             texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
             texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
-            texCollectible = Texture.Load(Resource.LoadStream(content + "coin.png"));
+            texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
             texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             texFloor = Texture.Load(Resource.LoadStream(content + "grass.png"));
             GL.Enable(EnableCap.Texture2D);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.Enable(EnableCap.Blend);
         }
 
@@ -108,6 +106,8 @@ namespace CG_Projekt
             var i = 0;
             foreach (LevelGrid levelGrid in model.levelGrids)
             {
+                GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
+
                 GL.BindTexture(TextureTarget.Texture2D, texFloor);
                 GL.Color3(model.levelGrids[i]._color);
                 GL.Begin(PrimitiveType.Quads);
@@ -120,6 +120,7 @@ namespace CG_Projekt
                 GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(model.levelGrids[i]._position + new Vector2(0, 0.018f));
                 GL.End();
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
                 i++;
             }
@@ -150,7 +151,7 @@ namespace CG_Projekt
             foreach (Bullet bullet in model.bullets)
             {
                 GL.BindTexture(TextureTarget.Texture2D, texBullet);
-                //GL.Color3(Color.Black);
+                GL.Color3(Color.Black);
                 GL.Begin(PrimitiveType.Quads);
 
                 GL.TexCoord2(new Vector2(0, 0));
@@ -210,7 +211,7 @@ namespace CG_Projekt
             i = 0;
             foreach (PickUp pickup in model.pickUps)
             {
-                //wGL.Color3(pickup.Color);
+                GL.Color3(pickup.Color);
                 GL.BindTexture(TextureTarget.Texture2D, texCollectible);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
