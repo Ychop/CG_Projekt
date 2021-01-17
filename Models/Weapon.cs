@@ -47,8 +47,5 @@ namespace CG_Projekt.Models
             }
 
         }
-
-
-
     }
 }

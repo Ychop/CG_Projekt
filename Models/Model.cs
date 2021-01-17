@@ -55,7 +55,7 @@ namespace CG_Projekt
             float ranX, ranY, ranS;
 
             //Generate Player
-            player = new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
+            GeneratePlayer();
             for (int j = 0; j < gameObjects.Count - 1; j++)
             {
                 if (intersection.IsIntersecting(player, gameObjects[j]))
@@ -85,7 +85,7 @@ namespace CG_Projekt
             {
                 ranX = (float)random.NextDouble() * 1.8f - 0.9f;
                 ranY = (float)random.NextDouble() * 1.8f - 0.9f;
-                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0f, 1f, gameObjects.Count));
+                enemies.Add(new Enemy(Color.Red, new Vector2(ranX, ranY), 0.01f, 0.007f, 1f, gameObjects.Count));
                 gameObjects.Add(enemies[i]);
                 for (int j = 0; j < gameObjects.Count ; j++)
                 {
@@ -118,6 +118,19 @@ namespace CG_Projekt
             }
 
             Console.WriteLine("Obstacles insgesamt: " + obstacles.Count + " \n" + "Enemies insgesamt: "+ enemies.Count + "\n" + "Pickups insgesamt: " + pickUps.Count);
+        }
+
+        internal void GeneratePlayer()
+        {
+            player = new Player(Color.Green, new Vector2((float)random.NextDouble() * 1.8f - 0.9f, (float)random.NextDouble() * 1.8f - 0.9f), 0.01f, 0f, 1f, -1);
+        }
+        internal void GenerateObstacles()
+        {
+
+            for(int i = 1; i < ObjectsLimit; i++)
+            {
+
+            }
         }
         internal void GenerateWeapons()
         {
