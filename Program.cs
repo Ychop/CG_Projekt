@@ -35,19 +35,12 @@ namespace CG_Projekt
 
 /*
  * Anmerkungen: 
- * - Man könnte ein Interface für die GameObjects(Player,Enemy,Obstacle,Pickup) machen, da sie alle eine Position haben.
- * - Die Gameobjects Überlappen sich noch.
- * - ist die Klasse Intersections im richtigen Ordner? oder ist sie teil der Models?
- * - die LevelGrids sind noch etwas zuklein. Das dient nur dazu das man sie sieht.
- * - Intersections nur Teilweiße implementiert(Spieler kann noch durch Obstacles laufen; GameObject Spawnen evlt. noch auf Spieler;Bei Intersection mit Gegner Passiert noch nichts;Intersection zwischen GameObjects während des Loop noch nicht implementiert).
- * - Zugriffsklassen sind noch nicht optimal gesetzt.
- * - Lösung für die Intersections ist ziemlich ugly. Eine Mögliche lösung dafür wären Eneties.
- * - Velocity für spieler Fehlt noch
- * 
- * Schießen Implementieren.
+ * Die Gameobjects Überlappen sich noch.
+ * Zugriffsklassen sind noch nicht optimal gesetzt.
  * Heathbar für Spieler und Gegner.
  * Highscore.
  * Bugs Fixen (Spawn der Gameobjects , Enemy KI).
- * Pickups Machen also Leben bekkommen / Munition.
+ * Enemy/Bullet Aglinment.
+ * HauptMenü/GameoverScreen.
  * 
  */
