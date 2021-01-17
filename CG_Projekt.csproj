@@ -137,5 +137,12 @@
     <EmbeddedResource Include="Content\player.jpg" />
     <EmbeddedResource Include="Content\rocks.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bullet.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\collectible.jpg" />
+    <EmbeddedResource Include="Content\monster.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
