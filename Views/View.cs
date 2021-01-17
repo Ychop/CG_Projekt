@@ -22,16 +22,15 @@ namespace CG_Projekt
         {
             Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
-            texPlayer = Texture.Load(Resource.LoadStream(content + "player.jpg"));
+            texPlayer = Texture.Load(Resource.LoadStream(content + "player.png"));
             texEnemy = Texture.Load(Resource.LoadStream(content + "monster.jpg"));
             texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
             texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.jpg"));
-            texBullet = Texture.Load(Resource.LoadStream(content + "bullet.jpg"));
+            texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             texFloor = Texture.Load(Resource.LoadStream(content + "grass.jpg"));
             GL.Enable(EnableCap.Texture2D);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend);
-
         }
 
         public Camera Camera { get; } 
@@ -151,17 +150,19 @@ namespace CG_Projekt
                 //GL.Color3(Color.Black);
                 GL.Begin(PrimitiveType.Quads);
 
-                GL.TexCoord2(bullet.Position + new Vector2(-bullet.Size, -bullet.Size));
+                GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, -bullet.Size));
-                GL.TexCoord2(bullet.Position + new Vector2(bullet.Size, -bullet.Size));
+                GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(bullet.Position + new Vector2(bullet.Size, -bullet.Size));
-                GL.TexCoord2(bullet.Position + new Vector2(bullet.Size, bullet.Size));
+                GL.TexCoord2(new Vector2(1, 1));
                 GL.Vertex2(bullet.Position + new Vector2(bullet.Size, bullet.Size));
-                GL.TexCoord2(bullet.Position + new Vector2(-bullet.Size, bullet.Size));
+                GL.TexCoord2(new Vector2(1, 0));
                 GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, bullet.Size));
                 GL.End();
             }
         }
+
+
         internal void DrawGameObjects(Model model)
         {
             var i = 0;
@@ -169,11 +170,16 @@ namespace CG_Projekt
             {
 
                 //GL.Color3(enemy.Color);
-                
+                GL.BindTexture(TextureTarget.Texture2D, texEnemy);
+
                 GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, -model.enemies[i].Size));
+                GL.TexCoord2(new Vector2(1, 0));
                 GL.Vertex2(model.enemies[i].Position + new Vector2(model.enemies[i].Size, -model.enemies[i].Size));
+                GL.TexCoord2(new Vector2(1, 1));
                 GL.Vertex2(model.enemies[i].Position + new Vector2(model.enemies[i].Size, model.enemies[i].Size));
+                GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, model.enemies[i].Size));
 
                 GL.End();
@@ -181,13 +187,19 @@ namespace CG_Projekt
                 i++;
             }
             i = 0;
+
             foreach (Obstacle obstacle in model.obstacles)
             {
-               // GL.Color3(obstacle.Color);
+                // GL.Color3(obstacle.Color);
+                GL.BindTexture(TextureTarget.Texture2D, texObstacle);
                 GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(-model.obstacles[i].Size, -model.obstacles[i].Size));
+                GL.TexCoord2(new Vector2(1, 0));
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(model.obstacles[i].Size, -model.obstacles[i].Size));
+                GL.TexCoord2(new Vector2(1, 1));
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(model.obstacles[i].Size, model.obstacles[i].Size));
+                GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(model.obstacles[i].Position + new Vector2(-model.obstacles[i].Size, model.obstacles[i].Size));
                 GL.End();
                 i++;
@@ -196,10 +208,15 @@ namespace CG_Projekt
             foreach (PickUp pickup in model.pickUps)
             {
                 //wGL.Color3(pickup.Color);
+                GL.BindTexture(TextureTarget.Texture2D, texCollectible);
                 GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.pickUps[i].Position + new Vector2(-model.pickUps[i].Size, -model.pickUps[i].Size));
+                GL.TexCoord2(new Vector2(1, 0));
                 GL.Vertex2(model.pickUps[i].Position + new Vector2(model.pickUps[i].Size, -model.pickUps[i].Size));
+                GL.TexCoord2(new Vector2(1, 1));
                 GL.Vertex2(model.pickUps[i].Position + new Vector2(model.pickUps[i].Size, model.pickUps[i].Size));
+                GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(model.pickUps[i].Position + new Vector2(-model.pickUps[i].Size, model.pickUps[i].Size));
                 GL.End();
                 i++;

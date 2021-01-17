@@ -134,7 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\grass.jpg" />
-    <EmbeddedResource Include="Content\player.jpg" />
     <EmbeddedResource Include="Content\rocks.png" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +142,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\collectible.jpg" />
     <EmbeddedResource Include="Content\monster.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bullet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\player.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
