@@ -31,11 +31,11 @@ namespace CG_Projekt
             texFloor = Texture.Load(Resource.LoadStream(content + "grass.png"));
             texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
             GL.Enable(EnableCap.Texture2D);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); 
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend);
         }
 
-        public Camera Camera { get; } 
+        public Camera Camera { get; }
 
         internal void Draw(Model model)
         {
@@ -58,8 +58,7 @@ namespace CG_Projekt
 
         internal void DrawUI(Model model)
         {
-
-            Vector2 HeathbarPosition = (model.player.Position + (Camera.Scale * new Vector2(0, -0.92f)));
+            Vector2 HeathbarPosition = (Camera.Center + (Camera.Scale * new Vector2(0, -0.92f)));
             //Helathbar
             GL.BindTexture(TextureTarget.Texture2D, texHealth);
             GL.Begin(PrimitiveType.Quads);
@@ -142,6 +141,7 @@ namespace CG_Projekt
 
                 GL.BindTexture(TextureTarget.Texture2D, texFloor);
                 GL.Begin(PrimitiveType.Quads);
+
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(model.levelGrids[i]._position);
                 GL.TexCoord2(new Vector2(1, 0));
@@ -172,7 +172,6 @@ namespace CG_Projekt
             GL.TexCoord2(new Vector2(1, 0));
             GL.Vertex2(new Vector2(-model.player.Size, model.player.Size));
             GL.End();
-
             GL.PopMatrix();
         }
         internal void DrawBullets(Model model)
@@ -181,17 +180,20 @@ namespace CG_Projekt
             {
                 GL.BindTexture(TextureTarget.Texture2D, texBullet);
                 GL.Color3(Color.Black);
+                GL.PushMatrix();
+                GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
+                GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
-
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, -bullet.Size));
+                GL.Vertex2( new Vector2(-bullet.Size, -bullet.Size));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(bullet.Position + new Vector2(bullet.Size, -bullet.Size));
+                GL.Vertex2(new Vector2(bullet.Size, -bullet.Size));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(bullet.Position + new Vector2(bullet.Size, bullet.Size));
+                GL.Vertex2(new Vector2(bullet.Size, bullet.Size));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(bullet.Position + new Vector2(-bullet.Size, bullet.Size));
+                GL.Vertex2(new Vector2(-bullet.Size, bullet.Size));
                 GL.End();
+                GL.PopMatrix();
             }
         }
 
@@ -201,20 +203,21 @@ namespace CG_Projekt
             var i = 0;
             foreach (Enemy enemy in model.enemies)
             {
-
                 GL.BindTexture(TextureTarget.Texture2D, texEnemy);
-
+                GL.PushMatrix();            
+                GL.Translate(new Vector3(model.enemies[i].Position.X, model.enemies[i].Position.Y, 0));
+                GL.Rotate(model.enemies[i].AngleToPlayer, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, -model.enemies[i].Size));
+                GL.Vertex2(new Vector2(-model.enemies[i].Size, -model.enemies[i].Size));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(model.enemies[i].Position + new Vector2(model.enemies[i].Size, -model.enemies[i].Size));
+                GL.Vertex2(new Vector2(model.enemies[i].Size, -model.enemies[i].Size));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(model.enemies[i].Position + new Vector2(model.enemies[i].Size, model.enemies[i].Size));
+                GL.Vertex2(new Vector2(model.enemies[i].Size, model.enemies[i].Size));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(model.enemies[i].Position + new Vector2(-model.enemies[i].Size, model.enemies[i].Size));
-
+                GL.Vertex2(new Vector2(-model.enemies[i].Size, model.enemies[i].Size));
                 GL.End();
+                GL.PopMatrix();
                 EnemyHelath(model.enemies[i]);
                 i++;
             }

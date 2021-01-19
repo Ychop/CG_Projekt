@@ -14,7 +14,7 @@ namespace CG_Projekt
             var model = new Model();
             var view = new View(camera);
             var controller = new Controller(view, model, window);
-
+            window.Title = "Topdown-Shooter";
             window.MouseMove += (_, args) => controller.TranslateMouseCoordinates(args.X, window.Height - 1 - args.Y);
             window.KeyPress += (_, args) => controller.WepaonSelection(args.KeyChar);
             window.UpdateFrame += (_, __) =>
@@ -35,12 +35,12 @@ namespace CG_Projekt
 
 /*
  * Anmerkungen: 
- * Die Gameobjects Überlappen sich noch.
+ * Particels bei Schuss.
  * Zugriffsklassen sind noch nicht optimal gesetzt.
  * Heathbar für Spieler und Gegner.
  * Highscore.
- * Bugs Fixen (Spawn der Gameobjects , Enemy KI, Shogun, Durchsichtige Texturen).
- * Enemy/Bullet Aglinment.
- * HauptMenü/GameoverScreen.
+ * Bugs Fixen (Enemy KI, Durchsichtige Texturen).
+ * Bullet Aglinment.
+ * HauptMenü/GameoverScreen OPTINAL.
  * Sprites hinzufügen
  */

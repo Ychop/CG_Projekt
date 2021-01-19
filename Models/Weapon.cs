@@ -31,7 +31,7 @@ namespace CG_Projekt.Models
                     this.Velocity = 0.6f;
                     break;
                 case 3:
-                    this.RPM = 0.5f;
+                    this.RPM = 0.6f;
                     this.Damage = 0.18f;
                     this.Size = 0.0024f;
                     this.Velocity = 0.3f;

@@ -46,11 +46,10 @@ namespace CG_Projekt
             //Updatet den Spieler
             UpdatePlayer(deltaTime);
             //Checkt die Collisons
-            UpdateCheckCollision();
+            CheckCollisions();
             // Updatet die Enemies
             UpdateEnemy(model.enemies, deltaTime);
         }
-
 
         internal void MenuUpdate()
         {
@@ -97,25 +96,8 @@ namespace CG_Projekt
             {
                 if (enemies[i].Hitpoints < 0)
                 {
-                    float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    for (int j = 0; j < model.gameObjects.Count; j++)
-                    {
-                        if (model.enemies[i].Id == model.gameObjects[j].Id)
-                        {
-                            j++;
-                        }
-                        if (intersection.IsIntersecting(model.enemies[i], model.gameObjects[j]) && Math.Pow(enemies[i].Position.X - player.Position.X, 2) + Math.Pow(enemies[i].Position.Y - player.Position.Y, 2) > 0.2f)
-                        {
-                            ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-                            ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
-                        }
-                        else
-                        {
-                            model.enemies[i].Position = new Vector2(ranX, ranY);
-                            model.enemies[i].Hitpoints = 1f;
-                        }
-                    }
+                    PlaceNewObj(enemies[i]);
+                    enemies[i].Hitpoints = 1f;
                 }
             }
             for (int i = 0; i < enemies.Count; i++)
@@ -166,7 +148,7 @@ namespace CG_Projekt
             view.Camera.Scale = zoom;
         }
 
-        internal void UpdateCheckCollision()
+        internal void CheckCollisions()
         {
             //Checkt Enemy/Player with LeverBorder Collision
             intersection.ObjectCollidingWithLeverBorder(player);
@@ -205,35 +187,36 @@ namespace CG_Projekt
                 if (intersection.IsIntersecting(model.player, model.pickUps[i]))
                 {
                     Console.WriteLine("Player Collision mit Pickup: " + model.pickUps[i].Id);
-                    float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    for (int j = 0; j < model.gameObjects.Count; j++)
+                    PlaceNewObj(model.pickUps[i]);
+                    switch (model.pickUps[i].Type)
                     {
-                        if (model.gameObjects[j].Id > 100)
-                        {
-                            continue;
-                        }
-                        if (intersection.IsIntersecting(model.pickUps[i], model.gameObjects[j]) && Math.Pow(model.pickUps[i].Position.X - model.gameObjects[j].Position.X, 2) + Math.Pow(model.pickUps[i].Position.Y - model.gameObjects[j].Position.Y, 2) < model.pickUps[i].Size + model.gameObjects[j].Size)
-                        {
-                            ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-                            ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
-                        }
-                        else
-                        {
-                            model.pickUps[i].Position = new Vector2(ranX, ranY);
-                        }
+                        case 0:
+                            player.Hitpoints += 0.1f;
+                            Console.WriteLine("Leben: +100");
+                            break;
+                        case 1:
+                            player.AmmoPistol += 50;
+                            Console.WriteLine("Pistol Ammo: +50");
+                            break;
+                        case 2:
+                            player.AmmoUZI += 100;
+                            Console.WriteLine("UZI Ammo: +100");
+                            break;
+                        case 3:
+                            player.AmmoShotgun += 25;
+                            Console.WriteLine("Shotgun Ammo: +25");
+                            break;
+                        case 4:
+                            player.AmmoRPG += 5;
+                            Console.WriteLine("RPG Ammo: +5");
+                            break;
+                        default:
+                            break;
                     }
-                    if (model.pickUps[i].Type == 1)
-                    {
-                        player.Ammo += 100;
-                        Console.WriteLine("Ammo: +100");
-                    }
-                    if (model.pickUps[i].Type == 0 && player.Hitpoints < 1)
-                    {
-                        player.Hitpoints += 0.1f;
-                        Console.WriteLine("Leben: +100");
-                    }
+
                 }
+
+
             }
             //Check Enemy with Obstacle/Enemy Collision
             for (int i = 0; i < model.enemies.Count; i++)
@@ -245,6 +228,7 @@ namespace CG_Projekt
                         intersection.ResetGameObjectPosition(model.enemies[i], model.obstacles[j]);
                     }
                 }
+
             }
 
             //Check Bullet collision with GameObjects
@@ -252,7 +236,7 @@ namespace CG_Projekt
             {
                 for (int j = 0; j < model.bullets.Count; j++)
                 {
-                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]) && model.gameObjects[i].Id < 101)
+                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]))
                     {
                         model.bullets.RemoveAt(j);
                         model.gameObjects[i].Hitpoints -= weapon.Damage;
@@ -262,8 +246,44 @@ namespace CG_Projekt
             }
 
             //TODO: EnemyWithEnemyCollision
-        }
+            foreach (Enemy enemy in model.enemies)
+            {
+                foreach (Enemy enemy1 in model.enemies)
+                {
+                    if ((Math.Pow(enemy.Position.X - enemy1.Position.X, 2) + Math.Pow(enemy.Position.Y - enemy1.Position.Y, 2) <= 0.0003f))
+                    {
+                        enemy.Position += new Vector2(enemy1.Position.X - enemy.Position.X, enemy1.Position.Y - enemy.Position.Y) * -0.005f;
+                    }
+                    if (intersection.IsIntersecting(enemy, enemy1) && enemy1 != enemy)
+                    {
+                        // Make Bigger Enemy ?
+                    }
+                }
 
+            }
+
+        }
+        internal void PlaceNewObj(GameObject obj)
+        {
+            float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
+            float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+
+            for (int i = 0; i < model.gameObjects.Count; i++)
+
+            {
+                obj.Position = new Vector2(ranX, ranY);
+                if (model.IntersectsAny(obj))
+                {
+                    ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
+                    ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+                    i = 0;
+                }
+                else
+                {
+                    obj.Position = new Vector2(ranX, ranY);
+                }
+            }
+        }
         internal void TranslateMouseCoordinates(int x, int y)
         {
             var fromViewportToWorld = Transformation.Combine(Camera.InvViewportMatrix, Camera.CameraMatrix.Inverted());
@@ -271,6 +291,7 @@ namespace CG_Projekt
             mousePosition = mouseVector.Transform(fromViewportToWorld);
             //  Console.WriteLine("Mouse X " + test.X + "\n" + "Mouse Y " + test.Y);
         }
-    }
 
+
+    }
 }
