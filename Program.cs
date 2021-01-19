@@ -1,14 +1,11 @@
-﻿using CG_Projekt.Models;
-using OpenTK;
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
+    using OpenTK;
+
     internal class Program
     {
-
-
-        static void Main()
+        private static void Main()
         {
-      
             var window = new GameWindow();
             var camera = new Camera();
             var model = new Model();
@@ -20,21 +17,18 @@ namespace CG_Projekt
             window.UpdateFrame += (_, __) =>
             {
                 controller.Update((float)__.Time);
-       
-
             };
             window.WindowState = WindowState.Maximized;
             window.Resize += (_, __) => view.Resize(window.Width, window.Height);
             window.RenderFrame += (_, __) => view.Draw(model);
             window.RenderFrame += (_, __) => window.SwapBuffers();
             window.Run();
-
         }
     }
 }
 
 /*
- * Anmerkungen: 
+ * Anmerkungen:
  * Particels bei Schuss.
  * Zugriffsklassen sind noch nicht optimal gesetzt.
  * Heathbar für Spieler und Gegner.
