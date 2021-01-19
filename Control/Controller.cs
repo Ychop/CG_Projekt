@@ -1,118 +1,127 @@
-﻿using CG_Projekt.Models;
-using OpenTK;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
-
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
-    class Controller
+    using System;
+    using System.Collections.Generic;
+    using CG_Projekt.Models;
+    using OpenTK;
+    using OpenTK.Input;
+
+    internal class Controller
     {
-        public Intersection intersection { get; } = new Intersection();
-        public Camera Camera { get; }
-
-        internal View view;
-        internal Model model;
-        internal GameWindow window;
-        internal int oldScrollValue = 0;
-        internal Weapon weapon;
-        internal float axisZoom = 0f;
-        internal bool GameOver;
-        internal Player player;
-        private Random rng = new Random();
-        internal Vector2 mousePosition;
-
-
+        private readonly View view;
+        private readonly Model model;
+        private readonly GameWindow window;
+        private readonly Player player;
+        private readonly Random rng = new Random();
+        private float axisZoom = 0f;
+        private float oldScrollValue = 0;
+        private Weapon weapon;
+        private bool gameOver;
+        private Vector2 mousePosition;
 
         internal Controller(View view_, Model model_, GameWindow window_)
         {
-            view = view_;
-            model = model_;
-            window = window_;
-            player = model.player;
-            Camera = view.Camera;
-            weapon = model.weapons[0];
+            this.view = view_;
+            this.model = model_;
+            this.window = window_;
+            this.player = this.model.Player;
+            this.Camera = this.view.Camera;
+            this.weapon = this.model.Weapons[0];
         }
+
+        internal Intersection Intersection { get; } = new Intersection();
+
+        internal Camera Camera { get; }
+
         internal void Update(float deltaTime)
         {
-            if (GameOver)
+            if (this.gameOver)
             {
                 return;
             }
-            //Menu
-            MenuUpdate();
-            //Zoom mit dem Mausrad
-            ScrollControl(deltaTime);
-            //Updatet den Spieler
-            UpdatePlayer(deltaTime);
-            //Checkt die Collisons
-            CheckCollisions();
+
+            // Menu
+            this.MenuUpdate();
+
+            // Zoom mit dem Mausrad
+            this.ScrollControl(deltaTime);
+
+            // Updatet den Spieler
+            this.UpdatePlayer(deltaTime);
+
+            // Checkt die Collisons
+            this.CheckCollisions();
+
             // Updatet die Enemies
-            UpdateEnemy(model.enemies, deltaTime);
+            this.UpdateEnemy(this.model.Enemies, deltaTime);
         }
 
         internal void MenuUpdate()
         {
             KeyboardState keyboard = Keyboard.GetState();
-
-            if (GameOver)
+            if (this.gameOver)
             {
                 return;
-                //wenn spieler keine Health mehr hat => Frezze
+
+                // Wenn Spieler keine Health mehr hat => Frezze
             }
 
             if (keyboard.IsKeyDown(Key.Escape))
             {
-                window.Exit();
+                this.window.Exit();
             }
         }
+
         internal void WepaonSelection(char key_)
         {
             switch (key_)
             {
                 case '1':
-                    weapon = model.weapons[0];
+                    this.weapon = this.model.Weapons[0];
                     Console.WriteLine("Pistole ausgewählt.");
                     break;
                 case '2':
-                    weapon = model.weapons[1];
+                    this.weapon = this.model.Weapons[1];
                     Console.WriteLine("UZI ausgewählt.");
                     break;
                 case '3':
-                    weapon = model.weapons[2];
+                    this.weapon = this.model.Weapons[2];
                     Console.WriteLine("Shotgun ausgewählt.");
                     break;
                 case '4':
-                    weapon = model.weapons[3];
+                    this.weapon = this.model.Weapons[3];
                     Console.WriteLine("RPG ausgewählt.");
                     break;
                 default:
                     break;
             }
         }
+
         internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung sdasdwsadSpieler
         {
             for (int i = 0; i < enemies.Count; i++)
             {
                 if (enemies[i].Hitpoints < 0)
                 {
-                    PlaceNewObj(enemies[i]);
+                    this.PlaceNewObj(enemies[i]);
                     enemies[i].Hitpoints = 1f;
                 }
             }
+
             for (int i = 0; i < enemies.Count; i++)
             {
-                enemies[i].EnemyAI(enemies[i], player, deltaTime);
+                enemies[i].EnemyAI(enemies[i], this.player, deltaTime);
             }
         }
+
         internal void UpdatePlayer(float deltaTime)
         {
-            player.MovePlayer(model.player, deltaTime);
-            player.AglignPlayer(mousePosition);
-            player.Shoot(model.bullets, deltaTime, this.weapon);
-            if (player.Hitpoints < 0)
+            this.player.MovePlayer(this.model.Player, deltaTime);
+            this.player.AglignPlayer(this.mousePosition);
+            this.player.Shoot(this.model.Bullets, deltaTime, this.weapon);
+            if (this.player.Hitpoints < 0)
             {
-                GameOver = true;
+                this.gameOver = true;
             }
         }
 
@@ -121,161 +130,159 @@ namespace CG_Projekt
             var mouse = Mouse.GetState();
             var scrollValue = mouse.ScrollWheelValue;
 
-            if (scrollValue < oldScrollValue)
+            if (scrollValue < this.oldScrollValue)
             {
-                axisZoom = 2f;
-                oldScrollValue = scrollValue;
+                this.axisZoom = 2f;
+                this.oldScrollValue = scrollValue;
             }
-            else if (scrollValue > oldScrollValue)
+            else if (scrollValue > this.oldScrollValue)
             {
-                axisZoom = -2f;
-                oldScrollValue = scrollValue;
+                this.axisZoom = -2f;
+                this.oldScrollValue = scrollValue;
             }
-            else if (scrollValue == oldScrollValue)
+            else if (scrollValue == this.oldScrollValue)
             {
-                axisZoom = 0f;
+                this.axisZoom = 0f;
             }
-            var zoom = view.Camera.Scale * (1 + deltaTime * axisZoom);
+
+            var zoom = this.view.Camera.Scale * (1 + (deltaTime * this.axisZoom));
             if (zoom > 0.5f)
             {
                 zoom = 0.5f;
             }
+
             if (zoom < 0.1f)
             {
                 zoom = 0.1f;
             }
+
             // zoom = MathHelper.Clamp(zoom, 0.9f, 1f); //setzt Zoom Grenze, also bis wie weit man rein/raus zoomen kann
-            view.Camera.Scale = zoom;
+            this.view.Camera.Scale = zoom;
         }
 
         internal void CheckCollisions()
         {
-            //Checkt Enemy/Player with LeverBorder Collision
-            intersection.ObjectCollidingWithLeverBorder(player);
-            for (int i = 0; i < model.enemies.Count; i++)
+            // Checkt Enemy/Player with LeverBorder Collision
+            this.Intersection.ObjectCollidingWithLeverBorder(this.player);
+            for (int i = 0; i < this.model.Enemies.Count; i++)
             {
-                intersection.ObjectCollidingWithLeverBorder(model.enemies[i]);
+                this.Intersection.ObjectCollidingWithLeverBorder(this.model.Enemies[i]);
             }
 
-            //Check Enemy and Player collision
-            for (int i = 0; i < model.enemies.Count; i++)
+            // Check Enemy and Player collision
+            for (int i = 0; i < this.model.Enemies.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.enemies[i]))
+                if (this.Intersection.IsIntersecting(this.model.Player, this.model.Enemies[i]))
                 {
-                    Console.WriteLine("Player Collision mit Enemy: " + model.enemies[i].Id);
-                    model.player.Hitpoints -= 0.001f;
-                    if (model.player.Hitpoints < 0)
+                    Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
+                    this.model.Player.Hitpoints -= 0.001f;
+                    if (this.model.Player.Hitpoints < 0)
                     {
-                        GameOver = true;
+                        this.gameOver = true;
                     }
                 }
             }
 
-            //Check Obstacle with Player collision
-            for (int i = 0; i < model.obstacles.Count; i++)
+            // Check Obstacle with Player collision
+            for (int i = 0; i < this.model.Obstacles.Count; i++)
             {
-                if (intersection.IsIntersecting(player, model.obstacles[i]))
+                if (this.Intersection.IsIntersecting(this.player, this.model.Obstacles[i]))
                 {
-                    Console.WriteLine("Player Collision mit Obstacle: " + model.obstacles[i].Id);
-                    intersection.ResetGameObjectPosition(player, model.obstacles[i]);
+                    Console.WriteLine("Player Collision mit Obstacle: " + this.model.Obstacles[i].Id);
+                    this.Intersection.ResetGameObjectPosition(this.player, this.model.Obstacles[i]);
                 }
             }
 
-            //Check Pickup with Player collision
-            for (int i = 0; i < model.pickUps.Count; i++)
+            // Check Pickup with Player collision
+            for (int i = 0; i < this.model.PickUps.Count; i++)
             {
-                if (intersection.IsIntersecting(model.player, model.pickUps[i]))
+                if (this.Intersection.IsIntersecting(this.model.Player, this.model.PickUps[i]))
                 {
-                    Console.WriteLine("Player Collision mit Pickup: " + model.pickUps[i].Id);
-                    PlaceNewObj(model.pickUps[i]);
-                    switch (model.pickUps[i].Type)
+                    Console.WriteLine("Player Collision mit Pickup: " + this.model.PickUps[i].Id);
+                    this.PlaceNewObj(this.model.PickUps[i]);
+                    switch (this.model.PickUps[i].Type)
                     {
                         case 0:
-                            player.Hitpoints += 0.1f;
+                            this.player.Hitpoints += 0.1f;
                             Console.WriteLine("Leben: +100");
                             break;
                         case 1:
-                            player.AmmoPistol += 50;
+                            this.player.AmmoPistol += 50;
                             Console.WriteLine("Pistol Ammo: +50");
                             break;
                         case 2:
-                            player.AmmoUZI += 100;
+                            this.player.AmmoUZI += 100;
                             Console.WriteLine("UZI Ammo: +100");
                             break;
                         case 3:
-                            player.AmmoShotgun += 25;
+                            this.player.AmmoShotgun += 25;
                             Console.WriteLine("Shotgun Ammo: +25");
                             break;
                         case 4:
-                            player.AmmoRPG += 5;
+                            this.player.AmmoRPG += 5;
                             Console.WriteLine("RPG Ammo: +5");
                             break;
                         default:
                             break;
                     }
-
                 }
-
-
             }
-            //Check Enemy with Obstacle/Enemy Collision
-            for (int i = 0; i < model.enemies.Count; i++)
+
+            // Check Enemy with Obstacle/Enemy Collision
+            for (int i = 0; i < this.model.Enemies.Count; i++)
             {
-                for (int j = 0; j < model.obstacles.Count; j++)
+                for (int j = 0; j < this.model.Obstacles.Count; j++)
                 {
-                    if (intersection.IsIntersecting(model.enemies[i], model.obstacles[j]))
+                    if (this.Intersection.IsIntersecting(this.model.Enemies[i], this.model.Obstacles[j]))
                     {
-                        intersection.ResetGameObjectPosition(model.enemies[i], model.obstacles[j]);
+                        this.Intersection.ResetGameObjectPosition(this.model.Enemies[i], this.model.Obstacles[j]);
                     }
                 }
-
             }
 
-            //Check Bullet collision with GameObjects
-            for (int i = 0; i < model.gameObjects.Count; i++)
+            // Check Bullet collision with GameObjects
+            for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
-                for (int j = 0; j < model.bullets.Count; j++)
+                for (int j = 0; j < this.model.Bullets.Count; j++)
                 {
-                    if (intersection.IsIntersecting(model.bullets[j], model.gameObjects[i]))
+                    if (this.Intersection.IsIntersecting(this.model.Bullets[j], this.model.GameObjects[i]))
                     {
-                        model.bullets.RemoveAt(j);
-                        model.gameObjects[i].Hitpoints -= weapon.Damage;
+                        this.model.Bullets.RemoveAt(j);
+                        this.model.GameObjects[i].Hitpoints -= this.weapon.Damage;
                     }
-
                 }
             }
 
-            //TODO: EnemyWithEnemyCollision
-            foreach (Enemy enemy in model.enemies)
+            // EnemyWithEnemyCollision
+            foreach (Enemy enemy in this.model.Enemies)
             {
-                foreach (Enemy enemy1 in model.enemies)
+                foreach (Enemy enemy1 in this.model.Enemies)
                 {
-                    if ((Math.Pow(enemy.Position.X - enemy1.Position.X, 2) + Math.Pow(enemy.Position.Y - enemy1.Position.Y, 2) <= 0.0003f))
+                    if (Math.Pow(enemy.Position.X - enemy1.Position.X, 2) + Math.Pow(enemy.Position.Y - enemy1.Position.Y, 2) <= 0.0003f)
                     {
                         enemy.Position += new Vector2(enemy1.Position.X - enemy.Position.X, enemy1.Position.Y - enemy.Position.Y) * -0.005f;
                     }
-                    if (intersection.IsIntersecting(enemy, enemy1) && enemy1 != enemy)
+
+                    if (this.Intersection.IsIntersecting(enemy, enemy1) && enemy1 != enemy)
                     {
                         // Make Bigger Enemy ?
                     }
                 }
-
             }
-
         }
+
         internal void PlaceNewObj(GameObject obj)
         {
-            float ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-            float ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+            float ranX = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;
+            float ranY = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;
 
-            for (int i = 0; i < model.gameObjects.Count; i++)
-
+            for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);
-                if (model.IntersectsAny(obj))
+                if (this.model.IntersectsAny(obj))
                 {
-                    ranX = (float)rng.NextDouble() * 1.8f - 0.9f;
-                    ranY = (float)rng.NextDouble() * 1.8f - 0.9f;
+                    ranX = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;
+                    ranY = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;
                     i = 0;
                 }
                 else
@@ -284,14 +291,14 @@ namespace CG_Projekt
                 }
             }
         }
+
         internal void TranslateMouseCoordinates(int x, int y)
         {
-            var fromViewportToWorld = Transformation.Combine(Camera.InvViewportMatrix, Camera.CameraMatrix.Inverted());
+            var fromViewportToWorld = Transformation.Combine(this.Camera.InvViewportMatrix, this.Camera.CameraMatrix.Inverted());
             var mouseVector = new Vector2(x, y);
-            mousePosition = mouseVector.Transform(fromViewportToWorld);
-            //  Console.WriteLine("Mouse X " + test.X + "\n" + "Mouse Y " + test.Y);
+            this.mousePosition = mouseVector.Transform(fromViewportToWorld);
+
+            // Console.WriteLine("Mouse X " + test.X + "\n" + "Mouse Y " + test.Y);
         }
-
-
     }
 }

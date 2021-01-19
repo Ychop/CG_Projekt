@@ -1,22 +1,11 @@
-﻿using OpenTK;
-using System.Drawing;
-
-
-namespace CG_Projekt.Models
+﻿namespace CG_Projekt.Models
 {
-    class Weapon
+    internal class Weapon
     {
-        public enum Wepaons { Pistol = 1, Uzi, Shotgun, RPG }
-
-        internal int Type;
-        internal float RPM;
-        internal float Damage;
-        internal float Size;
-        internal float Velocity;
-        public Weapon(int type_)
+        internal Weapon(int type_)
         {
             this.Type = type_;
-            switch (Type)
+            switch (this.Type)
             {
                 case 1:
                     this.RPM = 0.4f;
@@ -32,8 +21,8 @@ namespace CG_Projekt.Models
                     break;
                 case 3:
                     this.RPM = 0.6f;
-                    this.Damage = 0.18f;
-                    this.Size = 0.0024f;
+                    this.Damage = 0.12f;
+                    this.Size = 0.0015f;
                     this.Velocity = 0.3f;
                     break;
                 case 4:
@@ -45,7 +34,24 @@ namespace CG_Projekt.Models
                 default:
                     break;
             }
-
         }
+
+        internal enum Wepaons
+        {
+            Pistol = 1,
+            Uzi,
+            Shotgun,
+            RPG,
+        }
+
+        internal int Type { get; }
+
+        internal float RPM { get; }
+
+        internal float Damage { get; }
+
+        internal float Size { get; }
+
+        internal float Velocity { get; }
     }
 }

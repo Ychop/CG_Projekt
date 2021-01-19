@@ -1,15 +1,20 @@
-﻿using CG_Projekt.Models;
-using OpenTK;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
-    class Intersection
-    {
-        float objARechteKante, objALinkeKante, objAObereKante, objAUntereKante, obstacleRechteKante, obstacleLinkeKante, obstacleObereKante, obstacleUntereKante;
+    using CG_Projekt.Models;
+    using OpenTK;
 
-        public bool IsIntersecting(GameObject objA, GameObject objB)
+    internal class Intersection
+    {
+        private float objARechteKante;
+        private float objALinkeKante;
+        private float objAObereKante;
+        private float objAUntereKante;
+        private float obstacleRechteKante;
+        private float obstacleLinkeKante;
+        private float obstacleObereKante;
+        private float obstacleUntereKante;
+
+        internal bool IsIntersecting(GameObject objA, GameObject objB)
         {
             float objALeftSide, objARightSide, objATopSide, objALowerSide, objBLeftSide, objBRightSide, objBTopSide, objBLowerSide;
 
@@ -28,61 +33,69 @@ namespace CG_Projekt
             {
                 return true;
             }
+
             return false;
         }
-        public void ObjectCollidingWithLeverBorder(GameObject obj)
+
+        internal void ObjectCollidingWithLeverBorder(GameObject obj)
         {
-            objARechteKante = obj.Position.X + obj.Size;
-            objALinkeKante = obj.Position.X - obj.Size;
-            objAObereKante = obj.Position.Y + obj.Size;
-            objAUntereKante = obj.Position.Y - obj.Size;
-            if (objAObereKante > 0.9f) //Obere Levelgrenze
+            this.objARechteKante = obj.Position.X + obj.Size;
+            this.objALinkeKante = obj.Position.X - obj.Size;
+            this.objAObereKante = obj.Position.Y + obj.Size;
+            this.objAUntereKante = obj.Position.Y - obj.Size;
+
+            // Obere Levelgrenze
+            if (this.objAObereKante > 0.9f)
             {
                 obj.Position = new Vector2(obj.Position.X, 0.89f);
             }
-            if (objAUntereKante < -0.9f) //Untere Levelgrenze
+
+            // Untere Levelgrenze
+            if (this.objAUntereKante < -0.9f)
             {
                 obj.Position = new Vector2(obj.Position.X, -0.89f);
             }
-            if (objARechteKante > 0.9f) //Rechte Levelgrenze
+
+            // Rechte Levelgrenze
+            if (this.objARechteKante > 0.9f)
             {
                 obj.Position = new Vector2(0.89f, obj.Position.Y);
             }
-            if (objALinkeKante < -0.9f) //Linke Levelgrenze
+
+            // Linke Levelgrenze
+            if (this.objALinkeKante < -0.9f)
             {
                 obj.Position = new Vector2(-0.89f, obj.Position.Y);
             }
         }
-        public void ResetGameObjectPosition(GameObject objA, Obstacle obstacle)
-        {
-            objARechteKante = objA.Position.X + objA.Size;
-            objALinkeKante = objA.Position.X - objA.Size;
-            objAObereKante = objA.Position.Y + objA.Size;
-            objAUntereKante = objA.Position.Y - objA.Size;
-            obstacleRechteKante = obstacle.Position.X + obstacle.Size;
-            obstacleLinkeKante = obstacle.Position.X - obstacle.Size;
-            obstacleObereKante = obstacle.Position.Y + obstacle.Size;
-            obstacleUntereKante = obstacle.Position.Y - obstacle.Size;
 
-            if (objARechteKante >= obstacleLinkeKante && objALinkeKante < obstacleLinkeKante && objALinkeKante < (obstacle.Position.X - (obstacle.Size + (1.5f * objA.Size))))
+        internal void ResetGameObjectPosition(GameObject objA, Obstacle obstacle)
+        {
+            this.objARechteKante = objA.Position.X + objA.Size;
+            this.objALinkeKante = objA.Position.X - objA.Size;
+            this.objAObereKante = objA.Position.Y + objA.Size;
+            this.objAUntereKante = objA.Position.Y - objA.Size;
+            this.obstacleRechteKante = obstacle.Position.X + obstacle.Size;
+            this.obstacleLinkeKante = obstacle.Position.X - obstacle.Size;
+            this.obstacleObereKante = obstacle.Position.Y + obstacle.Size;
+            this.obstacleUntereKante = obstacle.Position.Y - obstacle.Size;
+
+            if (this.objARechteKante >= this.obstacleLinkeKante && this.objALinkeKante < this.obstacleLinkeKante && this.objALinkeKante < (obstacle.Position.X - (obstacle.Size + (1.5f * objA.Size))))
             {
                 objA.Position = new Vector2(obstacle.Position.X - (objA.Size + obstacle.Size), objA.Position.Y);
             }
-            else if (objAObereKante >= obstacleUntereKante && objAUntereKante < obstacleUntereKante && objAUntereKante < (obstacle.Position.Y - (obstacle.Size + (1.5f * objA.Size))))
+            else if (this.objAObereKante >= this.obstacleUntereKante && this.objAUntereKante < this.obstacleUntereKante && this.objAUntereKante < (obstacle.Position.Y - (obstacle.Size + (1.5f * objA.Size))))
             {
                 objA.Position = new Vector2(objA.Position.X, obstacle.Position.Y - (objA.Size + obstacle.Size));
             }
-            else if (objAUntereKante <= obstacleObereKante && objAObereKante > obstacleObereKante && objAObereKante > (obstacle.Position.Y + (obstacle.Size + (1.5f * objA.Size))))
+            else if (this.objAUntereKante <= this.obstacleObereKante && this.objAObereKante > this.obstacleObereKante && this.objAObereKante > (obstacle.Position.Y + (obstacle.Size + (1.5f * objA.Size))))
             {
                 objA.Position = new Vector2(objA.Position.X, obstacle.Position.Y + (objA.Size + obstacle.Size));
             }
-            else if (objALinkeKante <= obstacleRechteKante && objARechteKante > obstacleRechteKante)
+            else if (this.objALinkeKante <= this.obstacleRechteKante && this.objARechteKante > this.obstacleRechteKante)
             {
                 objA.Position = new Vector2(obstacle.Position.X + (objA.Size + obstacle.Size), objA.Position.Y);
             }
         }
-
     }
 }
-
-
