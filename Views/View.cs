@@ -28,6 +28,8 @@
             this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             this.texFloor = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Greater,0.2f);
             GL.Enable(EnableCap.Texture2D);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend);
@@ -83,7 +85,7 @@
             // TODO: Ammo count
         }
 
-        internal void EnemyHelath(Enemy enemy)
+        internal void EnemyHealth(Enemy enemy)
         {
             GL.BindTexture(TextureTarget.Texture2D, this.texHealth);
             GL.LineWidth(5f);
@@ -189,6 +191,7 @@
             foreach (Enemy enemy in model.Enemies)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texEnemy);
+                GL.Disable(EnableCap.Blend);
                 GL.PushMatrix();
                 GL.Translate(new Vector3(enemy.Position.X, enemy.Position.Y, 0));
                 GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
@@ -203,7 +206,8 @@
                 GL.Vertex2(new Vector2(-enemy.Size, enemy.Size));
                 GL.End();
                 GL.PopMatrix();
-                this.EnemyHelath(enemy);
+                GL.Enable(EnableCap.Blend);
+                this.EnemyHealth(enemy);
             }
 
             foreach (Obstacle obstacle in model.Obstacles)
