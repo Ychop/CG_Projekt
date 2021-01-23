@@ -30,10 +30,8 @@
 /*
  * Anmerkungen:
  * Particels bei Schuss.
- * Zugriffsklassen sind noch nicht optimal gesetzt.
- * Heathbar für Spieler und Gegner.
  * Highscore.
- * Bugs Fixen (Enemy KI, Durchsichtige Texturen).
+ * Bugs Fixen (Durchsichtige Texturen).
  * Bullet Aglinment.
  * HauptMenü/GameoverScreen OPTINAL.
  * Sprites hinzufügen

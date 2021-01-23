@@ -21,7 +21,7 @@
 
         internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
         {
-            if ((Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) < 0.2f)
+            if ((Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) < 0.2f && (Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) > 0.0001f)
             {
                 enemy.Velocity = deltaTime * 0.01f;
                 this.playerDirection = new Vector2(player.Position.X - enemy.Position.X, player.Position.Y - enemy.Position.Y);
