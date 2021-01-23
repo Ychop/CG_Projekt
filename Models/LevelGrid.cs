@@ -1,14 +1,14 @@
-﻿using OpenTK;
-using System.Drawing;
-
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
-    class LevelGrid
+    using OpenTK;
+
+    internal class LevelGrid
     {
-        internal Vector2 _position;
         internal LevelGrid(Vector2 position)
         {
-            _position = position;
+            this.Position = position;
         }
+
+        internal Vector2 Position { get; set; }
     }
 }

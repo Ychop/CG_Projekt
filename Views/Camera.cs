@@ -1,57 +1,59 @@
-﻿using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
-
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
-    class Camera
-    {
+    using System;
+    using OpenTK;
+    using OpenTK.Graphics.OpenGL;
 
-        public Matrix4 CameraMatrix => cameraMatrix;
-        public Matrix4 InvViewportMatrix { get; private set; }
+    internal class Camera
+    {
         private Matrix4 cameraMatrix = Matrix4.Identity;
-        private float _scale = 0.2f; // Setzt den Start Zoom auf den spieler
-        private float _invWindowAspectRatio = 1f;
-        private Vector2 _center;
+        private float scale = 0.2f; // Setzt den Start Zoom auf den spieler
+        private float invWindowAspectRatio = 1f;
+        private Vector2 center;
+
+        internal Matrix4 CameraMatrix => this.cameraMatrix;
+
+        internal Matrix4 InvViewportMatrix { get; private set; }
+
         internal Vector2 Center // Zentrum der Camera
         {
-            get => _center;
+            get => this.center;
             set
             {
-                _center = value;
-                UpdateMatrix();
+                this.center = value;
+                this.UpdateMatrix();
             }
         }
 
-        internal float Scale //ist der Zoom für die camera
+        internal float Scale // ist der Zoom für die camera
         {
-            get => _scale;
+            get => this.scale;
             set
             {
-                _scale = Math.Max(0.001f, value); // avoid division by 0 and negative
-                UpdateMatrix();
+                this.scale = Math.Max(0.001f, value); // avoid division by 0 and negative
+                this.UpdateMatrix();
             }
         }
 
         public void Resize(int width_, int height_)
         {
             GL.Viewport(0, 0, width_, height_); // tell OpenGL to use the whole window for drawing
-            _invWindowAspectRatio = height_ / (float)width_;
-            InvViewportMatrix = Transformation.Combine(Transformation.Scale(2f / width_, 2f / height_), Transformation.Translate(-Vector2.One));
-            UpdateMatrix();
+            this.invWindowAspectRatio = height_ / (float)width_;
+            this.InvViewportMatrix = Transformation.Combine(Transformation.Scale(2f / width_, 2f / height_), Transformation.Translate(-Vector2.One));
+            this.UpdateMatrix();
         }
 
         public void Draw()
         {
-            GL.LoadMatrix(ref cameraMatrix);
+            GL.LoadMatrix(ref this.cameraMatrix);
         }
 
         private void UpdateMatrix()
         {
-            var translate = Transformation.Translate(-Center);
-            var scale = Transformation.Scale(1f / Scale);
-            var aspect = Transformation.Scale(_invWindowAspectRatio, 1f);
-            cameraMatrix = Transformation.Combine(translate, scale, aspect);
+            var translate = Transformation.Translate(-this.Center);
+            var scale = Transformation.Scale(1f / this.Scale);
+            var aspect = Transformation.Scale(this.invWindowAspectRatio, 1f);
+            this.cameraMatrix = Transformation.Combine(translate, scale, aspect);
         }
     }
 }
