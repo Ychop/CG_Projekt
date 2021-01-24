@@ -10,7 +10,7 @@ namespace CG_Projekt.Framework
 		public static int Load(Stream stream)
 		{
 			using var image = new MagickImage(stream);
-			var format = PixelFormat.Rgb;
+			var format = PixelFormat.Rgba;
 			switch (image.ChannelCount)
 			{
 				case 3: break;

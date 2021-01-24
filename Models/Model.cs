@@ -36,6 +36,7 @@
         internal List<Weapon> Weapons { get; set; } = new List<Weapon>();
 
         internal Player Player { get; set; }
+        internal int Score { get; private set; } = 0;
 
         internal bool IntersectsAny(GameObject obj_)
         {

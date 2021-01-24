@@ -107,7 +107,10 @@
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
     <Compile Include="Control\Intersection.cs" />
+    <Compile Include="Framework\IReadOnlyRectangle.cs" />
+    <Compile Include="Framework\Rect.cs" />
     <Compile Include="Framework\Resource.cs" />
+    <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
@@ -148,6 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\healthbar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\nullptr_hq4x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
