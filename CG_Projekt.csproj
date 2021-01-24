@@ -155,5 +155,20 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\nullptr_hq4x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Blood_Bath.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\heart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ammoMissile.png" />
+    <EmbeddedResource Include="Content\ammoShotgun.png" />
+    <EmbeddedResource Include="Content\Rocketlauncher.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ammoPistol.png" />
+    <EmbeddedResource Include="Content\ammoUZI.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
