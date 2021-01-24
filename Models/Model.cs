@@ -137,7 +137,7 @@
             {
                 this.ranX = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
                 this.ranY = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.PickUps.Add(new PickUp(new Vector2(this.ranX, this.ranY), 0.01f, 0f, 1f, this.GameObjects.Count + 1, this.random.Next(5)));
+                this.PickUps.Add(new PickUp(new Vector2(this.ranX, this.ranY), 0.005f, 0f, 1f, this.GameObjects.Count + 1, this.random.Next(5)));
                 this.GameObjects.Add(this.PickUps[i]);
                 for (int j = 0; j < this.GameObjects.Count - 1; j++)
                 {

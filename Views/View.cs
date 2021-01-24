@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics;
+﻿using System;
+using OpenTK.Graphics;
 
 namespace CG_Projekt
 {
@@ -19,6 +20,12 @@ namespace CG_Projekt
         private readonly int texFloor;
         private readonly int texHealth;
         private readonly int texfont;
+        private readonly int texHeartCollectible;
+        private readonly int texAmmoPistol;
+        private readonly int texAmmoUzi;
+        private readonly int texAmmoShotgun;
+        private readonly int texAmmoMissile;
+        private Random random = new Random();
 
         internal View(Camera camera)
         {
@@ -28,10 +35,15 @@ namespace CG_Projekt
             this.texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             this.texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
             this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
+            this.texHeartCollectible = Texture.Load(Resource.LoadStream(content + "heart.png"));
             this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             this.texFloor = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
-            texfont = Texture.Load(Resource.LoadStream(content + "nullptr_hq4x.png"));
+            this.texAmmoPistol = Texture.Load(Resource.LoadStream(content + "ammoPistol.png"));
+            this.texAmmoUzi = Texture.Load(Resource.LoadStream(content + "ammoUZI.png"));
+            this.texAmmoShotgun = Texture.Load(Resource.LoadStream(content + "ammoShotgun.png"));
+            this.texAmmoMissile = Texture.Load(Resource.LoadStream(content + "ammoMissile.png"));
+            texfont = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.2f);
             GL.Enable(EnableCap.Texture2D);
@@ -90,7 +102,7 @@ namespace CG_Projekt
             // TODO: Position der Helthbar ist noch nicht richtig
             // TODO: Highscore
             GL.BindTexture(TextureTarget.Texture2D, texfont);
-            DrawFont($"Score={model.Score:D}", heathbarPosition.X + 0.1f, heathbarPosition.Y, 0.005f);
+            DrawFont($"Score={model.Score:D}", heathbarPosition.X + 0.1f, heathbarPosition.Y - 0.003f, 0.008f);
 
             // TODO: Ammo count
         }
@@ -208,6 +220,7 @@ namespace CG_Projekt
 
         internal void DrawGameObjects(Model model)
         {
+            float y = ((float)this.random.NextDouble() * 0.1f + 0.9f);
             foreach (Enemy enemy in model.Enemies)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texEnemy);
@@ -217,13 +230,13 @@ namespace CG_Projekt
                 GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2(-enemy.Size, -enemy.Size));
+                GL.Vertex2(new Vector2((float)(-enemy.Size * Math.Sin(y)), (float) (-enemy.Size * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2(enemy.Size, -enemy.Size));
+                GL.Vertex2(new Vector2((float)(enemy.Size * Math.Sin(y)), (float)(-enemy.Size * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2(enemy.Size, enemy.Size));
+                GL.Vertex2(new Vector2((float)(enemy.Size * Math.Sin(y)), (float)(enemy.Size * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2(-enemy.Size, enemy.Size));
+                GL.Vertex2(new Vector2((float)(-enemy.Size * Math.Sin(y)), (float)(enemy.Size * Math.Sin(y))));
                 GL.End();
                 GL.PopMatrix();
                 GL.Enable(EnableCap.Blend);
@@ -247,7 +260,26 @@ namespace CG_Projekt
 
             foreach (PickUp pickup in model.PickUps)
             {
-                GL.BindTexture(TextureTarget.Texture2D, this.texCollectible);
+                switch (pickup.Type)
+                {
+                    case 0:
+                        GL.BindTexture(TextureTarget.Texture2D, this.texHeartCollectible);
+                        break;
+                    case 1:
+                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoPistol);
+                        break;
+                    case 2:
+                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoUzi);
+                        break;
+                    case 3:
+                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoShotgun);
+                        break;
+                    case 4:
+                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoMissile);
+                        break;
+                }
+                GL.Disable(EnableCap.Blend);
+                //GL.AlphaFunc(AlphaFunction.Greater, 0.05f);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(pickup.Position + new Vector2(-pickup.Size, -pickup.Size));
@@ -258,6 +290,7 @@ namespace CG_Projekt
                 GL.TexCoord2(new Vector2(0, 1));
                 GL.Vertex2(pickup.Position + new Vector2(-pickup.Size, pickup.Size));
                 GL.End();
+                GL.Enable(EnableCap.Blend);
             }
         }
 
@@ -265,8 +298,8 @@ namespace CG_Projekt
         {
             GL.Color4(Color4.White);
             const uint firstCharacter = 32; // the ASCII code of the first character stored in the bitmap font
-            const uint charactersPerColumn = 12; // how many characters are in each column
-            const uint charactersPerRow = 8; // how many characters are in each row
+            const uint charactersPerColumn = 10; // how many characters are in each column
+            const uint charactersPerRow = 10; // how many characters are in each row
             var rect = new Rect(x, y, size, size); // rectangle of the first character
             foreach (var spriteId in SpriteSheetTools.StringToSpriteIds(text, firstCharacter))
             {
