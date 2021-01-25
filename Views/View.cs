@@ -19,12 +19,17 @@ namespace CG_Projekt
         private readonly int texBullet;
         private readonly int texFloor;
         private readonly int texHealth;
-        private readonly int texfont;
+        private readonly int texfontScore;
+        private readonly int texfontAmmo;
         private readonly int texHeartCollectible;
         private readonly int texAmmoPistol;
         private readonly int texAmmoUzi;
         private readonly int texAmmoShotgun;
         private readonly int texAmmoMissile;
+        private readonly int texPistol;
+        private readonly int texUzi;
+        private readonly int texShotgun;
+        private readonly int texRPG;
         private Random random = new Random();
 
         internal View(Camera camera)
@@ -43,7 +48,12 @@ namespace CG_Projekt
             this.texAmmoUzi = Texture.Load(Resource.LoadStream(content + "ammoUZI.png"));
             this.texAmmoShotgun = Texture.Load(Resource.LoadStream(content + "ammoShotgun.png"));
             this.texAmmoMissile = Texture.Load(Resource.LoadStream(content + "ammoMissile.png"));
-            texfont = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
+            this.texPistol = Texture.Load(Resource.LoadStream(content + "Pistol.png"));
+            this.texUzi = Texture.Load(Resource.LoadStream(content + "Uzi.png"));
+            this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
+            this.texRPG = Texture.Load(Resource.LoadStream(content + "Rocketlauncher.png"));
+            this.texfontScore = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
+            this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.2f);
             GL.Enable(EnableCap.Texture2D);
@@ -63,11 +73,11 @@ namespace CG_Projekt
             this.DrawPlayer(model);
             this.DrawBullets(model);
             this.DrawParticle(model);
-            this.DrawUI(model);
+            this.DrawHUD(model);
             this.Camera.Draw();
         }
 
-        internal void DrawUI(Model model)
+        internal void DrawHUD(Model model)
         {
             Vector2 heathbarPosition = this.Camera.Center + (this.Camera.Scale * new Vector2(0, -0.92f));
 
@@ -100,12 +110,57 @@ namespace CG_Projekt
 
             // TODO: Position der Helthbar ist noch nicht richtig
             // TODO: Highscore
-            GL.BindTexture(TextureTarget.Texture2D, texfont);
+            GL.BindTexture(TextureTarget.Texture2D, texfontScore);
             DrawFont($"Score={model.Score:D}", heathbarPosition.X + 0.1f, heathbarPosition.Y - 0.003f, 0.008f);
-
+            Vector2 HUDPosition = this.Camera.Center + (this.Camera.Scale * new Vector2(-0.5f, -0.92f));
+            switch (model.weaponSelected)
+            {
+                case 1:
+                    GL.BindTexture(TextureTarget.Texture2D, texPistol);
+                    break;
+                case 2:
+                    GL.BindTexture(TextureTarget.Texture2D, texUzi);
+                    break;
+                case 3:
+                    GL.BindTexture(TextureTarget.Texture2D, texShotgun);
+                    break;
+                case 4:
+                    GL.BindTexture(TextureTarget.Texture2D, texRPG);
+                    break;
+            }
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(-0.1f, -0.05f)));
+            GL.TexCoord2(new Vector2(1, 0));
+            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(0.1f, -0.05f)));
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(0.1f, 0.05f)));
+            GL.TexCoord2(new Vector2(0, 1));
+            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(-0.1f, 0.05f)));
+            GL.End();
             // TODO: Ammo count
-        }
+            switch (model.weaponSelected)
+            {
+                case 1:
+                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
+                    DrawFont($"{model.Player.AmmoPistol:D}", HUDPosition.X - 0.019f, HUDPosition.Y - 0.012f, 0.008f);
+                    break;
+                case 2:
+                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
+                    DrawFont($"{model.Player.AmmoUZI:D}", HUDPosition.X - 0.019f, HUDPosition.Y - 0.012f, 0.008f);
+                    break;
+                case 3:
+                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
+                    DrawFont($"{model.Player.AmmoShotgun:D}", HUDPosition.X - 0.019f, HUDPosition.Y - 0.012f, 0.008f);
+                    break;
+                case 4:
+                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
+                    DrawFont($"{model.Player.AmmoRPG:D}", HUDPosition.X - 0.019f, HUDPosition.Y - 0.012f, 0.008f);
+                    break;
+            }
 
+
+        }
         internal void EnemyHealth(Enemy enemy)
         {
             GL.BindTexture(TextureTarget.Texture2D, this.texHealth);
