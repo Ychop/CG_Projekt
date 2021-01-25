@@ -171,5 +171,10 @@
     <EmbeddedResource Include="Content\ammoPistol.png" />
     <EmbeddedResource Include="Content\ammoUZI.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Pistol.png" />
+    <EmbeddedResource Include="Content\Shotgun.png" />
+    <EmbeddedResource Include="Content\Uzi.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

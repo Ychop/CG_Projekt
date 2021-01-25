@@ -39,7 +39,7 @@
 
         internal Player Player { get; set; }
         internal int Score { get; set; } = 0;
-
+        internal int weaponSelected = 1;
         internal bool IntersectsAny(GameObject obj_)
         {
             foreach (GameObject obj in this.GameObjects)
