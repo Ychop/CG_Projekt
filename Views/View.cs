@@ -19,12 +19,14 @@ namespace CG_Projekt
         private readonly int texFloor;
         private readonly int texHealth;
         private readonly int texfont;
+        private readonly int texWater;
 
         internal View(Camera camera)
         {
             this.Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
             this.texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
+            this.texWater = Texture.Load(Resource.LoadStream(content + "water.png"));
             this.texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             this.texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
             this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
@@ -46,13 +48,11 @@ namespace CG_Projekt
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
             this.Camera.Center = model.Player.Position;
-            this.DrawLevel();
             this.DrawLevelGrid(model);
             this.DrawGameObjects(model);
             this.DrawPlayer(model);
             this.DrawBullets(model);
             this.DrawUI(model);
-
             this.Camera.Draw();
         }
 
@@ -90,8 +90,7 @@ namespace CG_Projekt
             // TODO: Position der Helthbar ist noch nicht richtig
             // TODO: Highscore
             GL.BindTexture(TextureTarget.Texture2D, texfont);
-            DrawFont($"Score={model.Score:D}", heathbarPosition.X + 0.1f, heathbarPosition.Y, 0.005f);
-
+            DrawFont($"Score={model.Score:D}", heathbarPosition.X + 25 * (this.Camera.Scale * 0.05f), heathbarPosition.Y - 0.005f, this.Camera.Scale * 0.05f);
             // TODO: Ammo count
         }
 
@@ -101,13 +100,13 @@ namespace CG_Projekt
             GL.LineWidth(5f);
             GL.Begin(PrimitiveType.Lines);
             GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size, enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Radius, enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.Size, enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Radius, enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.Size, -enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Radius, -enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size, -enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Radius, -enemy.Radius + 0.002f));
             GL.End();
 
 
@@ -115,13 +114,13 @@ namespace CG_Projekt
             GL.LineWidth(4f);
             GL.Begin(PrimitiveType.Lines);
             GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size * enemy.Hitpoints, enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Radius * enemy.Hitpoints, enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.Size * enemy.Hitpoints, enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Radius * enemy.Hitpoints, enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.Size * enemy.Hitpoints, -enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(enemy.Radius * enemy.Hitpoints, -enemy.Radius + 0.002f));
             GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.Size * enemy.Hitpoints, -enemy.Size + 0.002f));
+            GL.Vertex2(enemy.Position + new Vector2(-enemy.Radius * enemy.Hitpoints, -enemy.Radius + 0.002f));
             GL.End();
         }
 
@@ -133,17 +132,6 @@ namespace CG_Projekt
         internal void Resize(int width, int height)
         {
             this.Camera.Resize(width, height);
-        }
-
-        internal void DrawLevel()
-        {
-            GL.Begin(PrimitiveType.Quads);
-            GL.Color3(Color.White);
-            GL.Vertex2(-0.9f, -0.9f);
-            GL.Vertex2(0.9f, -0.9f);
-            GL.Vertex2(0.9f, 0.9f);
-            GL.Vertex2(-0.9f, 0.9f);
-            GL.End();
         }
 
         internal void DrawLevelGrid(Model model)
@@ -172,17 +160,16 @@ namespace CG_Projekt
             GL.Rotate(model.Player.Angle, new Vector3d(0, 0, -1));
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(new Vector2(-model.Player.Size, -model.Player.Size));
+            GL.Vertex2(new Vector2(-model.Player.Radius, -model.Player.Radius));
             GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(new Vector2(model.Player.Size, -model.Player.Size));
+            GL.Vertex2(new Vector2(model.Player.Radius, -model.Player.Radius));
             GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(new Vector2(model.Player.Size, model.Player.Size));
+            GL.Vertex2(new Vector2(model.Player.Radius, model.Player.Radius));
             GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(new Vector2(-model.Player.Size, model.Player.Size));
+            GL.Vertex2(new Vector2(-model.Player.Radius, model.Player.Radius));
             GL.End();
             GL.PopMatrix();
         }
-
         internal void DrawBullets(Model model)
         {
             foreach (Bullet bullet in model.Bullets)
@@ -194,13 +181,13 @@ namespace CG_Projekt
                 GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2(-bullet.Size, -bullet.Size));
+                GL.Vertex2(new Vector2(-bullet.Radius, -bullet.Radius));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2(bullet.Size, -bullet.Size));
+                GL.Vertex2(new Vector2(bullet.Radius, -bullet.Radius));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2(bullet.Size, bullet.Size));
+                GL.Vertex2(new Vector2(bullet.Radius, bullet.Radius));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2(-bullet.Size, bullet.Size));
+                GL.Vertex2(new Vector2(-bullet.Radius, bullet.Radius));
                 GL.End();
                 GL.PopMatrix();
             }
@@ -217,13 +204,13 @@ namespace CG_Projekt
                 GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2(-enemy.Size, -enemy.Size));
+                GL.Vertex2(new Vector2(-enemy.Radius, -enemy.Radius));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2(enemy.Size, -enemy.Size));
+                GL.Vertex2(new Vector2(enemy.Radius, -enemy.Radius));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2(enemy.Size, enemy.Size));
+                GL.Vertex2(new Vector2(enemy.Radius, enemy.Radius));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2(-enemy.Size, enemy.Size));
+                GL.Vertex2(new Vector2(-enemy.Radius, enemy.Radius));
                 GL.End();
                 GL.PopMatrix();
                 GL.Enable(EnableCap.Blend);
@@ -235,13 +222,13 @@ namespace CG_Projekt
                 GL.BindTexture(TextureTarget.Texture2D, this.texObstacle);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.Size, -obstacle.Size));
+                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.Radius, -obstacle.Radius));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(obstacle.Position + new Vector2(obstacle.Size, -obstacle.Size));
+                GL.Vertex2(obstacle.Position + new Vector2(obstacle.Radius, -obstacle.Radius));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(obstacle.Position + new Vector2(obstacle.Size, obstacle.Size));
+                GL.Vertex2(obstacle.Position + new Vector2(obstacle.Radius, obstacle.Radius));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.Size, obstacle.Size));
+                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.Radius, obstacle.Radius));
                 GL.End();
             }
 
@@ -250,13 +237,13 @@ namespace CG_Projekt
                 GL.BindTexture(TextureTarget.Texture2D, this.texCollectible);
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(pickup.Position + new Vector2(-pickup.Size, -pickup.Size));
+                GL.Vertex2(pickup.Position + new Vector2(-pickup.Radius, -pickup.Radius));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(pickup.Position + new Vector2(pickup.Size, -pickup.Size));
+                GL.Vertex2(pickup.Position + new Vector2(pickup.Radius, -pickup.Radius));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(pickup.Position + new Vector2(pickup.Size, pickup.Size));
+                GL.Vertex2(pickup.Position + new Vector2(pickup.Radius, pickup.Radius));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(pickup.Position + new Vector2(-pickup.Size, pickup.Size));
+                GL.Vertex2(pickup.Position + new Vector2(-pickup.Radius, pickup.Radius));
                 GL.End();
             }
         }

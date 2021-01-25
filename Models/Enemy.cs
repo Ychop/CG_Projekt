@@ -11,7 +11,7 @@
             : base(position_, size_, velocity_, hitpoints_, id_)
         {
             this.Position = position_;
-            this.Size = size_;
+            this.Radius = size_;
             this.Hitpoints = hitpoints_;
             this.Velocity = velocity_;
             this.Id = id_;

@@ -155,5 +155,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\nullptr_hq4x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Water.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\water.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

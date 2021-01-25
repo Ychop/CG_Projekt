@@ -103,6 +103,7 @@
             {
                 if (enemies[i].Hitpoints < 0)
                 {
+                    model.Score++;
                     this.PlaceNewObj(enemies[i]);
                     enemies[i].Hitpoints = 1f;
                 }
@@ -297,8 +298,6 @@
             var fromViewportToWorld = Transformation.Combine(this.Camera.InvViewportMatrix, this.Camera.CameraMatrix.Inverted());
             var mouseVector = new Vector2(x, y);
             this.mousePosition = mouseVector.Transform(fromViewportToWorld);
-
-            // Console.WriteLine("Mouse X " + test.X + "\n" + "Mouse Y " + test.Y);
         }
     }
 }

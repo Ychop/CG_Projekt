@@ -36,13 +36,13 @@
         internal List<Weapon> Weapons { get; set; } = new List<Weapon>();
 
         internal Player Player { get; set; }
-        internal int Score { get; private set; } = 0;
+        internal int Score { get; set; } = 0;
 
         internal bool IntersectsAny(GameObject obj_)
         {
             foreach (GameObject obj in this.GameObjects)
             {
-                if (this.Intersection.IsIntersecting(obj_, obj) && obj != obj_ && (Math.Pow(obj_.Position.X - obj.Position.X, 2) + Math.Pow(obj_.Position.Y - obj.Position.Y, 2) <= (obj.Size + obj_.Size)))
+                if (this.Intersection.IsIntersecting(obj_, obj) && obj != obj_ && (Math.Pow(obj_.Position.X - obj.Position.X, 2) + Math.Pow(obj_.Position.Y - obj.Position.Y, 2) <= (obj.Radius + obj_.Radius)))
                 {
                     return true;
                 }

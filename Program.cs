@@ -29,10 +29,10 @@
 
 /*
  * Anmerkungen:
- * Particels bei Schuss.
- * Highscore.
- * Bugs Fixen (Durchsichtige Texturen).
+ * Particels bei Schuss. MARCUS
+ * Circle Collider. MARCUS
  * Bullet Aglinment.
- * HauptMenü/GameoverScreen OPTINAL.
  * Sprites hinzufügen
+ * UI Munition
+ * Level Hintergrund
  */
