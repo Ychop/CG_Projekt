@@ -255,7 +255,6 @@
                     {
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;
-                        ParticleEffect(gameObject);
                     }
                 }
             }
