@@ -80,19 +80,23 @@
             {
                 case '1':
                     this.weapon = this.model.Weapons[0];
+                    model.weaponSelected = 1;
                     Console.WriteLine("Pistole ausgewählt.");
                     break;
                 case '2':
                     this.weapon = this.model.Weapons[1];
                     Console.WriteLine("UZI ausgewählt.");
+                    model.weaponSelected = 2;
                     break;
                 case '3':
                     this.weapon = this.model.Weapons[2];
                     Console.WriteLine("Shotgun ausgewählt.");
+                    model.weaponSelected = 3;
                     break;
                 case '4':
                     this.weapon = this.model.Weapons[3];
                     Console.WriteLine("RPG ausgewählt.");
+                    model.weaponSelected = 4;
                     break;
                 default:
                     break;
