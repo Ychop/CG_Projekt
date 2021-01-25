@@ -16,7 +16,7 @@
         private float axisZoom = 0f;
         private float oldScrollValue = 0;
         private Weapon weapon;
-        private bool gameOver;
+
         private Vector2 mousePosition;
 
         internal Controller(View view_, Model model_, GameWindow window_)
@@ -28,49 +28,27 @@
             this.Camera = this.view.Camera;
             this.weapon = this.model.Weapons[0];
         }
-
         internal Intersection Intersection { get; } = new Intersection();
 
         internal Camera Camera { get; }
 
         internal void Update(float deltaTime)
         {
-            if (this.gameOver)
+            if (!view.GameOver)
             {
-                return;
-            }
+                // Zoom mit dem Mausrad
+                this.ScrollControl(deltaTime);
 
-            // Menu
-            this.MenuUpdate();
+                // Updatet den Spieler
+                this.UpdatePlayer(deltaTime);
 
-            // Zoom mit dem Mausrad
-            this.ScrollControl(deltaTime);
+                // Checkt die Collisons
+                this.CheckCollisions();
 
-            // Updatet den Spieler
-            this.UpdatePlayer(deltaTime);
+                // Updatet die Enemies
+                this.UpdateEnemy(this.model.Enemies, deltaTime);
 
-            // Checkt die Collisons
-            this.CheckCollisions();
-
-            // Updatet die Enemies
-            this.UpdateEnemy(this.model.Enemies, deltaTime);
-
-            //Updated die Partikel
-        }
-
-        internal void MenuUpdate()
-        {
-            KeyboardState keyboard = Keyboard.GetState();
-            if (this.gameOver)
-            {
-                return;
-
-                // Wenn Spieler keine Health mehr hat => Frezze
-            }
-
-            if (keyboard.IsKeyDown(Key.Escape))
-            {
-                this.window.Exit();
+                //Updated die Partikel
             }
         }
 
@@ -101,7 +79,7 @@
                 default:
                     break;
             }
-        }    
+        }
 
         internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung sdasdwsadSpieler
         {
@@ -128,8 +106,13 @@
             this.player.Shoot(this.model.Bullets, deltaTime, this.weapon);
             if (this.player.Hitpoints < 0)
             {
-                this.gameOver = true;
+                view.GameOver = true;
             }
+            if (this.player.Hitpoints > 1)
+            {
+                this.player.Hitpoints = 1;
+            }
+
         }
 
         internal void ScrollControl(float deltaTime)
@@ -153,9 +136,9 @@
             }
 
             var zoom = this.view.Camera.Scale * (1 + (deltaTime * this.axisZoom));
-            if (zoom > 0.5f)
+            if (zoom > 0.2f)
             {
-                zoom = 0.5f;
+                zoom = 0.2f;
             }
 
             if (zoom < 0.1f)
@@ -169,7 +152,6 @@
 
         internal void CheckCollisions()
         {
-            var keyboard = Keyboard.GetState();
             // Checkt Enemy/Player with LeverBorder Collision
             this.Intersection.ObjectCollidingWithLeverBorder(this.player);
             for (int i = 0; i < this.model.Enemies.Count; i++)
@@ -180,22 +162,24 @@
             // Check Enemy and Player collision
             for (int i = 0; i < this.model.Enemies.Count; i++)
             {
-                if (this.Intersection.IsIntersecting(this.model.Player, this.model.Enemies[i]))
+                if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.Enemies[i]))
                 {
                     Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
-                    this.model.Player.Hitpoints -= 0.001f;
-                    if (this.model.Player.Hitpoints < 0)
-                    {
-                        this.gameOver = true;
-                    }
+                    this.model.Enemies[i].IsGrabbingPlayer = true;
+                    this.model.Player.Hitpoints -= 0.004f;
+                    this.model.Player.Position += (this.model.Player.Position - this.model.Enemies[i].Position) * 0.04f;
                 }
             }
+
 
             // Check Obstacle with Player collision
             for (int i = 0; i < this.model.Obstacles.Count; i++)
             {
                 if (this.Intersection.IsIntersectingCircle(this.player, this.model.Obstacles[i]))
                 {
+                    float radiusSum = (player.Radius + model.Obstacles[i].Radius) * 0.95f;
+                    Vector2 diff = player.Position - model.Obstacles[i].Position;
+                    this.player.Position += diff * (radiusSum * radiusSum + 0.05f);
                     this.Intersection.ResetGameObjectPosition(this.player, this.model.Obstacles[i]);
                     Console.WriteLine("Player Collision mit Obstacle: " + this.model.Obstacles[i].Id);
                 }
@@ -280,7 +264,7 @@
                 }
             }
         }
-  
+
         internal void PlaceNewObj(GameObject obj)
         {
             float ranX = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;

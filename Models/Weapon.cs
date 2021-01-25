@@ -15,7 +15,7 @@
                     break;
                 case 2:
                     this.RPM = 0.1f;
-                    this.Damage = 0.025f;
+                    this.Damage = 0.035f;
                     this.Size = 0.0016f;
                     this.Velocity = 0.6f;
                     break;
@@ -27,7 +27,7 @@
                     break;
                 case 4:
                     this.RPM = 0.8f;
-                    this.Damage = 0.5f;
+                    this.Damage = 0.55f;
                     this.Size = 0.006f;
                     this.Velocity = 0.1f;
                     break;

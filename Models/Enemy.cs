@@ -15,9 +15,11 @@
             this.Hitpoints = hitpoints_;
             this.Velocity = velocity_;
             this.Id = id_;
+            this.IsGrabbingPlayer = false;
         }
 
         internal double AngleToPlayer { get; set; }
+        internal bool IsGrabbingPlayer { get; set; }
 
         internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
         {
