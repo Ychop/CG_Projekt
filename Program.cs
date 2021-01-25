@@ -31,8 +31,6 @@
  * Anmerkungen:
  * Particels bei Schuss. MARCUS
  * Circle Collider. MARCUS
- * Bullet Aglinment.
  * Sprites hinzufügen
- * UI Munition
- * Level Hintergrund
+ * Level Hintergrund ?
  */

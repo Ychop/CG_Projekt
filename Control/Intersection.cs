@@ -21,8 +21,7 @@
             Vector2 diff = objA.Position - objB.Position;
             bool isIntersecting = radiusSum * radiusSum > diff.LengthSquared;
             if (isIntersecting)
-            {
-                objA.Position += diff * (radiusSum*radiusSum+ 0.05f);
+            {             
                 return true;
 
             }

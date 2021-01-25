@@ -7,7 +7,7 @@
     internal class Camera
     {
         private Matrix4 cameraMatrix = Matrix4.Identity;
-        private float scale = 0.2f; // Setzt den Start Zoom auf den spieler
+        private float scale = 0.05f; // Setzt den Start Zoom auf den spieler
         private float invWindowAspectRatio = 1f;
         private Vector2 center;
 
