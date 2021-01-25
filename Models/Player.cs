@@ -7,7 +7,11 @@
 
     internal class Player : GameObject
     {
+
+        internal float moveLR;
+        internal float moveUD;
         private Vector2 direction;
+
 
         public Player(Vector2 position_, float size_, float velocity_, float hitpoints_, int id_)
             : base(position_, size_, velocity_, hitpoints_, id_)
@@ -39,10 +43,10 @@
         internal void MovePlayer(Player player, float deltaTime)
         {
             // TODO: Teweak the movement a bit by using Velocity/acceleration.
-            var keyboard = Keyboard.GetState(); // Holt den Zustand des Keyboards
-            float moveLR = (keyboard.IsKeyDown(Key.Left) || keyboard.IsKeyDown(Key.A)) ? -0.15f : keyboard.IsKeyDown(Key.Right) || keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
-            float moveUD = keyboard.IsKeyDown(Key.Down) || keyboard.IsKeyDown(Key.S) ? -0.1f : keyboard.IsKeyDown(Key.Up) || keyboard.IsKeyDown(Key.W) ? 0.1f : 0.0f;
-            player.Position += deltaTime * new Vector2(moveLR, moveUD);
+            var keyboard = Keyboard.GetState();
+            this.moveLR = keyboard.IsKeyDown(Key.A) ? -0.15f : keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
+            this.moveUD = keyboard.IsKeyDown(Key.S) ? -0.15f : keyboard.IsKeyDown(Key.W) ? 0.15f : 0.0f;
+            player.Position += deltaTime * new Vector2(moveLR, moveUD) * this.Velocity;
         }
 
         internal void AglignPlayer(Vector2 mousePosition)

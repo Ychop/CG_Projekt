@@ -35,6 +35,8 @@
 
         internal List<Weapon> Weapons { get; set; } = new List<Weapon>();
 
+        internal List<Particle> Particles { get; set; } = new List<Particle>();
+
         internal Player Player { get; set; }
         internal int Score { get; set; } = 0;
 
@@ -90,7 +92,7 @@
 
         internal void GeneratePlayer()
         {
-            this.Player = new Player(new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f), 0.01f, 0f, 1f, -1);
+            this.Player = new Player(new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f), 0.01f, 0.8f, 1f, -1);
         }
 
         internal void GenerateObstacles()

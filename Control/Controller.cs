@@ -54,6 +54,8 @@
 
             // Updatet die Enemies
             this.UpdateEnemy(this.model.Enemies, deltaTime);
+
+            //Updated die Partikel
         }
 
         internal void MenuUpdate()
@@ -95,7 +97,7 @@
                 default:
                     break;
             }
-        }
+        }    
 
         internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung sdasdwsadSpieler
         {
@@ -163,6 +165,7 @@
 
         internal void CheckCollisions()
         {
+            var keyboard = Keyboard.GetState();
             // Checkt Enemy/Player with LeverBorder Collision
             this.Intersection.ObjectCollidingWithLeverBorder(this.player);
             for (int i = 0; i < this.model.Enemies.Count; i++)
@@ -187,13 +190,15 @@
             // Check Obstacle with Player collision
             for (int i = 0; i < this.model.Obstacles.Count; i++)
             {
-                if (this.Intersection.IsIntersecting(this.player, this.model.Obstacles[i]))
+                if (this.Intersection.IsIntersectingCircle(this.player, this.model.Obstacles[i]))
                 {
-                    Console.WriteLine("Player Collision mit Obstacle: " + this.model.Obstacles[i].Id);
                     this.Intersection.ResetGameObjectPosition(this.player, this.model.Obstacles[i]);
+                    Console.WriteLine("Player Collision mit Obstacle: " + this.model.Obstacles[i].Id);
                 }
-            }
 
+
+
+            }
             // Check Pickup with Player collision
             for (int i = 0; i < this.model.PickUps.Count; i++)
             {
@@ -242,14 +247,14 @@
             }
 
             // Check Bullet collision with GameObjects
-            for (int i = 0; i < this.model.GameObjects.Count; i++)
+            foreach (GameObject gameObject in model.GameObjects)
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
                 {
-                    if (this.Intersection.IsIntersecting(this.model.Bullets[j], this.model.GameObjects[i]))
+                    if (this.Intersection.IsIntersectingCircle(this.model.Bullets[j], gameObject))
                     {
                         this.model.Bullets.RemoveAt(j);
-                        this.model.GameObjects[i].Hitpoints -= this.weapon.Damage;
+                        gameObject.Hitpoints -= this.weapon.Damage;
                     }
                 }
             }
@@ -271,7 +276,7 @@
                 }
             }
         }
-
+  
         internal void PlaceNewObj(GameObject obj)
         {
             float ranX = ((float)this.rng.NextDouble() * 1.8f) - 0.9f;

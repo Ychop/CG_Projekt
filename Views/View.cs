@@ -32,7 +32,6 @@ namespace CG_Projekt
             this.Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
             this.texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
-            this.texWater = Texture.Load(Resource.LoadStream(content + "water.png"));
             this.texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             this.texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
             this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
@@ -63,6 +62,7 @@ namespace CG_Projekt
             this.DrawGameObjects(model);
             this.DrawPlayer(model);
             this.DrawBullets(model);
+            this.DrawParticle(model);
             this.DrawUI(model);
             this.Camera.Draw();
         }
@@ -204,7 +204,10 @@ namespace CG_Projekt
                 GL.PopMatrix();
             }
         }
-
+        internal void DrawParticle(Model model)
+        {
+         
+        }
         internal void DrawGameObjects(Model model)
         {
             float y = ((float)this.random.NextDouble() * 0.1f + 0.9f);
@@ -217,13 +220,13 @@ namespace CG_Projekt
                 GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2((float)(-enemy.Size * Math.Sin(y)), (float) (-enemy.Size * Math.Sin(y))));
+                GL.Vertex2(new Vector2((float)(-enemy.Radius * Math.Sin(y)), (float) (-enemy.Radius * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2((float)(enemy.Size * Math.Sin(y)), (float)(-enemy.Size * Math.Sin(y))));
+                GL.Vertex2(new Vector2((float)(enemy.Radius * Math.Sin(y)), (float)(-enemy.Radius * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2((float)(enemy.Size * Math.Sin(y)), (float)(enemy.Size * Math.Sin(y))));
+                GL.Vertex2(new Vector2((float)(enemy.Radius * Math.Sin(y)), (float)(enemy.Radius * Math.Sin(y))));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2((float)(-enemy.Size * Math.Sin(y)), (float)(enemy.Size * Math.Sin(y))));
+                GL.Vertex2(new Vector2((float)(-enemy.Radius * Math.Sin(y)), (float)(enemy.Radius * Math.Sin(y))));
                 GL.End();
                 GL.PopMatrix();
                 GL.Enable(EnableCap.Blend);
