@@ -180,12 +180,13 @@
                 {
                     Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
                     this.model.Player.Hitpoints -= 0.001f;
+                    this.model.Player.Velocity = 0.08f; 
                     if (this.model.Player.Hitpoints < 0)
                     {
                         this.gameOver = true;
                     }
                 }
-            }
+            }           
 
             // Check Obstacle with Player collision
             for (int i = 0; i < this.model.Obstacles.Count; i++)
