@@ -17,8 +17,15 @@
 
         internal bool IsIntersectingCircle(GameObject objA, GameObject objB)
         {
+            float radiusSum = (objA.Radius + objB.Radius) * 0.95f;
+            Vector2 diff = objA.Position - objB.Position;
+            bool isIntersecting = radiusSum * radiusSum > diff.LengthSquared;
+            if (isIntersecting)
+            {
+                objA.Position += diff * (radiusSum*radiusSum);
+                return true;
 
-
+            }
             return false;
         }
 

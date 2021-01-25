@@ -114,6 +114,7 @@
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
+    <Compile Include="Models\Particle.cs" />
     <Compile Include="Models\Weapon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Models\Enemy.cs" />
