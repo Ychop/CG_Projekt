@@ -332,7 +332,7 @@
             {
                 foreach(Particle fragment in model.RPGFragments)
                 {
-                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject))
+                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject) && gameObject.Id != -1)
                     {
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }
