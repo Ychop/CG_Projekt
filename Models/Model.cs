@@ -11,7 +11,6 @@
         private int objectsLimit = 50; // sets the Limit for all Gameobjects each.
         private float ranX;
         private float ranY;
-        private float ranS;
 
         public Model()
         {
@@ -104,7 +103,7 @@
             for (int i = 0; i < this.objectsLimit; i++)
             {
                 float obstacleSize = 0.01f;
-                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.007f, obstacleVelocity, obstacleHitpoints, GameObjects.Count));
+                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count));
                 while (IntersectsAny(Obstacles[i]))
                 {
                     Obstacles[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
@@ -113,7 +112,7 @@
                 {
                     obstacleSize += 0.01f;
                     Obstacles[i].RadiusDraw = obstacleSize;
-                    Obstacles[i].RadiusCollision = obstacleSize - 0.007f;
+                    Obstacles[i].RadiusCollision = obstacleSize - 0.008f;
                 }
 
 

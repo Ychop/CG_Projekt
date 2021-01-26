@@ -229,8 +229,8 @@ namespace CG_Projekt
         {
             GameOver = true;
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            DrawFont($"Du bist Gestorben.", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y, 0.2f * Camera.Scale);
-            DrawFont($"Deine Kills Waren:", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y - 0.25f * Camera.Scale, 0.2f * Camera.Scale);
+            DrawFont($"Du bist gestorben.", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y, 0.2f * Camera.Scale);
+            DrawFont($"Deine Kills waren:", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y - 0.25f * Camera.Scale, 0.2f * Camera.Scale);
             DrawFont($"{model.Score:D}", Camera.Center.X - 0.01f, Camera.Center.Y - 0.45f * Camera.Scale, 0.2f * Camera.Scale);
         }
         internal void Resize(int width, int height)
@@ -278,7 +278,7 @@ namespace CG_Projekt
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texBullet);
                 GL.PushMatrix();
-                GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
+                GL.Translate(new Vector3(bullet.Position.X , bullet.Position.Y, 0));
                 GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));

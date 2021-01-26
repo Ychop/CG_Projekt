@@ -289,7 +289,7 @@
         internal void CheckBulletCollision()
         {
             // Check Bullet collision with GameObjects
-            int Id = 0;
+            int Id;
             foreach (GameObject gameObject in model.GameObjects)
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
@@ -314,7 +314,7 @@
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
                            
-                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                            this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
                        
                         this.model.Bullets.RemoveAt(j);
