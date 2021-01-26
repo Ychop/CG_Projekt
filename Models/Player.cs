@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using CG_Projekt.Framework;
     using OpenTK;
     using OpenTK.Input;
 
@@ -11,7 +12,7 @@
         internal float moveLR;
         internal float moveUD;
         public Vector2 direction;
-
+        internal SoundManager manager;
 
         public Player(Vector2 position_, float radiusDraw_,float radiusColl_, float velocity_, float hitpoints_, int id_)
             : base(position_, radiusDraw_,radiusColl_, velocity_, hitpoints_, id_)
@@ -27,6 +28,7 @@
             this.AmmoShotgun = 3;
             this.AmmoRPG = 1;
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
+            this.manager = new SoundManager();
         }
 
         internal double Angle { get; set; }
@@ -45,6 +47,12 @@
         internal void MovePlayer(Player player, float deltaTime)
         {
             var keyboard = Keyboard.GetState();
+            var walkingSound = new CachedSound("../../Content/PlayerWalk.mp3");
+            if(keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D))
+            {
+                //this.manager.PlaySound(walkingSound);
+            }
+
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
                 this.moveLR = 0;
@@ -77,6 +85,8 @@
                     case 1:
                         if (this.AmmoPistol > 0)
                         {
+                            var AmmoSound = new CachedSound("../../Content/PistolSound.mp3");
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size,weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoPistol--;
                             this.Rpm = weapon_.RPM;
@@ -87,6 +97,8 @@
                     case 2:
                         if (this.AmmoUZI > 0)
                         {
+                            var AmmoSound = new CachedSound("../../Content/UZISound.mp3");
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoUZI--;
                             this.Rpm = weapon_.RPM;
@@ -97,6 +109,8 @@
                     case 3:
                         if (this.AmmoShotgun > 0)
                         {
+                            var AmmoSound = new CachedSound("../../Content/ShotgunSound.mp3");
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.05f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.1f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
@@ -111,6 +125,8 @@
                     case 4:
                         if (this.AmmoRPG > 0)
                         {
+                            var AmmoSound = new CachedSound("../../Content/RPGSound.mp3");
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoRPG--;
                             this.Rpm = weapon_.RPM;

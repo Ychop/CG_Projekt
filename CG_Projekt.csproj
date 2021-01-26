@@ -210,5 +210,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\debris.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PistolSound.mp3" />
+    <EmbeddedResource Include="Content\ShotgunSound.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\RPGSound.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerWalk.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\UZISound.mp3" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
