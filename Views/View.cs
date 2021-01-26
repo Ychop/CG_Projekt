@@ -50,7 +50,7 @@ namespace CG_Projekt
             this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             this.texGrass = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texMud = Texture.Load(Resource.LoadStream(content + "mud.jpg"));
-            this.texBlood = Texture.Load(Resource.LoadStream(content + "Blood.png"));
+            this.texBlood = Texture.Load(Resource.LoadStream(content + "BloodNew.png"));
             this.texWater = Texture.Load(Resource.LoadStream(content + "water.png"));
             this.texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
             this.texHealthBackground = Texture.Load(Resource.LoadStream(content + "healthbar -Background.png"));
@@ -273,6 +273,7 @@ namespace CG_Projekt
         }
         internal void DrawParticle(Model model)
         {
+            //Blutspritzer
             foreach (Particle particle in model.Particles)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texBlood);
@@ -288,7 +289,8 @@ namespace CG_Projekt
                 GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
                 GL.End();
             }
-            foreach(Particle paricleFrament in model.RPGFragments)
+            //Partikel RPG
+            foreach (Particle paricleFrament in model.RPGFragments)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texBlood);
                 GL.Begin(PrimitiveType.Quads);
