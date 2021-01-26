@@ -281,7 +281,7 @@
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
-                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f, 0.5f, 0.5f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f, 0.5f, 0.7f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
                        
                         this.model.Bullets.RemoveAt(j);
@@ -324,11 +324,11 @@
                 {
                     if (this.Intersection.IsIntersectingCircle(this.model.Enemies[i], this.model.Obstacles[j]))
                     {
-                        float radiusSum = (this.model.Enemies[i].RadiusCollision + model.Obstacles[i].RadiusCollision);
-                        Vector2 diff = this.model.Enemies[i].Position - model.Obstacles[i].Position;
+                        float radiusSum = (this.model.Enemies[i].RadiusCollision + model.Obstacles[j].RadiusCollision);
+                        Vector2 diff = this.model.Enemies[i].Position - model.Obstacles[j].Position;
                         diff /= diff.Length;
                         diff *= (radiusSum);
-                        this.model.Enemies[i].Position = model.Obstacles[i].Position + diff;
+                        this.model.Enemies[i].Position = model.Obstacles[j].Position + diff;
                     }
                 }
             }
