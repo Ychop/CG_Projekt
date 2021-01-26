@@ -187,5 +187,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\water.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Blood.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
