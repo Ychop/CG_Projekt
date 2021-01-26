@@ -91,6 +91,7 @@
             float playerHitpoints = 1f;
             float playerVelocity = 0.8f;
             this.Player = new Player(new Vector2(((float)this.rng.NextDouble() * 1.1f) - 0.65f, ((float)this.rng.NextDouble() * 1.1f) - 0.65f), playerSizeDraw, playerSizeColl, playerVelocity, playerHitpoints, -1);
+            GameObjects.Add(this.Player);
         }
 
         internal void GenerateObstacles()
@@ -103,7 +104,7 @@
             for (int i = 0; i < this.objectsLimit; i++)
             {
                 float obstacleSize = 0.01f;
-                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count));
+                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count-1));
                 while (IntersectsAny(Obstacles[i]))
                 {
                     Obstacles[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
@@ -114,11 +115,8 @@
                     Obstacles[i].RadiusDraw = obstacleSize;
                     Obstacles[i].RadiusCollision = obstacleSize - 0.008f;
                 }
-
-
-
                 this.GameObjects.Add(this.Obstacles[i]);
-                Console.WriteLine("Obstacle " + this.GameObjects.Count + ". erzeugt.");
+                Console.WriteLine("Obstacle " + (this.GameObjects.Count-1)+ ". erzeugt.");
             }
         }
 
@@ -132,16 +130,16 @@
             {
                 this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                 this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
-                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), enemySizeDraw, enemySizeColl, enemyVelocity, enemyHitpoints, this.GameObjects.Count));
+                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), enemySizeDraw, enemySizeColl, enemyVelocity, enemyHitpoints,( this.GameObjects.Count-1)));
                 this.GameObjects.Add(this.Enemies[i]);
                 for (int j = 0; j < this.GameObjects.Count; j++)
                 {
-                    while (this.IntersectsAny(this.Enemies[i]) && (Math.Pow(this.Enemies[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Enemies[i].Position.Y - this.Player.Position.Y, 2)) < 0.1f)
+                    while (this.IntersectsAny(this.Enemies[i]) && (Math.Pow(this.Enemies[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Enemies[i].Position.Y - this.Player.Position.Y, 2)) < 0.5f)
                     {
                         this.Enemies[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
                     }
                 }
-                Console.WriteLine("Enemy " + this.GameObjects.Count + ". erzeugt.");
+                Console.WriteLine("Enemy " + (this.GameObjects.Count-1) + ". erzeugt.");
             }
         }
 

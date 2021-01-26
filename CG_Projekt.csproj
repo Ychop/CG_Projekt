@@ -203,5 +203,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\debris.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PressBlack.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

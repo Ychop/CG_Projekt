@@ -19,12 +19,12 @@
         }
 
         internal double AngleToPlayer { get; set; }
-        internal float SpeedUp { get; set; } = 0.01f;
-        internal float Damage { get; set; } = 0.004f;
+        internal float SpeedUp { get; set; } = 0.02f;
+        internal float Damage { get; set; } = 0.01f;
 
         internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
         {
-            if ((Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) < 0.04f && (Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) > 0.0001f)
+            if ((Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) < 0.05f && (Math.Pow(enemy.Position.X - player.Position.X, 2) + Math.Pow(enemy.Position.Y - player.Position.Y, 2)) > 0.0001f)
             {
                 enemy.Velocity = deltaTime * SpeedUp;
                 this.playerDirection = new Vector2(player.Position.X - enemy.Position.X, player.Position.Y - enemy.Position.Y);

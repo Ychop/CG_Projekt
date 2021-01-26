@@ -17,6 +17,7 @@
         private float oldScrollValue = 0;
         private Weapon weapon;
         private Vector2 mousePosition;
+        public bool GameStarted = false;
 
         internal Controller(View view_, Model model_, GameWindow window_)
         {
@@ -33,7 +34,8 @@
 
         internal void Update(float deltaTime)
         {
-            if (!view.GameOver)
+            UpdateMainMenu();
+            if (!view.GameOver && GameStarted)
             {
                 // Zoom mit dem Mausrad
                 this.ScrollControl(deltaTime);
@@ -55,14 +57,11 @@
 
         internal void UpdateMainMenu()
         {
-            var mouse = Mouse.GetState();
-            Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
-            Console.WriteLine("Maus:(" + mouse.X  + "," + mouse.Y + ")");
-            if (Intersection.MouseIntersection(mousePos, view.MainMenu.StartButton))
+            var keyboard = Keyboard.GetState();
+            if (keyboard.IsAnyKeyDown)
             {
-                Console.WriteLine("Button geklickt");
-             
-                // view.GameStarted = true;                       
+                GameStarted = true;
+                view.GameStarted = true;
             }
         }
 
@@ -231,6 +230,10 @@
                     Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
                     this.model.Player.Hitpoints -= model.Enemies[i].Damage;
                     this.model.Player.Position += this.model.Enemies[i].playerDirection.Normalized()* powerOfschubs;
+                    for (int j = 0; j < rng.Next(10, 20); j++)
+                    {
+                        this.model.Particles.Add(new Particle(player.Position, 0.0015f, 0.0015f, (float)rng.NextDouble() - 0.2f, 5f, 1, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                    }
                 }
             }
 
@@ -294,7 +297,7 @@
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
                 {
-                    if (this.Intersection.IsIntersectingCircle(this.model.Bullets[j], gameObject))
+                    if (this.Intersection.IsIntersectingCircle(this.model.Bullets[j], gameObject) && gameObject.Id != -1)
                     {
                         if (gameObject.Id > 50)
                         {
@@ -370,13 +373,13 @@
         {
             float ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             float ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
-            obj.SpeedUp += 0.005f;
-            obj.Hitpoints += 0.0015f;
-            obj.Damage += 0.0005f;
+            obj.SpeedUp += 0.0025f;
+            obj.Hitpoints += 0.0025f;
+            obj.Damage += 0.0025f;
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);
-                if (this.model.IntersectsAny(obj))
+                if (this.model.IntersectsAny(obj) && (Math.Pow(obj.Position.X - player.Position.X, 2) + Math.Pow(obj.Position.Y - player.Position.Y, 2)) < 0.05f)
                 {
                     ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                     ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;

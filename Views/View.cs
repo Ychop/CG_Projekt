@@ -15,6 +15,8 @@ namespace CG_Projekt
         private readonly int texPlayer;
         private readonly int texEnemy;
         private readonly int texObstacle;
+        private readonly int texStart;
+        private readonly int texStartBlack;
         private readonly int texCollectible;
         private readonly int texBullet;
         private readonly int texGrass;
@@ -52,6 +54,8 @@ namespace CG_Projekt
             this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
             this.texHeartCollectible = Texture.Load(Resource.LoadStream(content + "heart.png"));
             this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
+            this.texStart = Texture.Load(Resource.LoadStream(content + "Press.png"));
+            this.texStartBlack = Texture.Load(Resource.LoadStream(content + "PressBlack.png"));
             this.texGrass = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texFragment = Texture.Load(Resource.LoadStream(content + "debris.png"));
             this.texMud = Texture.Load(Resource.LoadStream(content + "mud.jpg"));
@@ -78,7 +82,7 @@ namespace CG_Projekt
 
 
         }
-
+        internal float change = -1f;
         internal Camera Camera { get; }
         internal void Draw(Model model)
         {
@@ -94,12 +98,40 @@ namespace CG_Projekt
             this.DrawPlayer(model);
             this.Camera.Draw();
             this.DrawHUD(model);
-
+            if (!GameStarted)
+            {
+                PressAnyKeyToStart();
+            }
 
             if (GameOver)
             {
                 this.DrawGameOver(model);
             }
+        }
+
+        internal void PressAnyKeyToStart()
+        {
+            if (change < 0)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, this.texStart);
+                change += 0.4f;
+            }
+            else
+            {
+                GL.BindTexture(TextureTarget.Texture2D, this.texStartBlack);
+                change = -1f;
+            }
+
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(Camera.Center + new Vector2(-0.18f, -0.05f));
+            GL.TexCoord2(new Vector2(1, 0));
+            GL.Vertex2(Camera.Center + new Vector2(0.18f, -0.05f));
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(Camera.Center + new Vector2(0.18f, 0.05f));
+            GL.TexCoord2(new Vector2(0, 1));
+            GL.Vertex2(Camera.Center + new Vector2(-0.18f, 0.05f));
+            GL.End();
         }
         internal void DrawSea(Model model)
         {
@@ -278,7 +310,7 @@ namespace CG_Projekt
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texBullet);
                 GL.PushMatrix();
-                GL.Translate(new Vector3(bullet.Position.X , bullet.Position.Y, 0));
+                GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
                 GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
@@ -298,7 +330,7 @@ namespace CG_Projekt
             //Blutspritzer
             foreach (Particle particle in model.Particles)
             {
-                if(particle.Id == 0)
+                if (particle.Id == 0)
                 {
                     GL.BindTexture(TextureTarget.Texture2D, this.texFragment);
                     GL.Begin(PrimitiveType.Quads);
@@ -328,9 +360,9 @@ namespace CG_Projekt
                     GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
                     GL.End();
                 }
-              
+
             }
-            foreach(Particle paricleFrament in model.RPGFragments)
+            foreach (Particle paricleFrament in model.RPGFragments)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texFragment);
                 GL.Begin(PrimitiveType.Quads);
@@ -347,7 +379,7 @@ namespace CG_Projekt
         }
         internal void DrawGameObjects(Model model)
         {
-         
+
             foreach (Obstacle obstacle in model.Obstacles)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texObstacle);
