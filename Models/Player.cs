@@ -10,7 +10,7 @@
 
         internal float moveLR;
         internal float moveUD;
-        private Vector2 direction;
+        public Vector2 direction;
 
 
         public Player(Vector2 position_, float radiusDraw_,float radiusColl_, float velocity_, float hitpoints_, int id_)
