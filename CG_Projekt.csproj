@@ -185,10 +185,13 @@
     <EmbeddedResource Include="Content\mud.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\water.png" />
+    <EmbeddedResource Include="Content\Blood.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Blood.png" />
+    <EmbeddedResource Include="Content\water.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\sand.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\BloodNew.png" />

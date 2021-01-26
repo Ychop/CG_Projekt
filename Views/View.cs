@@ -22,6 +22,7 @@ namespace CG_Projekt
         private readonly int texWater;
         private readonly int texHealth;
         private readonly int texBlood;
+        private readonly int texSand;
         private readonly int texfontScore;
         private readonly int texfontAmmo;
         private readonly int texHeartCollectible;
@@ -50,8 +51,9 @@ namespace CG_Projekt
             this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             this.texGrass = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texMud = Texture.Load(Resource.LoadStream(content + "mud.jpg"));
-            this.texBlood = Texture.Load(Resource.LoadStream(content + "BloodNew.png"));
-            this.texWater = Texture.Load(Resource.LoadStream(content + "water.png"));
+            this.texBlood = Texture.Load(Resource.LoadStream(content + "Blood.png"));
+            this.texWater = Texture.Load(Resource.LoadStream(content + "water.jpg"));
+            this.texSand = Texture.Load(Resource.LoadStream(content + "sand.png"));
             this.texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
             this.texHealthBackground = Texture.Load(Resource.LoadStream(content + "healthbar -Background.png"));
             this.texAmmoPistol = Texture.Load(Resource.LoadStream(content + "ammoPistol.png"));
@@ -81,17 +83,32 @@ namespace CG_Projekt
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             this.Camera.Center = model.Player.Position;
+            this.DrawSea(model);
             this.DrawLevelGrid(model);
             this.DrawBullets(model);
             this.DrawParticle(model);
             this.DrawGameObjects(model);
-            this.DrawPlayer(model);         
+            this.DrawPlayer(model);
             this.Camera.Draw();
             this.DrawHUD(model);
             if (GameOver)
             {
                 this.DrawGameOver(model);
             }
+        }
+        internal void DrawSea(Model model)
+        {
+            GL.BindTexture(TextureTarget.Texture2D, this.texWater);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(-1, -1);
+            GL.TexCoord2(new Vector2(1, 0));
+            GL.Vertex2(1, -1);
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(1, 1);
+            GL.TexCoord2(new Vector2(0, 1));
+            GL.Vertex2(-1, 1);
+            GL.End();
         }
         internal void DrawHUD(Model model)
         {
@@ -289,12 +306,10 @@ namespace CG_Projekt
                 GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
                 GL.End();
             }
-            //Partikel RPG
-            foreach (Particle paricleFrament in model.RPGFragments)
+            foreach(Particle paricleFrament in model.RPGFragments)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texBlood);
                 GL.Begin(PrimitiveType.Quads);
-                // GL.Color3(Color.Red);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(paricleFrament.Position + new Vector2(-paricleFrament.RadiusDraw, -paricleFrament.RadiusDraw));
                 GL.TexCoord2(new Vector2(0, 1));
