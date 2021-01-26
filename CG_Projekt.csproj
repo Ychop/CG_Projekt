@@ -54,6 +54,9 @@
       <HintPath>packages\Microsoft.VisualStudio.Setup.Configuration.Interop.1.16.30\lib\net35\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -96,6 +99,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -107,9 +111,12 @@
   <ItemGroup>
     <Compile Include="Control\Controller.cs" />
     <Compile Include="Control\Intersection.cs" />
+    <Compile Include="Framework\CachedSound.cs" />
+    <Compile Include="Framework\CachedSoundSampleProvider.cs" />
     <Compile Include="Framework\IReadOnlyRectangle.cs" />
     <Compile Include="Framework\Rect.cs" />
     <Compile Include="Framework\Resource.cs" />
+    <Compile Include="Framework\SoundManager.cs" />
     <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="Models\Button.cs" />
@@ -202,6 +209,19 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\debris.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PistolSound.mp3" />
+    <EmbeddedResource Include="Content\ShotgunSound.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\RPGSound.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerWalk.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\UZISound.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
