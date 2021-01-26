@@ -196,6 +196,9 @@
     <EmbeddedResource Include="Content\sand.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Content\BloodNew.png" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Content\ExitButton.png" />
     <EmbeddedResource Include="Content\OptionsButton.png" />
     <EmbeddedResource Include="Content\StartButton.png" />
