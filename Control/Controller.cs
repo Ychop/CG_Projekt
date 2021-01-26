@@ -49,6 +49,20 @@
 
                 //Updated die Partikel
                 UpdateParticle(deltaTime);
+
+            }
+        }
+
+        internal void UpdateMainMenu()
+        {
+            var mouse = Mouse.GetState();
+            Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
+            Console.WriteLine("Maus:(" + mouse.X  + "," + mouse.Y + ")");
+            if (Intersection.MouseIntersection(mousePos, view.MainMenu.StartButton))
+            {
+                Console.WriteLine("Button geklickt");
+             
+                // view.GameStarted = true;                       
             }
         }
 
@@ -281,7 +295,7 @@
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
-                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f, 0.5f, 0.7f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 2f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
                        
                         this.model.Bullets.RemoveAt(j);

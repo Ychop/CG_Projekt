@@ -9,6 +9,21 @@
         private float objALinkeKante;
         private float objAObereKante;
         private float objAUntereKante;
+        internal bool MouseIntersection(Vector2 mousePos_, Button button_)
+        {
+            float buttonLeftSide, buttonRightSide, buttonTopSide, buttonLowerSide;
+            buttonLeftSide = button_.MinX;
+            buttonRightSide = button_.MaxX;
+            buttonTopSide = button_.MaxY;
+            buttonLowerSide = button_.MinY;         
+            bool xCollision = mousePos_.X >= buttonLeftSide && mousePos_.X <= buttonRightSide;
+            bool yCollision = mousePos_.Y >= buttonLowerSide && mousePos_.Y <= buttonTopSide;
+            if (xCollision && yCollision)
+            {
+                return true;
+            }
+            return false;
+        }
         internal bool IsIntersectingCircle(GameObject objA, GameObject objB)
         {
             float radiusSum = (objA.RadiusCollision + objB.RadiusCollision);

@@ -112,6 +112,7 @@
     <Compile Include="Framework\Resource.cs" />
     <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
+    <Compile Include="Models\Button.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Models\Particle.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Models\Transformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Camera.cs" />
+    <Compile Include="Views\MainMenu.cs" />
     <Compile Include="Views\View.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +194,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\sand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ExitButton.png" />
+    <EmbeddedResource Include="Content\OptionsButton.png" />
+    <EmbeddedResource Include="Content\StartButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

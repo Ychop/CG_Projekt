@@ -5,9 +5,9 @@ namespace CG_Projekt
 {
     using CG_Projekt.Framework;
     using CG_Projekt.Models;
+    using CG_Projekt.Views;
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
-    using System.Drawing;
     using GL = OpenTK.Graphics.OpenGL.GL;
 
     internal class View
@@ -36,11 +36,13 @@ namespace CG_Projekt
         private readonly int texRPG;
         private readonly int texHealthBackground;
         private Random random = new Random();
+        public MainMenu MainMenu;
         public bool GameOver = false;
+        public bool GameStarted = false;
 
-        internal View(Camera camera)
+        internal View(Camera camera, MainMenu mainMenu)
         {
-
+            MainMenu = mainMenu;
             this.Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
             this.texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
@@ -81,7 +83,6 @@ namespace CG_Projekt
 
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
-
             this.Camera.Center = model.Player.Position;
             this.DrawSea(model);
             this.DrawLevelGrid(model);
@@ -91,6 +92,8 @@ namespace CG_Projekt
             this.DrawPlayer(model);
             this.Camera.Draw();
             this.DrawHUD(model);
+
+
             if (GameOver)
             {
                 this.DrawGameOver(model);
