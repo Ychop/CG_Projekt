@@ -136,6 +136,14 @@
                     this.PlaceNewEnemy(enemy);
                     enemy.Hitpoints = 1f;
                 }
+                if(enemy.SpeedUp > 0.8f)
+                {
+                    enemy.SpeedUp = 0.8f;
+                }
+                if(enemy.Hitpoints > 5f)
+                {
+                    enemy.Hitpoints = 5f;
+                }
                 enemy.EnemyAI(enemy, this.player, deltaTime);
             }
         }
@@ -219,9 +227,10 @@
             {
                 if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.Enemies[i]))
                 {
+                    float powerOfschubs = 0.001f;
                     Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
                     this.model.Player.Hitpoints -= model.Enemies[i].Damage;
-                    this.model.Player.Position += (this.model.Player.Position - this.model.Enemies[i].Position) * 0.03f;
+                    this.model.Player.Position += this.model.Enemies[i].playerDirection.Normalized()* powerOfschubs;
                 }
             }
 
@@ -280,22 +289,32 @@
         internal void CheckBulletCollision()
         {
             // Check Bullet collision with GameObjects
+            int Id = 0;
             foreach (GameObject gameObject in model.GameObjects)
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
                 {
                     if (this.Intersection.IsIntersectingCircle(this.model.Bullets[j], gameObject))
                     {
+                        if (gameObject.Id > 50)
+                        {
+                            Id = 0;
+                        }
+                        else
+                        {
+                            Id = 1;
+                        }
                         if (this.player.SelectedWeapon == 4)
                         {
                             for (int i = 0; i < rng.Next(10, 20); i++)
                             {
-                                this.model.RPGFragments.Add(new Particle(gameObject.Position, 0.002f, 0.002f, 0.4f, 1f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));                             
+                                this.model.RPGFragments.Add(new Particle(gameObject.Position, 0.002f, 0.002f, 0.5f, 2f, 0, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));                             
                             }
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
-                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 2f, i, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                           
+                            this.model.Particles.Add(new Particle(gameObject.Position, 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
                        
                         this.model.Bullets.RemoveAt(j);
@@ -352,8 +371,8 @@
             float ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             float ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             obj.SpeedUp += 0.005f;
-            obj.Hitpoints += 0.005f;
-            obj.Damage += 0.0001f;
+            obj.Hitpoints += 0.0015f;
+            obj.Damage += 0.0005f;
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);

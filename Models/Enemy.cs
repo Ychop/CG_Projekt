@@ -5,7 +5,7 @@
 
     internal class Enemy : GameObject
     {
-        private Vector2 playerDirection;
+        public Vector2 playerDirection;
 
         internal Enemy(Vector2 position_, float radiusDraw_,float radiusColl_, float velocity_, float hitpoints_, int id_)
             : base(position_, radiusDraw_,radiusColl_, velocity_, hitpoints_, id_)

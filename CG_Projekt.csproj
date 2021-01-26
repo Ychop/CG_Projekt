@@ -187,9 +187,6 @@
     <EmbeddedResource Include="Content\mud.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Blood.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\water.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +199,9 @@
     <EmbeddedResource Include="Content\ExitButton.png" />
     <EmbeddedResource Include="Content\OptionsButton.png" />
     <EmbeddedResource Include="Content\StartButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\debris.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
