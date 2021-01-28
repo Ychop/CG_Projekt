@@ -7,14 +7,14 @@
 
     internal class Model
     {
-        private Random random = new Random();
+        private Random rng = new Random();
         private int objectsLimit = 50; // sets the Limit for all Gameobjects each.
         private float ranX;
         private float ranY;
-        private float ranS;
 
         public Model()
         {
+
             this.GenerateLevelGrid();
             this.GenerateGameObjects();
         }
@@ -36,6 +36,7 @@
         internal List<Weapon> Weapons { get; set; } = new List<Weapon>();
 
         internal List<Particle> Particles { get; set; } = new List<Particle>();
+        internal List<Particle> RPGFragments { get; set; } = new List<Particle>();
 
         internal Player Player { get; set; }
         internal int Score { get; set; } = 0;
@@ -44,29 +45,28 @@
         {
             foreach (GameObject obj in this.GameObjects)
             {
-                if (this.Intersection.IsIntersecting(obj_, obj) && obj != obj_ && (Math.Pow(obj_.Position.X - obj.Position.X, 2) + Math.Pow(obj_.Position.Y - obj.Position.Y, 2) <= (obj.Radius + obj_.Radius)))
+                if (this.Intersection.IsIntersecting(obj_, obj) && obj != obj_ && (Math.Pow(obj_.Position.X - obj.Position.X, 2) + Math.Pow(obj_.Position.Y - obj.Position.Y, 2) < (obj.RadiusDraw + obj_.RadiusDraw)))
                 {
                     return true;
                 }
             }
-
             return false;
         }
 
         internal void GenerateLevelGrid()
         {
-            float y = -0.9f;
-            float x = -0.9f;
+            float y = -0.6f;
+            float x = -0.6f;
             for (int i = 0; i < 100; i++)
             {
-                x = -0.9f;
+                x = -0.6f;
                 for (int j = 0; j < 100; j++)
                 {
                     this.LevelGrids.Add(new LevelGrid(new Vector2(x, y)));
-                    x += 0.018f;
+                    x += 0.012f;
                 }
 
-                y += 0.018f;
+                y += 0.012f;
             }
         }
 
@@ -74,83 +74,108 @@
         {
             // Generate Weapons
             this.GenerateWeapons();
-
             // Generate Player
             this.GeneratePlayer();
-
+            // Generate Enemies
+            this.GenerateEnemies();
             // Generate Obstacles
             this.GenerateObstacles();
 
-            // Generate Pickups
-            this.GeneratePickUps();
-
-            // Generate Enemies
-            this.GenerateEnemies();
-
-            Console.WriteLine("Obstacles insgesamt: " + this.Obstacles.Count + " \n" + "Enemies insgesamt: " + this.Enemies.Count + "\n" + "Pickups insgesamt: " + this.PickUps.Count);
+            Console.WriteLine("Obstacles insgesamt: " + this.Obstacles.Count + " \n" + "Enemies insgesamt: " + this.Enemies.Count);
         }
 
         internal void GeneratePlayer()
         {
-            this.Player = new Player(new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f), 0.01f, 0.8f, 1f, -1);
+            float playerSizeDraw = 0.015f;
+            float playerSizeColl = 0.01f;
+            float playerHitpoints = 1f;
+            float playerVelocity = 0.8f;
+            this.Player = new Player(new Vector2(((float)this.rng.NextDouble() * 1.1f) - 0.65f, ((float)this.rng.NextDouble() * 1.1f) - 0.65f), playerSizeDraw, playerSizeColl, playerVelocity, playerHitpoints, -1);
+            GameObjects.Add(this.Player);
         }
 
         internal void GenerateObstacles()
         {
+            float obstacleVelocity = 0f;
+            float obstacleHitpoints = 1000f;
+
+            this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
+            this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             for (int i = 0; i < this.objectsLimit; i++)
             {
-                this.ranX = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.ranY = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.ranS = ((float)this.random.NextDouble() * 0.09f) + 0.01f;
-                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), this.ranS, 0f, 1000f, i));
-                this.GameObjects.Add(this.Obstacles[i]);
-                while (Math.Pow(this.Obstacles[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Obstacles[i].Position.Y - this.Player.Position.Y, 2) < 0.09f)
+                float obstacleSize = 0.01f;
+                this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count-1));
+                while (IntersectsAny(Obstacles[i]))
                 {
-                    this.Obstacles[i].Position = new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f);
+                    Obstacles[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
                 }
-
-                Console.WriteLine("Obstacle " + this.GameObjects.Count + ". erzeugt.");
+                while (!IntersectsAny(Obstacles[i]))
+                {
+                    obstacleSize += 0.01f;
+                    Obstacles[i].RadiusDraw = obstacleSize;
+                    Obstacles[i].RadiusCollision = obstacleSize - 0.008f;
+                }
+                this.GameObjects.Add(this.Obstacles[i]);
+                Console.WriteLine("Obstacle " + (this.GameObjects.Count-1)+ ". erzeugt.");
             }
         }
 
         internal void GenerateEnemies()
         {
-            for (int i = 0; i < this.objectsLimit; i++)
+            float enemySizeDraw = 0.015f;
+            float enemySizeColl = 0.011f;
+            float enemyHitpoints = 1f;
+            float enemyVelocity = 0.01f;
+            for (int i = 0; i < 50; i++)
             {
-                this.ranX = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.ranY = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), 0.01f, 0.007f, 1f, this.GameObjects.Count));
+                this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
+                this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
+                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), enemySizeDraw, enemySizeColl, enemyVelocity, enemyHitpoints,( this.GameObjects.Count-1)));
                 this.GameObjects.Add(this.Enemies[i]);
                 for (int j = 0; j < this.GameObjects.Count; j++)
                 {
-                    while (this.IntersectsAny(this.Enemies[i]))
+                    while (this.IntersectsAny(this.Enemies[i]) && (Math.Pow(this.Enemies[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Enemies[i].Position.Y - this.Player.Position.Y, 2)) < 0.5f)
                     {
-                        this.Enemies[i].Position = new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f);
+                        this.Enemies[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
                     }
                 }
-
-                Console.WriteLine("Enemy " + this.GameObjects.Count + ". erzeugt.");
+                Console.WriteLine("Enemy " + (this.GameObjects.Count-1) + ". erzeugt.");
             }
         }
 
-        internal void GeneratePickUps()
+        internal void GeneratePickUp(Vector2 position_)
         {
-            for (int i = 0; i < this.objectsLimit; i++)
-            {
-                this.ranX = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.ranY = ((float)this.random.NextDouble() * 1.8f) - 0.9f;
-                this.PickUps.Add(new PickUp(new Vector2(this.ranX, this.ranY), 0.005f, 0f, 1f, this.GameObjects.Count + 1, this.random.Next(5)));
-                this.GameObjects.Add(this.PickUps[i]);
-                for (int j = 0; j < this.GameObjects.Count - 1; j++)
-                {
-                    while (this.IntersectsAny(this.PickUps[i]))
-                    {
-                        this.PickUps[i].Position = new Vector2(((float)this.random.NextDouble() * 1.8f) - 0.9f, ((float)this.random.NextDouble() * 1.8f) - 0.9f);
-                    }
-                }
+            float pickupSizeDraw = 0.005f;
+            float pickupSizeColl = pickupSizeDraw;
+            float pickupVelocity = 0f;
+            float pickupHitpoints = 100f;
 
-                Console.WriteLine("Pickup " + this.GameObjects.Count + ". erzeugt.");
+            if ((Score % 2) == 0)
+            {
+                Vector2 ranDir = new Vector2((float)rng.NextDouble() * 0.02f - 0.01f, (float)rng.NextDouble() * 0.02f - 0.01f);
+                PickUps.Add(new PickUp(position_ + ranDir, pickupSizeDraw, pickupSizeDraw, pickupVelocity, pickupHitpoints, GameObjects.Count, 0));
             }
+            if ((Score % 3) == 0)
+            {
+                Vector2 ranDir = new Vector2((float)rng.NextDouble() * 0.02f - 0.01f, (float)rng.NextDouble() * 0.02f - 0.01f);
+                PickUps.Add(new PickUp(position_ + ranDir, pickupSizeDraw, pickupSizeDraw, pickupVelocity, pickupHitpoints, GameObjects.Count, 1));
+            }
+            if ((Score % 5) == 0)
+            {
+                Vector2 ranDir = new Vector2((float)rng.NextDouble() * 0.02f - 0.01f, (float)rng.NextDouble() * 0.02f - 0.01f);
+                PickUps.Add(new PickUp(position_ + ranDir, pickupSizeDraw, pickupSizeDraw, pickupVelocity, pickupHitpoints, GameObjects.Count, 2));
+            }
+            if ((Score % 20) == 0)
+            {
+                Vector2 ranDir = new Vector2((float)rng.NextDouble() * 0.02f - 0.01f, (float)rng.NextDouble() * 0.02f - 0.01f);
+                PickUps.Add(new PickUp(position_ + ranDir, pickupSizeDraw, pickupSizeDraw, pickupVelocity, pickupHitpoints, GameObjects.Count, 3));
+            }
+            if ((Score % 50) == 0)
+            {
+                Vector2 ranDir = new Vector2((float)rng.NextDouble() * 0.02f - 0.01f, (float)rng.NextDouble() * 0.02f - 0.01f);
+                PickUps.Add(new PickUp(position_ + ranDir, pickupSizeDraw, pickupSizeDraw, pickupVelocity, pickupHitpoints, GameObjects.Count, 4));
+            }
+            Console.WriteLine("Pickup " + this.GameObjects.Count + ". erzeugt.");
         }
 
         internal void GenerateWeapons()
