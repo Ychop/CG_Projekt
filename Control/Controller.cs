@@ -151,7 +151,7 @@
         {
             this.player.MovePlayer(this.model.Player, deltaTime);
             this.player.AglignPlayer(this.mousePosition);
-            this.player.Shoot(this.model.Bullets, deltaTime, this.weapon);
+            this.player.Shoot(this.model.Bullets, this.model.Explosions, deltaTime, this.weapon);
             if (this.player.Hitpoints < 0)
             {
                 view.GameOver = true;
@@ -319,7 +319,7 @@
                            
                             this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
-                       
+                        
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }

@@ -30,6 +30,7 @@
         internal List<PickUp> PickUps { get; set; } = new List<PickUp>();
 
         internal List<Bullet> Bullets { get; set; } = new List<Bullet>();
+        internal List<Explosion> Explosions { get; set; } = new List<Explosion>();
 
         internal List<GameObject> GameObjects { get; set; } = new List<GameObject>();
 

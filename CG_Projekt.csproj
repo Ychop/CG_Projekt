@@ -120,6 +120,7 @@
     <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="Models\Button.cs" />
+    <Compile Include="Models\Explosion.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Models\Particle.cs" />
@@ -228,6 +229,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\PressBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\explosion.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

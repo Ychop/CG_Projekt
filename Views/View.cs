@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics;
 
 namespace CG_Projekt
@@ -37,6 +38,7 @@ namespace CG_Projekt
         private readonly int texUzi;
         private readonly int texShotgun;
         private readonly int texRPG;
+        private readonly int texExplosion;
         private readonly int texHealthBackground;
         private Random random = new Random();
         public MainMenu MainMenu;
@@ -72,6 +74,7 @@ namespace CG_Projekt
             this.texUzi = Texture.Load(Resource.LoadStream(content + "Uzi.png"));
             this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
             this.texRPG = Texture.Load(Resource.LoadStream(content + "Rocketlauncher.png"));
+            this.texExplosion = Texture.Load(Resource.LoadStream(content + "explosion.png"));
             this.texfontScore = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             GL.Enable(EnableCap.AlphaTest);
@@ -98,6 +101,7 @@ namespace CG_Projekt
             this.DrawPlayer(model);
             this.Camera.Draw();
             this.DrawHUD(model);
+            this.DrawExplosion(model);
             if (!GameStarted)
             {
                 PressAnyKeyToStart();
@@ -468,8 +472,34 @@ namespace CG_Projekt
                 DrawRect(rect, texCoords);
                 rect.MinX += rect.SizeX;
             }
-
         }
+        
+        private void DrawExplosion(Model model)
+        {
+            GL.BindTexture(TextureTarget.Texture2D, texExplosion);
+            const uint spritesPerColumn = 5;
+            const uint spritesPerRow = 5;
+            
+
+            foreach (Explosion explosion in model.Explosions)
+            {
+
+                var spriteId = (uint)Math.Round(explosion.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));
+                var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, spritesPerRow, spritesPerColumn);
+                GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(texCoords.MinX, texCoords.MinY);
+                GL.Vertex2(new Vector2(-explosion.RadiusDraw, -explosion.RadiusDraw) + explosion.Position);
+                GL.TexCoord2(texCoords.MaxX, texCoords.MinY);
+                GL.Vertex2(new Vector2(explosion.RadiusDraw, -explosion.RadiusDraw) + explosion.Position);
+                GL.TexCoord2(texCoords.MaxX, texCoords.MaxY);
+                GL.Vertex2(new Vector2(explosion.RadiusDraw, explosion.RadiusDraw) + explosion.Position);
+                GL.TexCoord2(texCoords.MinX, texCoords.MaxY);
+                GL.Vertex2(new Vector2(-explosion.RadiusDraw, explosion.RadiusDraw) + explosion.Position);
+                GL.End();
+            
+            }
+        }
+        
         private static void DrawRect(IReadOnlyRectangle rectangle, IReadOnlyRectangle texCoords)
         {
             //TODO: draw a rectangle with texture coordinates
