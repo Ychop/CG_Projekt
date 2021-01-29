@@ -114,7 +114,7 @@ namespace CG_Projekt
             if (change < 0)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texStart);
-                change += 0.4f;
+                change += 0.3f;
             }
             else
             {
@@ -308,19 +308,20 @@ namespace CG_Projekt
         {
             foreach (Bullet bullet in model.Bullets)
             {
+                Vector2 bulletOffset = new Vector2(0, -0.007f);
                 GL.BindTexture(TextureTarget.Texture2D, this.texBullet);
                 GL.PushMatrix();
                 GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
                 GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2(-bullet.RadiusDraw, -bullet.RadiusDraw));
+                GL.Vertex2(bulletOffset + new Vector2(-bullet.RadiusDraw, -bullet.RadiusDraw));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2(bullet.RadiusDraw, -bullet.RadiusDraw));
+                GL.Vertex2(bulletOffset + new Vector2(bullet.RadiusDraw, -bullet.RadiusDraw));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2(bullet.RadiusDraw, bullet.RadiusDraw));
+                GL.Vertex2(bulletOffset + new Vector2(bullet.RadiusDraw, bullet.RadiusDraw));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2(-bullet.RadiusDraw, bullet.RadiusDraw));
+                GL.Vertex2(bulletOffset + new Vector2(-bullet.RadiusDraw, bullet.RadiusDraw));
                 GL.End();
                 GL.PopMatrix();
             }

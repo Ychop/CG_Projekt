@@ -229,5 +229,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\PressBlack.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\14 - Indo Silver Club.mp3" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
