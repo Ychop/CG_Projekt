@@ -41,6 +41,7 @@
         internal Player Player { get; set; }
         internal int Score { get; set; } = 0;
         internal int weaponSelected = 1;
+        internal float Time { get; private set; } = 0;
         internal bool IntersectsAny(GameObject obj_)
         {
             foreach (GameObject obj in this.GameObjects)
@@ -130,7 +131,7 @@
             {
                 this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                 this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
-                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), enemySizeDraw, enemySizeColl, enemyVelocity, enemyHitpoints,( this.GameObjects.Count-1)));
+                this.Enemies.Add(new Enemy(new Vector2(this.ranX, this.ranY), enemySizeDraw, enemySizeColl, enemyVelocity, enemyHitpoints,( this.GameObjects.Count-1), animationLength: 1.5f));
                 this.GameObjects.Add(this.Enemies[i]);
                 for (int j = 0; j < this.GameObjects.Count; j++)
                 {
@@ -185,5 +186,7 @@
                 this.Weapons.Add(new Weapon(i));
             }
         }
+
+
     }
 }

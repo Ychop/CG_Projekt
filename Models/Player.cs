@@ -27,7 +27,7 @@
             this.AmmoPistol = 100;
             this.AmmoUZI = 10;
             this.AmmoShotgun = 3;
-            this.AmmoRPG = 1;
+            this.AmmoRPG = 100;
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
             this.manager = new SoundManager();
         }
@@ -46,14 +46,18 @@
         internal int AmmoRPG { get; set; }
 
         internal float Rpm { get; set; }
+        internal float Spm { get; set; }
 
         internal void MovePlayer(Player player, float deltaTime)
         {
             var keyboard = Keyboard.GetState();
             var walkingSound = new CachedSound("../../Content/PlayerWalk.mp3");
-            if(keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D))
+            Spm = 0.4f;
+            this.Spm -= deltaTime;
+            if (keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D) && this.Spm < 0)
             {
-                //this.manager.PlaySound(walkingSound);
+                this.manager.PlaySound(walkingSound);
+                this.Spm = 0.4f;
             }
 
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
@@ -84,6 +88,11 @@
             this.Angle = angleRad * (180 / Math.PI);
         }
 
+        internal void Walkanimation(float deltaTime)
+        {
+
+        }
+
         internal void Shoot(List<Bullet> bullets, float deltaTime, Weapon weapon_)
         {
             var mouse = Mouse.GetState();
@@ -99,7 +108,7 @@
                         {
                             var AmmoSound = new CachedSound("../../Content/PistolSound.mp3");
                             this.manager.PlaySound(AmmoSound);
-                            bullets.Add(new Bullet(this.Position, weapon_.Size,weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoPistol--;
                             this.Rpm = weapon_.RPM;
                             SelectedWeapon = weapon_.Type;

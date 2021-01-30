@@ -128,6 +128,7 @@
         {
             foreach (Enemy enemy in model.Enemies)
             {
+
                 if (enemy.Hitpoints < 0)
                 {
                     model.Score++;
@@ -144,6 +145,7 @@
                     enemy.Hitpoints = 5f;
                 }
                 enemy.EnemyAI(enemy, this.player, deltaTime);
+                enemy.Update(deltaTime);
             }
         }
 
@@ -319,7 +321,7 @@
                            
                             this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
-                       
+                        
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }
