@@ -120,7 +120,6 @@
     <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
     <Compile Include="Models\Button.cs" />
-    <Compile Include="Models\Explosion.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Models\Particle.cs" />
@@ -148,9 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\rocks.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\playerNew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\collectible.png" />
@@ -231,8 +227,20 @@
     <EmbeddedResource Include="Content\PressBlack.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\explosion.png" />
     <EmbeddedResource Include="Content\14 - Indo Silver Club.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\enemyhitanimationNew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\enemywalkanimation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerPistol.png" />
+    <EmbeddedResource Include="Content\PlayerShotgun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerUzi.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -128,6 +128,7 @@
         {
             foreach (Enemy enemy in model.Enemies)
             {
+
                 if (enemy.Hitpoints < 0)
                 {
                     model.Score++;
@@ -144,6 +145,7 @@
                     enemy.Hitpoints = 5f;
                 }
                 enemy.EnemyAI(enemy, this.player, deltaTime);
+                enemy.Update(deltaTime);
             }
         }
 
@@ -151,7 +153,7 @@
         {
             this.player.MovePlayer(this.model.Player, deltaTime);
             this.player.AglignPlayer(this.mousePosition);
-            this.player.Shoot(this.model.Bullets, this.model.Explosions, deltaTime, this.weapon);
+            this.player.Shoot(this.model.Bullets, deltaTime, this.weapon);
             if (this.player.Hitpoints < 0)
             {
                 view.GameOver = true;

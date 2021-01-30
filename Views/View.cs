@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTK.Graphics;
+﻿using OpenTK.Input;
 
 namespace CG_Projekt
 {
@@ -10,11 +8,17 @@ namespace CG_Projekt
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
     using GL = OpenTK.Graphics.OpenGL.GL;
+    using System.Linq;
+    using System;
+    using OpenTK.Graphics;
 
     internal class View
     {
-        private readonly int texPlayer;
+        private readonly int texPlayerPistol;
+        private readonly int texPlayerShotgun;
+        private readonly int texPlayerUzi;
         private readonly int texEnemy;
+        private readonly int texEnemyWalk;
         private readonly int texObstacle;
         private readonly int texStart;
         private readonly int texStartBlack;
@@ -50,8 +54,11 @@ namespace CG_Projekt
             MainMenu = mainMenu;
             this.Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
-            this.texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
+            this.texPlayerPistol = Texture.Load(Resource.LoadStream(content + "PlayerPistol.png"));
+            this.texPlayerShotgun = Texture.Load(Resource.LoadStream(content + "PlayerShotgun.png"));
+            this.texPlayerUzi = Texture.Load(Resource.LoadStream(content + "PlayerUzi.png"));
             this.texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
+            this.texEnemyWalk = Texture.Load(Resource.LoadStream(content + "enemywalkanimation.png"));
             this.texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
             this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
             this.texHeartCollectible = Texture.Load(Resource.LoadStream(content + "heart.png"));
@@ -74,7 +81,6 @@ namespace CG_Projekt
             this.texUzi = Texture.Load(Resource.LoadStream(content + "Uzi.png"));
             this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
             this.texRPG = Texture.Load(Resource.LoadStream(content + "Rocketlauncher.png"));
-            this.texExplosion = Texture.Load(Resource.LoadStream(content + "explosion.png"));
             this.texfontScore = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
             GL.Enable(EnableCap.AlphaTest);
@@ -98,10 +104,10 @@ namespace CG_Projekt
             this.DrawBullets(model);
             this.DrawParticle(model);
             this.DrawGameObjects(model);
+            this.DrawEnemy(model);
             this.DrawPlayer(model);
             this.Camera.Draw();
             this.DrawHUD(model);
-            this.DrawExplosion(model);
             if (!GameStarted)
             {
                 PressAnyKeyToStart();
@@ -292,7 +298,22 @@ namespace CG_Projekt
         }
         internal void DrawPlayer(Model model)
         {
-            GL.BindTexture(TextureTarget.Texture2D, this.texPlayer);
+            GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
+            switch (model.Player.SelectedWeapon)
+            {
+                case 1:
+                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
+                    break;
+                case 2:
+                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerUzi);
+                    break;
+                case 3:
+                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerShotgun);
+                    break;
+                case 4:
+                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerShotgun);
+                    break;
+            }
             GL.PushMatrix();
             GL.Translate(new Vector3(model.Player.Position.X, model.Player.Position.Y, 0));
             GL.Rotate(model.Player.Angle, new Vector3d(0, 0, -1));
@@ -307,6 +328,41 @@ namespace CG_Projekt
             GL.Vertex2(new Vector2(-model.Player.RadiusDraw, model.Player.RadiusDraw));
             GL.End();
             GL.PopMatrix();
+        }
+        
+        internal void DrawEnemy(Model model)
+        {
+            const uint spritesPerColumn = 2;
+            const uint spritesPerRow = 4;
+            float y = ((float)this.random.NextDouble() * 0.1f + 0.9f);
+
+            foreach (Enemy enemy in model.Enemies)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, texEnemyWalk);
+                //NormalizedAnimationTime ist 0 am anfang der animation und nahe bei 1 am ende
+                var spriteId = (uint)Math.Round(enemy.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));        //Zahl zwischen 0 und 7
+                Console.WriteLine("spriteId: " + spriteId);
+                Console.WriteLine("NAT: " + enemy.NormalizedAnimationTime);
+                var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, spritesPerRow, spritesPerColumn);
+                GL.Disable(EnableCap.Blend);
+                GL.PushMatrix();
+                GL.Translate(new Vector3(enemy.Position.X, enemy.Position.Y, 0));
+                GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
+                GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(texCoords.MinX, texCoords.MinY);
+                GL.Vertex2(new Vector2((-enemy.RadiusDraw), (-enemy.RadiusDraw)));
+                GL.TexCoord2(texCoords.MaxX, texCoords.MinY);
+                GL.Vertex2(new Vector2((enemy.RadiusDraw), (-enemy.RadiusDraw)));
+                GL.TexCoord2(texCoords.MaxX, texCoords.MaxY);
+                GL.Vertex2(new Vector2((enemy.RadiusDraw), (enemy.RadiusDraw)));
+                GL.TexCoord2(texCoords.MinX, texCoords.MaxY);
+                GL.Vertex2(new Vector2((-enemy.RadiusDraw), (enemy.RadiusDraw)));
+                GL.End();
+                GL.PopMatrix();
+                GL.Enable(EnableCap.Blend);
+                this.EnemyHealth(enemy);
+            }
+
         }
         internal void DrawBullets(Model model)
         {
@@ -400,28 +456,6 @@ namespace CG_Projekt
                 GL.End();
             }
             float y = ((float)this.random.NextDouble() * 0.1f + 0.9f);
-            foreach (Enemy enemy in model.Enemies)
-            {
-                GL.BindTexture(TextureTarget.Texture2D, this.texEnemy);
-                GL.Disable(EnableCap.Blend);
-                GL.PushMatrix();
-                GL.Translate(new Vector3(enemy.Position.X, enemy.Position.Y, 0));
-                GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2((float)(-enemy.RadiusDraw * Math.Sin(y)), (float)(-enemy.RadiusDraw * Math.Sin(y))));
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2((float)(enemy.RadiusDraw * Math.Sin(y)), (float)(-enemy.RadiusDraw * Math.Sin(y))));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2((float)(enemy.RadiusDraw * Math.Sin(y)), (float)(enemy.RadiusDraw * Math.Sin(y))));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2((float)(-enemy.RadiusDraw * Math.Sin(y)), (float)(enemy.RadiusDraw * Math.Sin(y))));
-                GL.End();
-                GL.PopMatrix();
-                GL.Enable(EnableCap.Blend);
-                this.EnemyHealth(enemy);
-            }
-
 
             foreach (PickUp pickup in model.PickUps)
             {
@@ -458,6 +492,8 @@ namespace CG_Projekt
                 GL.Enable(EnableCap.Blend);
             }
         }
+
+
         private void DrawFont(string text, float x, float y, float size)
         {
             GL.Color4(Color4.White);
@@ -467,43 +503,14 @@ namespace CG_Projekt
             var rect = new Rect(x, y, size, size); // rectangle of the first character
             foreach (var spriteId in SpriteSheetTools.StringToSpriteIds(text, firstCharacter))
             {
-                //TODO: Calculate the texture coordinates of the characters letter from the bitmap font texture
                 var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, charactersPerRow, charactersPerColumn);
-                //TODO: Draw a rectangle at the characters relative position
                 DrawRect(rect, texCoords);
                 rect.MinX += rect.SizeX;
             }
         }
-        
-        private void DrawExplosion(Model model)
-        {
-            GL.BindTexture(TextureTarget.Texture2D, texExplosion);
-            const uint spritesPerColumn = 5;
-            const uint spritesPerRow = 5;
-            
 
-            foreach (Explosion explosion in model.Explosions)
-            {
-
-                var spriteId = (uint)Math.Round(explosion.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));
-                var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, spritesPerRow, spritesPerColumn);
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(texCoords.MinX, texCoords.MinY);
-                GL.Vertex2(new Vector2(-explosion.RadiusDraw, -explosion.RadiusDraw) + explosion.Position);
-                GL.TexCoord2(texCoords.MaxX, texCoords.MinY);
-                GL.Vertex2(new Vector2(explosion.RadiusDraw, -explosion.RadiusDraw) + explosion.Position);
-                GL.TexCoord2(texCoords.MaxX, texCoords.MaxY);
-                GL.Vertex2(new Vector2(explosion.RadiusDraw, explosion.RadiusDraw) + explosion.Position);
-                GL.TexCoord2(texCoords.MinX, texCoords.MaxY);
-                GL.Vertex2(new Vector2(-explosion.RadiusDraw, explosion.RadiusDraw) + explosion.Position);
-                GL.End();
-            
-            }
-        }
-        
         private static void DrawRect(IReadOnlyRectangle rectangle, IReadOnlyRectangle texCoords)
         {
-            //TODO: draw a rectangle with texture coordinates
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(texCoords.MinX, texCoords.MinY);
             GL.Vertex2(rectangle.MinX, rectangle.MinY);

@@ -7,7 +7,7 @@
     {
         public Vector2 playerDirection;
 
-        internal Enemy(Vector2 position_, float radiusDraw_,float radiusColl_, float velocity_, float hitpoints_, int id_)
+        internal Enemy(Vector2 position_, float radiusDraw_,float radiusColl_, float velocity_, float hitpoints_, int id_, float animationLength)
             : base(position_, radiusDraw_,radiusColl_, velocity_, hitpoints_, id_)
         {
             this.Position = position_;
@@ -16,11 +16,20 @@
             this.Hitpoints = hitpoints_;
             this.Velocity = velocity_;
             this.Id = id_;
+            AnimationLength = animationLength;
         }
 
         internal double AngleToPlayer { get; set; }
         internal float SpeedUp { get; set; } = 0.02f;
         internal float Damage { get; set; } = 0.01f;
+        internal float NormalizedAnimationTime { get; set; } = 0f;
+        public float AnimationLength { get; }
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+            NormalizedAnimationTime += deltaTime / AnimationLength;
+            NormalizedAnimationTime %= 1f;
+        }
 
         internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
         {

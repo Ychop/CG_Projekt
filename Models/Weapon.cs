@@ -36,13 +36,6 @@
             }
         }
 
-        internal enum Wepaons
-        {
-            Pistol = 1,
-            Uzi,
-            Shotgun,
-            RPG,
-        }
 
         internal int Type { get; }
 

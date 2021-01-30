@@ -88,7 +88,12 @@
             this.Angle = angleRad * (180 / Math.PI);
         }
 
-        internal void Shoot(List<Bullet> bullets, List<Explosion> explosion, float deltaTime, Weapon weapon_)
+        internal void Walkanimation(float deltaTime)
+        {
+
+        }
+
+        internal void Shoot(List<Bullet> bullets, float deltaTime, Weapon weapon_)
         {
             var mouse = Mouse.GetState();
             this.Rpm -= deltaTime;
@@ -144,10 +149,6 @@
                             var AmmoSound = new CachedSound("../../Content/RPGSound.mp3");
                             this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
-                            explosion.Add(new Explosion(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
-                            explosion[0].NormalizedAnimationTime += deltaTime / explosion[0].AnimationLength;
-                            explosion[0].NormalizedAnimationTime %= 1f;
-
                             this.AmmoRPG--;
                             this.Rpm = weapon_.RPM;
                             SelectedWeapon = weapon_.Type;
