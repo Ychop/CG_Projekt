@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using CG_Projekt.Framework;
     using CG_Projekt.Models;
     using OpenTK;
     using OpenTK.Input;
@@ -18,6 +19,7 @@
         private Weapon weapon;
         private Vector2 mousePosition;
         public bool GameStarted = false;
+        private SoundManager sManager;
 
         internal Controller(View view_, Model model_, GameWindow window_)
         {
@@ -27,6 +29,7 @@
             this.player = this.model.Player;
             this.Camera = this.view.Camera;
             this.weapon = this.model.Weapons[0];
+            sManager = new SoundManager();
         }
         internal Intersection Intersection { get; } = new Intersection();
 
@@ -226,6 +229,7 @@
             {
                 if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.Enemies[i]))
                 {
+
                     float powerOfschubs = 0.001f;
                     Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
                     this.model.Player.Hitpoints -= model.Enemies[i].Damage;
@@ -234,6 +238,9 @@
                     {
                         this.model.Particles.Add(new Particle(player.Position, 0.0015f, 0.0015f, (float)rng.NextDouble() - 0.2f, 5f, 1, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                     }
+
+                        var Grunt = new CachedSound("../../Content/Grunt.mp3");
+                        sManager.PlaySound(Grunt);  
                 }
             }
 
@@ -256,9 +263,19 @@
                 if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.PickUps[i]))
                 {
                     Console.WriteLine("Player Collision mit Pickup: " + this.model.PickUps[i].Id);
+                    if(this.model.PickUps[i].Type > 0)
+                    {
+                        var ReloadSound = new CachedSound("../../Content/Reload.mp3");
+                        sManager.PlaySound(ReloadSound);
+                    }
+                    else
+                    {
+                        var Lifeup = new CachedSound("../../Content/Lifeup.mp3");
+                        sManager.PlaySound(Lifeup);
+                    }
                     switch (this.model.PickUps[i].Type)
                     {
-                        case 0:
+                        case 0:                     
                             this.player.Hitpoints += 0.1f;
                             Console.WriteLine("Leben: +100");
                             this.model.PickUps.RemoveAt(i);
@@ -292,7 +309,7 @@
         internal void CheckBulletCollision()
         {
             // Check Bullet collision with GameObjects
-            int Id;
+            int isBlood;//0 = false 1 = true;
             foreach (GameObject gameObject in model.GameObjects)
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
@@ -301,11 +318,13 @@
                     {
                         if (gameObject.Id > 50)
                         {
-                            Id = 0;
+                            isBlood = 0; ;
                         }
                         else
                         {
-                            Id = 1;
+                            isBlood = 1;
+                            var Bloodsound = new CachedSound("../../Content/Bloodsound.mp3");
+                            sManager.PlaySound(Bloodsound);
                         }
                         if (this.player.SelectedWeapon == 4)
                         {
@@ -317,7 +336,7 @@
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
                            
-                            this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, Id, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                            this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, isBlood, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
                         }
                        
                         this.model.Bullets.RemoveAt(j);

@@ -5,7 +5,6 @@ namespace CG_Projekt
 {
     using CG_Projekt.Framework;
     using CG_Projekt.Models;
-    using CG_Projekt.Views;
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
     using GL = OpenTK.Graphics.OpenGL.GL;
@@ -20,12 +19,10 @@ namespace CG_Projekt
         private readonly int texCollectible;
         private readonly int texBullet;
         private readonly int texGrass;
-        private readonly int texMud;
         private readonly int texWater;
         private readonly int texHealth;
         private readonly int texBlood;
         private readonly int texFragment;
-        private readonly int texSand;
         private readonly int texfontScore;
         private readonly int texfontAmmo;
         private readonly int texHeartCollectible;
@@ -39,13 +36,11 @@ namespace CG_Projekt
         private readonly int texRPG;
         private readonly int texHealthBackground;
         private Random random = new Random();
-        public MainMenu MainMenu;
         public bool GameOver = false;
         public bool GameStarted = false;
 
-        internal View(Camera camera, MainMenu mainMenu)
+        internal View(Camera camera)
         {
-            MainMenu = mainMenu;
             this.Camera = camera;
             var content = $"{nameof(CG_Projekt)}.Content.";
             this.texPlayer = Texture.Load(Resource.LoadStream(content + "playerNew.png"));
@@ -58,10 +53,8 @@ namespace CG_Projekt
             this.texStartBlack = Texture.Load(Resource.LoadStream(content + "PressBlack.png"));
             this.texGrass = Texture.Load(Resource.LoadStream(content + "grass.png"));
             this.texFragment = Texture.Load(Resource.LoadStream(content + "debris.png"));
-            this.texMud = Texture.Load(Resource.LoadStream(content + "mud.jpg"));
             this.texBlood = Texture.Load(Resource.LoadStream(content + "BloodNew.png"));
             this.texWater = Texture.Load(Resource.LoadStream(content + "water.jpg"));
-            this.texSand = Texture.Load(Resource.LoadStream(content + "sand.png"));
             this.texHealth = Texture.Load(Resource.LoadStream(content + "healthbar.png"));
             this.texHealthBackground = Texture.Load(Resource.LoadStream(content + "healthbar -Background.png"));
             this.texAmmoPistol = Texture.Load(Resource.LoadStream(content + "ammoPistol.png"));
@@ -114,7 +107,7 @@ namespace CG_Projekt
             if (change < 0)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texStart);
-                change += 0.3f;
+                change += 0.25f;
             }
             else
             {
@@ -395,7 +388,6 @@ namespace CG_Projekt
                 GL.Vertex2(obstacle.Position + new Vector2(-obstacle.RadiusDraw, obstacle.RadiusDraw));
                 GL.End();
             }
-            float y = ((float)this.random.NextDouble() * 0.1f + 0.9f);
             foreach (Enemy enemy in model.Enemies)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texEnemy);
@@ -405,13 +397,13 @@ namespace CG_Projekt
                 GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(new Vector2((float)(-enemy.RadiusDraw * Math.Sin(y)), (float)(-enemy.RadiusDraw * Math.Sin(y))));
+                GL.Vertex2(new Vector2(-enemy.RadiusDraw, -enemy.RadiusDraw));
                 GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(new Vector2((float)(enemy.RadiusDraw * Math.Sin(y)), (float)(-enemy.RadiusDraw * Math.Sin(y))));
+                GL.Vertex2(new Vector2(enemy.RadiusDraw, -enemy.RadiusDraw));
                 GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(new Vector2((float)(enemy.RadiusDraw * Math.Sin(y)), (float)(enemy.RadiusDraw * Math.Sin(y))));
+                GL.Vertex2(new Vector2(enemy.RadiusDraw, enemy.RadiusDraw));
                 GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(new Vector2((float)(-enemy.RadiusDraw * Math.Sin(y)), (float)(enemy.RadiusDraw * Math.Sin(y))));
+                GL.Vertex2(new Vector2(-enemy.RadiusDraw, enemy.RadiusDraw));
                 GL.End();
                 GL.PopMatrix();
                 GL.Enable(EnableCap.Blend);

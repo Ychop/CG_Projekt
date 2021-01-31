@@ -90,7 +90,7 @@
             float playerSizeColl = 0.01f;
             float playerHitpoints = 1f;
             float playerVelocity = 0.8f;
-            this.Player = new Player(new Vector2(((float)this.rng.NextDouble() * 1.1f) - 0.65f, ((float)this.rng.NextDouble() * 1.1f) - 0.65f), playerSizeDraw, playerSizeColl, playerVelocity, playerHitpoints, -1);
+            this.Player = new Player(new Vector2(((float)this.rng.NextDouble() * 1.1f) - 0.60f, ((float)this.rng.NextDouble() * 1.1f) - 0.60f), playerSizeDraw, playerSizeColl, playerVelocity, playerHitpoints, -1);
             GameObjects.Add(this.Player);
         }
 

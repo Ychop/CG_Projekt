@@ -12,7 +12,7 @@
         internal float moveLR;
         internal float moveUD;
         public Vector2 direction;
-        internal SoundManager manager;
+        private SoundManager sManager;
 
 
         public Player(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
@@ -29,13 +29,11 @@
             this.AmmoShotgun = 3;
             this.AmmoRPG = 1;
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
-            this.manager = new SoundManager();
+            this.sManager = new SoundManager();
         }
 
         internal double Angle { get; set; }
         internal int SelectedWeapon { get; set; }
-
-        internal float Stamina { get; set; } = 1f;
 
         internal int AmmoPistol { get; set; }
 
@@ -51,13 +49,9 @@
         {
             var keyboard = Keyboard.GetState();
             var walkingSound = new CachedSound("../../Content/PlayerWalk.mp3");
-            if(keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D))
-            {
-                //this.manager.PlaySound(walkingSound);
-            }
-
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
+
                 this.moveLR = 0;
                 this.moveUD = 0;
             }
@@ -66,13 +60,6 @@
                 this.moveLR = keyboard.IsKeyDown(Key.A) ? -0.15f : keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
                 this.moveUD = keyboard.IsKeyDown(Key.S) ? -0.15f : keyboard.IsKeyDown(Key.W) ? 0.15f : 0.0f;
             }
-            if (keyboard.IsKeyDown(Key.ShiftLeft) && this.Stamina >= 0)
-            {
-                this.Velocity = 1.6f;
-                this.Stamina = 0f;
-            }
-            this.Stamina *= (deltaTime* 0.05f);
-            this.Velocity = 0.8f;
             player.Position += deltaTime * new Vector2(moveLR, moveUD) * this.Velocity;
         }
 
@@ -98,8 +85,8 @@
                         if (this.AmmoPistol > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/PistolSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
-                            bullets.Add(new Bullet(this.Position, weapon_.Size,weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
+                            sManager.PlaySound(AmmoSound);
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoPistol--;
                             this.Rpm = weapon_.RPM;
                             SelectedWeapon = weapon_.Type;
@@ -110,7 +97,7 @@
                         if (this.AmmoUZI > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/UZISound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoUZI--;
                             this.Rpm = weapon_.RPM;
@@ -122,7 +109,7 @@
                         if (this.AmmoShotgun > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/ShotgunSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.15f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.3f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
@@ -138,7 +125,7 @@
                         if (this.AmmoRPG > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/RPGSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoRPG--;
                             this.Rpm = weapon_.RPM;
@@ -150,14 +137,13 @@
                         break;
                 }
             }
-
-            for (int i = 0; i < bullets.Count; i++)
+            foreach (Bullet bullet in bullets)
             {
-                bullets[i].Position += bullets[i].Direction * bullets[i].Velocity;
-                bullets[i].Hitpoints -= deltaTime;
-                if (bullets[i].Hitpoints < 0)
+                bullet.MoveBullet(bullet);
+                bullet.Hitpoints -= deltaTime;
+                if (bullet.Hitpoints < 0)
                 {
-                    bullets.RemoveAt(i);
+                    bullets.Remove(bullet);
                 }
             }
         }

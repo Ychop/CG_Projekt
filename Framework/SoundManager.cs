@@ -10,8 +10,8 @@ namespace CG_Projekt.Framework
 {
     class SoundManager : IDisposable
     {
-        private readonly IWavePlayer outputDevice;
-        private readonly MixingSampleProvider mixer;
+        internal readonly IWavePlayer outputDevice;
+        internal readonly MixingSampleProvider mixer;
 
         public SoundManager(int sampleRate = 44100, int channelCount = 2)
         {
