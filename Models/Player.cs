@@ -25,9 +25,9 @@
             this.Velocity = velocity_;
             this.Id = id_;
             this.AmmoPistol = 100;
-            this.AmmoUZI = 10;
-            this.AmmoShotgun = 3;
-            this.AmmoRPG = 100;
+            this.AmmoUZI = 50;
+            this.AmmoShotgun = 10;
+            this.AmmoRPG = 3;
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
             this.sManager = new SoundManager();
         }
@@ -123,10 +123,12 @@
                         {
                             var AmmoSound = new CachedSound("../../Content/Sounds/ShotgunSound.mp3");
                             this.sManager.PlaySound(AmmoSound);
-                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.15f)));
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.1f)));
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.2f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.3f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
-                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularRight * 0.15f)));
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularRight * 0.1f)));
+                            bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularRight * 0.2f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularRight * 0.3f)));
                             this.AmmoShotgun--;
                             this.Rpm = weapon_.RPM;
