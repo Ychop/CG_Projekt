@@ -54,7 +54,7 @@
             this.Spm -= deltaTime;
             if (keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D) && this.Spm < 0)
             {
-                this.manager.PlaySound(walkingSound);
+           //     this.sManager.PlaySound(walkingSound);
                 this.Spm = 0.4f;
             }
 
@@ -98,7 +98,7 @@
                         if (this.AmmoPistol > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/PistolSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            this.sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoPistol--;
                             this.Rpm = weapon_.RPM;
@@ -110,7 +110,7 @@
                         if (this.AmmoUZI > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/UZISound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            this.sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoUZI--;
                             this.Rpm = weapon_.RPM;
@@ -122,7 +122,7 @@
                         if (this.AmmoShotgun > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/ShotgunSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            this.sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.15f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.3f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
@@ -138,7 +138,7 @@
                         if (this.AmmoRPG > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/RPGSound.mp3");
-                            this.manager.PlaySound(AmmoSound);
+                            this.sManager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoRPG--;
                             this.Rpm = weapon_.RPM;
