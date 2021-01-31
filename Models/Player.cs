@@ -27,7 +27,7 @@
             this.AmmoPistol = 100;
             this.AmmoUZI = 10;
             this.AmmoShotgun = 3;
-            this.AmmoRPG = 1;
+            this.AmmoRPG = 100;
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
             this.sManager = new SoundManager();
         }
@@ -44,14 +44,22 @@
         internal int AmmoRPG { get; set; }
 
         internal float Rpm { get; set; }
+        internal float Spm { get; set; }
 
         internal void MovePlayer(Player player, float deltaTime)
         {
             var keyboard = Keyboard.GetState();
             var walkingSound = new CachedSound("../../Content/PlayerWalk.mp3");
+            Spm = 0.4f;
+            this.Spm -= deltaTime;
+            if (keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D) && this.Spm < 0)
+            {
+                this.manager.PlaySound(walkingSound);
+                this.Spm = 0.4f;
+            }
+
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
-
                 this.moveLR = 0;
                 this.moveUD = 0;
             }
@@ -71,6 +79,11 @@
             this.Angle = angleRad * (180 / Math.PI);
         }
 
+        internal void Walkanimation(float deltaTime)
+        {
+
+        }
+
         internal void Shoot(List<Bullet> bullets, float deltaTime, Weapon weapon_)
         {
             var mouse = Mouse.GetState();
@@ -85,7 +98,7 @@
                         if (this.AmmoPistol > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/PistolSound.mp3");
-                            sManager.PlaySound(AmmoSound);
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoPistol--;
                             this.Rpm = weapon_.RPM;
@@ -97,7 +110,7 @@
                         if (this.AmmoUZI > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/UZISound.mp3");
-                            sManager.PlaySound(AmmoSound);
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoUZI--;
                             this.Rpm = weapon_.RPM;
@@ -109,7 +122,7 @@
                         if (this.AmmoShotgun > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/ShotgunSound.mp3");
-                            sManager.PlaySound(AmmoSound);
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.15f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction + (this.direction.PerpendicularLeft * 0.3f)));
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
@@ -125,7 +138,7 @@
                         if (this.AmmoRPG > 0)
                         {
                             var AmmoSound = new CachedSound("../../Content/RPGSound.mp3");
-                            sManager.PlaySound(AmmoSound);
+                            this.manager.PlaySound(AmmoSound);
                             bullets.Add(new Bullet(this.Position, weapon_.Size, weapon_.Size, deltaTime * weapon_.Velocity, 5f, bullets.Count + 1, this.direction));
                             this.AmmoRPG--;
                             this.Rpm = weapon_.RPM;

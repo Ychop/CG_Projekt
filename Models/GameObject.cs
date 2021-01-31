@@ -24,5 +24,9 @@
         internal float Hitpoints { get; set; }
 
         internal int Id { get; set; }
+        public virtual void Update(float frameTime)
+        {
+        }
+
     }
 }

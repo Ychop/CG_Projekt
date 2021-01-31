@@ -148,9 +148,6 @@
     <EmbeddedResource Include="Content\rocks.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\playerNew.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\collectible.png" />
     <EmbeddedResource Include="Content\enemyNew.png" />
   </ItemGroup>
@@ -228,6 +225,19 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Grunt.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\enemyhitanimationNew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\enemywalkanimation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerPistol.png" />
+    <EmbeddedResource Include="Content\PlayerShotgun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\PlayerUzi.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
