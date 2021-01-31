@@ -24,7 +24,7 @@
         internal float Damage { get; set; } = 0.01f;
         internal float NormalizedAnimationTime { get; set; } = 0f;
         public float AnimationLength { get; }
-        public override void Update(float deltaTime)
+        public void AnimationUpdate(float deltaTime)
         {
             base.Update(deltaTime);
             NormalizedAnimationTime += deltaTime / AnimationLength;

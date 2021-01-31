@@ -242,5 +242,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\PlayerUzi.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\RocksTest.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
