@@ -16,13 +16,10 @@ namespace CG_Projekt
         private int texPlayerPistol;
         private int texPlayerShotgun;
         private int texPlayerUzi;
-        private int texEnemy;
         private int texEnemyWalk;
         private int texObstacle;
         private int texStart;
         private int texStartBlack;
-        private int texCollectible;
-        private int texBullet;
         private int texGrass;
         private int texWater;
         private int texHealth;
@@ -34,7 +31,7 @@ namespace CG_Projekt
         private int texAmmoPistol;
         private int texAmmoUzi;
         private int texAmmoShotgun;
-        private int texAmmoMissile;
+        private int texMissile;
         private int texPistol;
         private int texUzi;
         private int texShotgun;
@@ -58,12 +55,9 @@ namespace CG_Projekt
             this.texPlayerPistol = Texture.Load(Resource.LoadStream(content + "PlayerPistol.png"));
             this.texPlayerShotgun = Texture.Load(Resource.LoadStream(content + "PlayerShotgun.png"));
             this.texPlayerUzi = Texture.Load(Resource.LoadStream(content + "PlayerUzi.png"));
-            this.texEnemy = Texture.Load(Resource.LoadStream(content + "enemyNew.png"));
             this.texEnemyWalk = Texture.Load(Resource.LoadStream(content + "enemywalkanimation.png"));
             this.texObstacle = Texture.Load(Resource.LoadStream(content + "rocks.png"));
-            this.texCollectible = Texture.Load(Resource.LoadStream(content + "collectible.png"));
             this.texHeartCollectible = Texture.Load(Resource.LoadStream(content + "heart.png"));
-            this.texBullet = Texture.Load(Resource.LoadStream(content + "bullet.png"));
             this.texStart = Texture.Load(Resource.LoadStream(content + "Press.png"));
             this.texStartBlack = Texture.Load(Resource.LoadStream(content + "PressBlack.png"));
             this.texGrass = Texture.Load(Resource.LoadStream(content + "grass.png"));
@@ -75,7 +69,7 @@ namespace CG_Projekt
             this.texAmmoPistol = Texture.Load(Resource.LoadStream(content + "ammoPistol.png"));
             this.texAmmoUzi = Texture.Load(Resource.LoadStream(content + "ammoUZI.png"));
             this.texAmmoShotgun = Texture.Load(Resource.LoadStream(content + "ammoShotgun.png"));
-            this.texAmmoMissile = Texture.Load(Resource.LoadStream(content + "ammoMissile.png"));
+            this.texMissile = Texture.Load(Resource.LoadStream(content + "ammoMissile.png"));
             this.texPistol = Texture.Load(Resource.LoadStream(content + "Pistol.png"));
             this.texUzi = Texture.Load(Resource.LoadStream(content + "Uzi.png"));
             this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
@@ -343,7 +337,7 @@ namespace CG_Projekt
                 GL.Disable(EnableCap.Blend);
                 GL.PushMatrix();
                 GL.Translate(new Vector3(enemy.Position.X, enemy.Position.Y, 0));
-                GL.Rotate(enemy.AngleToPlayer - 90, new Vector3d(0, 0, 1));
+                GL.Rotate(enemy.AngleToPlayer + 90, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(texCoords.MinX, texCoords.MinY);
                 GL.Vertex2(new Vector2((-enemy.RadiusDraw), (-enemy.RadiusDraw)));
@@ -365,10 +359,10 @@ namespace CG_Projekt
             foreach (Bullet bullet in model.Bullets)
             {
                 Vector2 bulletOffset = new Vector2(0, -0.007f);
-                GL.BindTexture(TextureTarget.Texture2D, this.texBullet);
+                GL.BindTexture(TextureTarget.Texture2D, this.texMissile);
                 GL.PushMatrix();
                 GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
-                GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
+                GL.Rotate(bullet.Angle - 90, new Vector3d(0, 0, -1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(new Vector2(0, 0));
                 GL.Vertex2(bulletOffset + new Vector2(-bullet.RadiusDraw, -bullet.RadiusDraw));
@@ -493,7 +487,7 @@ namespace CG_Projekt
                         GL.BindTexture(TextureTarget.Texture2D, this.texAmmoShotgun);
                         break;
                     case 4:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoMissile);
+                        GL.BindTexture(TextureTarget.Texture2D, this.texMissile);
                         break;
                 }
                 GL.Disable(EnableCap.Blend);
