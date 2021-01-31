@@ -147,7 +147,6 @@
     <EmbeddedResource Include="Content\Textures\rocks.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Textures\collectible.png" />
     <EmbeddedResource Include="Content\Textures\enemyNew.png" />
   </ItemGroup>
   <ItemGroup>
