@@ -88,13 +88,14 @@
         internal void GenerateObstacles()
         {
             float obstacleVelocity = 0f;
+            float maxSize = 0.08f;
             float obstacleHitpoints = 1000f;
 
             this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             for (int i = 0; i < this.objectsLimit; i++)
             {
-                float obstacleSize = 0.01f;
+                float obstacleSize = 0.02f;
                 this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count-1));
                 while (Intersection.IntersectsAny(this.GameObjects,Obstacles[i]))
                 {

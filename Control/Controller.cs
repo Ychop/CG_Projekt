@@ -156,7 +156,7 @@
                     enemy.Hitpoints = 3f;
                 }
                 enemy.EnemyAI(enemy, this.player, deltaTime);
-                enemy.Update(deltaTime);
+                enemy.AnimationUpdate(deltaTime);
             }
         }
         internal void UpdatePlayer(float deltaTime)

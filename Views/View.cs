@@ -339,8 +339,6 @@ namespace CG_Projekt
                 GL.BindTexture(TextureTarget.Texture2D, texEnemyWalk);
                 //NormalizedAnimationTime ist 0 am anfang der animation und nahe bei 1 am ende
                 var spriteId = (uint)Math.Round(enemy.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));        //Zahl zwischen 0 und 7
-                                                                                                                                //  Console.WriteLine("spriteId: " + spriteId);
-                                                                                                                                // Console.WriteLine("NAT: " + enemy.NormalizedAnimationTime);
                 var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, spritesPerRow, spritesPerColumn);
                 GL.Disable(EnableCap.Blend);
                 GL.PushMatrix();
