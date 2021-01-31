@@ -42,17 +42,7 @@
         internal int Score { get; set; } = 0;
         internal int weaponSelected = 1;
         internal float Time { get; private set; } = 0;
-        internal bool IntersectsAny(GameObject obj_)
-        {
-            foreach (GameObject obj in this.GameObjects)
-            {
-                if (this.Intersection.IsIntersecting(obj_, obj) && obj != obj_ && (Math.Pow(obj_.Position.X - obj.Position.X, 2) + Math.Pow(obj_.Position.Y - obj.Position.Y, 2) < (obj.RadiusDraw + obj_.RadiusDraw)))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+      
 
         internal void GenerateLevelGrid()
         {
@@ -106,11 +96,11 @@
             {
                 float obstacleSize = 0.01f;
                 this.Obstacles.Add(new Obstacle(new Vector2(this.ranX, this.ranY), obstacleSize, obstacleSize - 0.008f, obstacleVelocity, obstacleHitpoints, GameObjects.Count-1));
-                while (IntersectsAny(Obstacles[i]))
+                while (Intersection.IntersectsAny(this.GameObjects,Obstacles[i]))
                 {
                     Obstacles[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
                 }
-                while (!IntersectsAny(Obstacles[i]))
+                while (!Intersection.IntersectsAny(this.GameObjects,Obstacles[i]))
                 {
                     obstacleSize += 0.01f;
                     Obstacles[i].RadiusDraw = obstacleSize;
@@ -135,7 +125,7 @@
                 this.GameObjects.Add(this.Enemies[i]);
                 for (int j = 0; j < this.GameObjects.Count; j++)
                 {
-                    while (this.IntersectsAny(this.Enemies[i]) && (Math.Pow(this.Enemies[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Enemies[i].Position.Y - this.Player.Position.Y, 2)) < 0.5f)
+                    while (Intersection.IntersectsAny(this.GameObjects,this.Enemies[i]) && (Math.Pow(this.Enemies[i].Position.X - this.Player.Position.X, 2) + Math.Pow(this.Enemies[i].Position.Y - this.Player.Position.Y, 2)) < 0.5f)
                     {
                         this.Enemies[i].Position = new Vector2(((float)this.rng.NextDouble() * 1.2f) - 0.6f, ((float)this.rng.NextDouble() * 1.2f) - 0.6f);
                     }
@@ -148,7 +138,7 @@
         {
             float pickupSizeDraw = 0.005f;
             float pickupSizeColl = pickupSizeDraw;
-            float pickupVelocity = 0f;
+            float pickupVelocity = 0.8f;
             float pickupHitpoints = 100f;
 
             if ((Score % 2) == 0)

@@ -145,99 +145,99 @@
     <Folder Include="Res\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\rocks.png" />
+    <EmbeddedResource Include="Content\Textures\rocks.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\collectible.png" />
-    <EmbeddedResource Include="Content\enemyNew.png" />
+    <EmbeddedResource Include="Content\Textures\collectible.png" />
+    <EmbeddedResource Include="Content\Textures\enemyNew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\healthbar.png" />
+    <EmbeddedResource Include="Content\Textures\healthbar.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\nullptr_hq4x.png" />
+    <EmbeddedResource Include="Content\Textures\nullptr_hq4x.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Blood_Bath.png" />
+    <EmbeddedResource Include="Content\Textures\Blood_Bath.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\heart.png" />
+    <EmbeddedResource Include="Content\Textures\heart.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\ammoMissile.png" />
-    <EmbeddedResource Include="Content\ammoShotgun.png" />
-    <EmbeddedResource Include="Content\Rocketlauncher.png" />
+    <EmbeddedResource Include="Content\Textures\ammoMissile.png" />
+    <EmbeddedResource Include="Content\Textures\ammoShotgun.png" />
+    <EmbeddedResource Include="Content\Textures\Rocketlauncher.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\ammoPistol.png" />
-    <EmbeddedResource Include="Content\ammoUZI.png" />
+    <EmbeddedResource Include="Content\Textures\ammoPistol.png" />
+    <EmbeddedResource Include="Content\Textures\ammoUZI.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Pistol.png" />
-    <EmbeddedResource Include="Content\Shotgun.png" />
-    <EmbeddedResource Include="Content\Uzi.png" />
+    <EmbeddedResource Include="Content\Textures\Pistol.png" />
+    <EmbeddedResource Include="Content\Textures\Shotgun.png" />
+    <EmbeddedResource Include="Content\Textures\Uzi.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\healthbar -Background.png" />
+    <EmbeddedResource Include="Content\Textures\healthbar -Background.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bullet.png" />
+    <EmbeddedResource Include="Content\Textures\bullet.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\grass.png" />
+    <EmbeddedResource Include="Content\Textures\grass.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\water.jpg" />
+    <EmbeddedResource Include="Content\Textures\water.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\BloodNew.png" />
+    <EmbeddedResource Include="Content\Textures\BloodNew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\debris.png" />
+    <EmbeddedResource Include="Content\Textures\debris.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\PistolSound.mp3" />
-    <EmbeddedResource Include="Content\ShotgunSound.mp3" />
+    <EmbeddedResource Include="Content\Sounds\PistolSound.mp3" />
+    <EmbeddedResource Include="Content\Sounds\ShotgunSound.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\RPGSound.mp3" />
+    <EmbeddedResource Include="Content\Sounds\RPGSound.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\PlayerWalk.mp3" />
+    <EmbeddedResource Include="Content\Sounds\PlayerWalk.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\UZISound.mp3" />
+    <EmbeddedResource Include="Content\Sounds\UZISound.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Press.png" />
+    <EmbeddedResource Include="Content\Textures\Press.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\PressBlack.png" />
+    <EmbeddedResource Include="Content\Textures\PressBlack.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Reload.mp3" />
+    <EmbeddedResource Include="Content\Sounds\Reload.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Bloodsound.mp3" />
+    <EmbeddedResource Include="Content\Sounds\Bloodsound.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Lifeup.mp3" />
+    <EmbeddedResource Include="Content\Sounds\Lifeup.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Grunt.mp3" />
+    <EmbeddedResource Include="Content\Sounds\Grunt.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\enemyhitanimationNew.png" />
+    <EmbeddedResource Include="Content\Textures\enemyhitanimationNew.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\enemywalkanimation.png" />
+    <EmbeddedResource Include="Content\Textures\enemywalkanimation.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\PlayerPistol.png" />
-    <EmbeddedResource Include="Content\PlayerShotgun.png" />
+    <EmbeddedResource Include="Content\Textures\PlayerPistol.png" />
+    <EmbeddedResource Include="Content\Textures\PlayerShotgun.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\PlayerUzi.png" />
+    <EmbeddedResource Include="Content\Textures\PlayerUzi.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,42 +13,48 @@ namespace CG_Projekt
 
     internal class View
     {
-        private readonly int texPlayerPistol;
-        private readonly int texPlayerShotgun;
-        private readonly int texPlayerUzi;
-        private readonly int texEnemy;
-        private readonly int texEnemyWalk;
-        private readonly int texObstacle;
-        private readonly int texStart;
-        private readonly int texStartBlack;
-        private readonly int texCollectible;
-        private readonly int texBullet;
-        private readonly int texGrass;
-        private readonly int texWater;
-        private readonly int texHealth;
-        private readonly int texBlood;
-        private readonly int texFragment;
-        private readonly int texfontScore;
-        private readonly int texfontAmmo;
-        private readonly int texHeartCollectible;
-        private readonly int texAmmoPistol;
-        private readonly int texAmmoUzi;
-        private readonly int texAmmoShotgun;
-        private readonly int texAmmoMissile;
-        private readonly int texPistol;
-        private readonly int texUzi;
-        private readonly int texShotgun;
-        private readonly int texRPG;
-        private readonly int texExplosion;
-        private readonly int texHealthBackground;
+        private int texPlayerPistol;
+        private int texPlayerShotgun;
+        private int texPlayerUzi;
+        private int texEnemy;
+        private int texEnemyWalk;
+        private int texObstacle;
+        private int texStart;
+        private int texStartBlack;
+        private int texCollectible;
+        private int texBullet;
+        private int texGrass;
+        private int texWater;
+        private int texHealth;
+        private int texBlood;
+        private int texFragment;
+        private int texfontScore;
+        private int texfontAmmo;
+        private int texHeartCollectible;
+        private int texAmmoPistol;
+        private int texAmmoUzi;
+        private int texAmmoShotgun;
+        private int texAmmoMissile;
+        private int texPistol;
+        private int texUzi;
+        private int texShotgun;
+        private int texRPG;
+        private int texExplosion;
+        private int texHealthBackground;
         private Random random = new Random();
         public bool GameOver = false;
         public bool GameStarted = false;
+        public bool TexturesLoaded = false;
 
         internal View(Camera camera)
         {
             this.Camera = camera;
-            var content = $"{nameof(CG_Projekt)}.Content.";
+            this.Loadtextures();
+
+        }
+        internal void Loadtextures()
+        {
+            var content = $"{nameof(CG_Projekt)}.Content.Textures.";
             this.texPlayerPistol = Texture.Load(Resource.LoadStream(content + "PlayerPistol.png"));
             this.texPlayerShotgun = Texture.Load(Resource.LoadStream(content + "PlayerShotgun.png"));
             this.texPlayerUzi = Texture.Load(Resource.LoadStream(content + "PlayerUzi.png"));
@@ -81,16 +87,15 @@ namespace CG_Projekt
             GL.Enable(EnableCap.Texture2D);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend);
-
-
+            TexturesLoaded = true;
         }
+
         internal float change = -1f;
         internal Camera Camera { get; }
         internal void Draw(Model model)
         {
-
-
             GL.Clear(ClearBufferMask.ColorBufferBit);
+
             this.Camera.Center = model.Player.Position;
             this.DrawSea(model);
             this.DrawLevelGrid(model);
@@ -292,7 +297,7 @@ namespace CG_Projekt
         internal void DrawPlayer(Model model)
         {
             GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
-            switch (model.Player.SelectedWeapon)
+            switch (model.weaponSelected)
             {
                 case 1:
                     GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
@@ -322,7 +327,7 @@ namespace CG_Projekt
             GL.End();
             GL.PopMatrix();
         }
-        
+
         internal void DrawEnemy(Model model)
         {
             const uint spritesPerColumn = 2;
@@ -334,13 +339,13 @@ namespace CG_Projekt
                 GL.BindTexture(TextureTarget.Texture2D, texEnemyWalk);
                 //NormalizedAnimationTime ist 0 am anfang der animation und nahe bei 1 am ende
                 var spriteId = (uint)Math.Round(enemy.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));        //Zahl zwischen 0 und 7
-                Console.WriteLine("spriteId: " + spriteId);
-                Console.WriteLine("NAT: " + enemy.NormalizedAnimationTime);
+                                                                                                                                //  Console.WriteLine("spriteId: " + spriteId);
+                                                                                                                                // Console.WriteLine("NAT: " + enemy.NormalizedAnimationTime);
                 var texCoords = SpriteSheetTools.CalcTexCoords(spriteId, spritesPerRow, spritesPerColumn);
                 GL.Disable(EnableCap.Blend);
                 GL.PushMatrix();
                 GL.Translate(new Vector3(enemy.Position.X, enemy.Position.Y, 0));
-                GL.Rotate(enemy.AngleToPlayer, new Vector3d(0, 0, 1));
+                GL.Rotate(enemy.AngleToPlayer - 90, new Vector3d(0, 0, 1));
                 GL.Begin(PrimitiveType.Quads);
                 GL.TexCoord2(texCoords.MinX, texCoords.MinY);
                 GL.Vertex2(new Vector2((-enemy.RadiusDraw), (-enemy.RadiusDraw)));
@@ -448,6 +453,7 @@ namespace CG_Projekt
                 GL.Vertex2(obstacle.Position + new Vector2(-obstacle.RadiusDraw, obstacle.RadiusDraw));
                 GL.End();
             }
+            /*
             foreach (Enemy enemy in model.Enemies)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texEnemy);
@@ -469,6 +475,7 @@ namespace CG_Projekt
                 GL.Enable(EnableCap.Blend);
                 this.EnemyHealth(enemy);
             }
+            */
 
 
             foreach (PickUp pickup in model.PickUps)

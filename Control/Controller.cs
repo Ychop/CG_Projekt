@@ -11,7 +11,6 @@
     {
         private readonly View view;
         private readonly Model model;
-        private readonly GameWindow window;
         private readonly Player player;
         private readonly Random rng = new Random();
         private float axisZoom = 0f;
@@ -19,13 +18,12 @@
         private Weapon weapon;
         private Vector2 mousePosition;
         public bool GameStarted = false;
-        private SoundManager sManager;
+        private readonly SoundManager sManager;
 
-        internal Controller(View view_, Model model_, GameWindow window_)
+        internal Controller(View view_, Model model_)
         {
             this.view = view_;
             this.model = model_;
-            this.window = window_;
             this.player = this.model.Player;
             this.Camera = this.view.Camera;
             this.weapon = this.model.Weapons[0];
@@ -38,26 +36,27 @@
         internal void Update(float deltaTime)
         {
             UpdateMainMenu();
-            if (!view.GameOver && GameStarted)
+            if (!view.GameOver && GameStarted && view.TexturesLoaded)
             {
                 // Zoom mit dem Mausrad
                 this.ScrollControl(deltaTime);
 
-                // Updatet den Spieler
-                this.UpdatePlayer(deltaTime);
+                //Updatet die GameObjects.
+                this.UpdatedGameObjects(deltaTime);
 
                 // Checkt die Collisons
                 this.CheckCollisions();
-
-                // Updatet die Enemies
-                this.UpdateEnemy(this.model.Enemies, deltaTime);
-
-                //Updated die Partikel
-                UpdateParticle(deltaTime);
-
             }
         }
-
+        internal void UpdatedGameObjects(float deltaTime)
+        {
+            // Updatet den Spieler
+            this.UpdatePlayer(deltaTime);
+            // Updatet die Enemies
+            this.UpdateEnemy(deltaTime);
+            //Updated die Partikel
+            UpdateParticle(deltaTime);
+        }
         internal void UpdateMainMenu()
         {
             var keyboard = Keyboard.GetState();
@@ -67,7 +66,17 @@
                 view.GameStarted = true;
             }
         }
-
+        internal bool IsDead(GameObject obj_)
+        {
+            if (obj_.Hitpoints < 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         internal void WepaonSelection(char key_)
         {
             switch (key_)
@@ -127,37 +136,35 @@
                 }
             }
         }
-        internal void UpdateEnemy(List<Enemy> enemies, float deltaTime) // Enemies bewegen sich richtung Spieler
+        internal void UpdateEnemy(float deltaTime)
         {
             foreach (Enemy enemy in model.Enemies)
             {
-
-                if (enemy.Hitpoints < 0)
+                if (IsDead(enemy))
                 {
                     model.Score++;
                     model.GeneratePickUp(enemy.Position);
                     this.PlaceNewEnemy(enemy);
                     enemy.Hitpoints = 1f;
                 }
-                if(enemy.SpeedUp > 0.8f)
+                if (enemy.SpeedUp > 0.8f)
                 {
                     enemy.SpeedUp = 0.8f;
                 }
-                if(enemy.Hitpoints > 5f)
+                if (enemy.Hitpoints > 3f)
                 {
-                    enemy.Hitpoints = 5f;
+                    enemy.Hitpoints = 3f;
                 }
                 enemy.EnemyAI(enemy, this.player, deltaTime);
                 enemy.Update(deltaTime);
             }
         }
-
         internal void UpdatePlayer(float deltaTime)
         {
             this.player.MovePlayer(this.model.Player, deltaTime);
             this.player.AglignPlayer(this.mousePosition);
             this.player.Shoot(this.model.Bullets, deltaTime, this.weapon);
-            if (this.player.Hitpoints < 0)
+            if (IsDead(this.player))
             {
                 view.GameOver = true;
             }
@@ -166,38 +173,36 @@
                 this.player.Hitpoints = 1;
             }
         }
-
         internal void ScrollControl(float deltaTime)
         {
             var mouse = Mouse.GetState();
             var scrollValue = mouse.ScrollWheelValue;
-
+            var maxZoomIn = 0.1f;
+            var maxZoomOut = 0.2f;
+            float zoomChange = 2f;
             if (scrollValue < this.oldScrollValue)
             {
-                this.axisZoom = 2f;
+                this.axisZoom = zoomChange;
                 this.oldScrollValue = scrollValue;
             }
             else if (scrollValue > this.oldScrollValue)
             {
-                this.axisZoom = -2f;
+                this.axisZoom = -zoomChange;
                 this.oldScrollValue = scrollValue;
             }
             else if (scrollValue == this.oldScrollValue)
             {
                 this.axisZoom = 0f;
             }
-
             var zoom = this.view.Camera.Scale * (1 + (deltaTime * this.axisZoom));
-            if (zoom > 0.2f)
+            if (zoom > maxZoomOut)
             {
-                zoom = 0.2f;
+                zoom = maxZoomOut;
             }
-
-            if (zoom < 0.1f)
+            if (zoom < maxZoomIn)
             {
-                zoom = 0.1f;
+                zoom = maxZoomIn;
             }
-
             this.view.Camera.Scale = zoom;
         }
         internal void CheckCollisions()
@@ -212,9 +217,9 @@
         {
             // Checkt Enemy/Player with LeverBorder Collision
             this.Intersection.ObjectCollidingWithLeverBorder(this.player);
-            for (int i = 0; i < this.model.Enemies.Count; i++)
+            foreach (Enemy enemy in model.Enemies)
             {
-                this.Intersection.ObjectCollidingWithLeverBorder(this.model.Enemies[i]);
+                this.Intersection.ObjectCollidingWithLeverBorder(enemy);
             }
             for (int i = 0; i < this.model.Bullets.Count; i++)
             {
@@ -227,36 +232,43 @@
         internal void CheckPlayerCollisions()
         {
             // Check Enemy and Player collision
-            for (int i = 0; i < this.model.Enemies.Count; i++)
+            foreach (Enemy enemy in model.Enemies)
             {
-                if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.Enemies[i]))
+                if (this.Intersection.IsIntersectingCircle(this.model.Player, enemy))
                 {
-
-                    float powerOfschubs = 0.001f;
-                    Console.WriteLine("Player Collision mit Enemy: " + this.model.Enemies[i].Id);
-                    this.model.Player.Hitpoints -= model.Enemies[i].Damage;
-                    this.model.Player.Position += this.model.Enemies[i].playerDirection.Normalized()* powerOfschubs;
-                    for (int j = 0; j < rng.Next(10, 20); j++)
+                    var minSplatter = 10;
+                    var maxSplatter = 20;
+                    var particleSize = 0.0015f;
+                    var particleId = 1;
+                    var particleHitpoints = 5f;
+                    float particleSpeed;
+                    Vector2 particleDirection;
+                    var powerOfschubs = 0.001f;
+                    Console.WriteLine("Player Collision mit Enemy: " + enemy.Id);
+                    this.model.Player.Hitpoints -= enemy.Damage;
+                    this.model.Player.Position += enemy.playerDirection.Normalized() * powerOfschubs;
+                    for (int j = 0; j < rng.Next(minSplatter, maxSplatter); j++)
                     {
-                        this.model.Particles.Add(new Particle(player.Position, 0.0015f, 0.0015f, (float)rng.NextDouble() - 0.2f, 5f, 1, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                        particleSpeed = (float)rng.NextDouble() - 0.2f;
+                        particleDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
+                        this.model.Particles.Add(new Particle(player.Position, particleSize, particleSize, particleSpeed, particleHitpoints, particleId, particleDirection));
                     }
-
-                        var Grunt = new CachedSound("../../Content/Grunt.mp3");
-                        sManager.PlaySound(Grunt);  
+                    var Grunt = new CachedSound("../../Content/Sounds/Grunt.mp3");
+                    sManager.PlaySound(Grunt);
                 }
             }
 
             // Check Obstacle with Player collision
-            for (int i = 0; i < this.model.Obstacles.Count; i++)
+            foreach (Obstacle obstacle in model.Obstacles)
             {
-                if (this.Intersection.IsIntersectingCircle(this.player, this.model.Obstacles[i]))
+                if (this.Intersection.IsIntersectingCircle(this.player, obstacle))
                 {
-                    float radiusSum = (player.RadiusCollision + model.Obstacles[i].RadiusCollision);
-                    Vector2 diff = player.Position - model.Obstacles[i].Position;
+                    float radiusSum = (player.RadiusCollision + obstacle.RadiusCollision);
+                    Vector2 diff = player.Position - obstacle.Position;
                     diff /= diff.Length;
                     diff *= (radiusSum);
-                    this.player.Position = model.Obstacles[i].Position + diff;
-                    Console.WriteLine("Player Collision mit Obstacle: " + this.model.Obstacles[i].Id);
+                    this.player.Position = obstacle.Position + diff;
+                    Console.WriteLine("Player Collision mit Obstacle: " + obstacle.Id);
                 }
             }
             // Check Pickup with Player collision
@@ -265,19 +277,19 @@
                 if (this.Intersection.IsIntersectingCircle(this.model.Player, this.model.PickUps[i]))
                 {
                     Console.WriteLine("Player Collision mit Pickup: " + this.model.PickUps[i].Id);
-                    if(this.model.PickUps[i].Type > 0)
+                    if (this.model.PickUps[i].Type > 0)
                     {
-                        var ReloadSound = new CachedSound("../../Content/Reload.mp3");
+                        var ReloadSound = new CachedSound("../../Content/Sounds/Reload.mp3");
                         sManager.PlaySound(ReloadSound);
                     }
                     else
                     {
-                        var Lifeup = new CachedSound("../../Content/Lifeup.mp3");
+                        var Lifeup = new CachedSound("../../Content/Sounds/Lifeup.mp3");
                         sManager.PlaySound(Lifeup);
                     }
                     switch (this.model.PickUps[i].Type)
                     {
-                        case 0:                     
+                        case 0:
                             this.player.Hitpoints += 0.1f;
                             Console.WriteLine("Leben: +100");
                             this.model.PickUps.RemoveAt(i);
@@ -312,6 +324,12 @@
         {
             // Check Bullet collision with GameObjects
             int isBlood;//0 = false 1 = true;
+            var fragmentSize = 0.002f;
+            var fragmentSpeed = 0.5f;
+            var fragmentHitpoints = 2f;
+            var fragmentID = 0;
+            var weaponIsRocket = 4;
+            Vector2 fragmentDirection;
             foreach (GameObject gameObject in model.GameObjects)
             {
                 for (int j = 0; j < this.model.Bullets.Count; j++)
@@ -325,67 +343,73 @@
                         else
                         {
                             isBlood = 1;
-                            var Bloodsound = new CachedSound("../../Content/Bloodsound.mp3");
+                            var Bloodsound = new CachedSound("../../Content/Sounds/Bloodsound.mp3");
                             sManager.PlaySound(Bloodsound);
                         }
-                        if (this.player.SelectedWeapon == 4)
+                        if (this.player.SelectedWeapon == weaponIsRocket)
                         {
                             for (int i = 0; i < rng.Next(10, 20); i++)
                             {
-                                this.model.RPGFragments.Add(new Particle(gameObject.Position, 0.002f, 0.002f, 0.5f, 2f, 0, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));                             
+                                fragmentDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
+                                this.model.RPGFragments.Add(new Particle(gameObject.Position, fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, fragmentID, fragmentDirection));
                             }
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
                         {
-                           
-                            this.model.Particles.Add(new Particle(gameObject.Position+(this.model.Bullets[j].Position-gameObject.Position), 0.0015f, 0.0015f,(float)rng.NextDouble()-0.2f, 5f, isBlood, new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1)));
+                            fragmentDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
+                            fragmentSize = 0.0015f;
+                            fragmentSpeed = (float)rng.NextDouble() - 0.2f;
+                            fragmentHitpoints = 5f;
+                            this.model.Particles.Add(new Particle(gameObject.Position + (this.model.Bullets[j].Position - gameObject.Position), fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection));
                         }
-                        
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }
-                }             
+                }
             }
         }
         internal void CheckDebrisCollison()
         {
-            foreach(GameObject gameObject in model.GameObjects)
+            var playerID = -1;
+            foreach (GameObject gameObject in model.GameObjects)
             {
-                foreach(Particle fragment in model.RPGFragments)
+                foreach (Particle fragment in model.RPGFragments)
                 {
-                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject) && gameObject.Id != -1)
+                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject) && gameObject.Id != playerID)
                     {
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }
                 }
-              
             }
         }
         internal void CheckEnemyCollisions()
         {
+            var enemyInOtherSphere = 0.0005f;
+            var enemySlowdown = -0.05f;
             // EnemyWithEnemyCollision
             foreach (Enemy enemy in this.model.Enemies)
             {
                 foreach (Enemy enemy1 in this.model.Enemies)
                 {
-                    if (Math.Pow(enemy.Position.X - enemy1.Position.X, 2) + Math.Pow(enemy.Position.Y - enemy1.Position.Y, 2) <= 0.0003f)
+                    double distanceEnemies = Math.Pow(enemy.Position.X - enemy1.Position.X, 2) + Math.Pow(enemy.Position.Y - enemy1.Position.Y, 2);
+                    if (distanceEnemies <= enemyInOtherSphere)
                     {
-                        enemy.Position += new Vector2(enemy1.Position.X - enemy.Position.X, enemy1.Position.Y - enemy.Position.Y) * -0.005f;
+                        enemy.Position += new Vector2(enemy1.Position.X - enemy.Position.X, enemy1.Position.Y - enemy.Position.Y) * enemySlowdown;
                     }
                 }
             }
             // Check Enemy with Obstacle Collision
-            for (int i = 0; i < this.model.Enemies.Count; i++)
+           foreach(Enemy enemy in model.Enemies)
             {
-                for (int j = 0; j < this.model.Obstacles.Count; j++)
+               foreach(Obstacle obstacle in model.Obstacles)
                 {
-                    if (this.Intersection.IsIntersectingCircle(this.model.Enemies[i], this.model.Obstacles[j]))
+                    if (this.Intersection.IsIntersectingCircle(enemy, obstacle))
                     {
-                        float radiusSum = (this.model.Enemies[i].RadiusCollision + model.Obstacles[j].RadiusCollision);
-                        Vector2 diff = this.model.Enemies[i].Position - model.Obstacles[j].Position;
+                        float radiusSum = (enemy.RadiusCollision + obstacle.RadiusCollision);
+                        Vector2 diff = enemy.Position - obstacle.Position;
                         diff /= diff.Length;
                         diff *= (radiusSum);
-                        this.model.Enemies[i].Position = model.Obstacles[j].Position + diff;
+                        enemy.Position = obstacle.Position + diff;
                     }
                 }
             }
@@ -400,7 +424,7 @@
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);
-                if (this.model.IntersectsAny(obj) && (Math.Pow(obj.Position.X - player.Position.X, 2) + Math.Pow(obj.Position.Y - player.Position.Y, 2)) < 0.05f)
+                if (this.Intersection.IntersectsAny(model.GameObjects,obj))
                 {
                     ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                     ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
