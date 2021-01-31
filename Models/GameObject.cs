@@ -1,7 +1,6 @@
 ﻿namespace CG_Projekt
 {
     using OpenTK;
-
     internal class GameObject
     {
         public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)

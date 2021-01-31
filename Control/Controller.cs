@@ -399,9 +399,9 @@
                 }
             }
             // Check Enemy with Obstacle Collision
-           foreach(Enemy enemy in model.Enemies)
+            foreach (Enemy enemy in model.Enemies)
             {
-               foreach(Obstacle obstacle in model.Obstacles)
+                foreach (Obstacle obstacle in model.Obstacles)
                 {
                     if (this.Intersection.IsIntersectingCircle(enemy, obstacle))
                     {
@@ -424,7 +424,7 @@
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);
-                if (this.Intersection.IntersectsAny(model.GameObjects,obj))
+                if (this.Intersection.IntersectsAny(model.GameObjects, obj))
                 {
                     ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                     ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;

@@ -1,9 +1,7 @@
 ﻿namespace CG_Projekt.Models
 {
     using System;
-    using System.Collections.Generic;
     using OpenTK;
-
     internal class Bullet : GameObject
     {
         internal Bullet(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_, Vector2 direction_)
@@ -22,10 +20,7 @@
         }
 
         internal Vector2 Direction { get; set; }
-
         internal double Angle { get; }
-
-
         public void MoveBullet(Bullet bullet)
         {
             bullet.Position += bullet.Direction * bullet.Velocity;
