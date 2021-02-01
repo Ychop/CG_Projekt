@@ -3,7 +3,7 @@
     using OpenTK;
     internal class LevelGrid
     {
-        internal LevelGrid(Vector2 position,float size_)
+        internal LevelGrid(Vector2 position, float size_)
         {
             this.Position = position;
             this.Size = size_;

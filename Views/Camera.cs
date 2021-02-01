@@ -1,8 +1,8 @@
 ﻿namespace CG_Projekt
 {
-    using System;
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
+    using System;
 
     internal class Camera
     {

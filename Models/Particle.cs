@@ -1,5 +1,4 @@
 ﻿using OpenTK;
-using System;
 namespace CG_Projekt.Models
 {
     class Particle : GameObject

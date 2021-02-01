@@ -1,7 +1,7 @@
 ﻿namespace CG_Projekt.Models
 {
-    using System;
     using OpenTK;
+    using System;
     internal class Enemy : GameObject
     {
         public Vector2 playerDirection;

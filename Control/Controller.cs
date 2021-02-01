@@ -1,11 +1,10 @@
 ﻿namespace CG_Projekt
 {
-    using System;
-    using System.Collections.Generic;
     using CG_Projekt.Framework;
     using CG_Projekt.Models;
     using OpenTK;
     using OpenTK.Input;
+    using System;
 
     internal class Controller
     {
@@ -251,7 +250,7 @@
                     {
                         particleSpeed = (float)rng.NextDouble() - 0.2f;
                         particleDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
-                        this.model.Particles.Add(new Particle(player.Position, particleSize, particleSize, particleSpeed, particleHitpoints, particleId, particleDirection,player));
+                        this.model.Particles.Add(new Particle(player.Position, particleSize, particleSize, particleSpeed, particleHitpoints, particleId, particleDirection, player));
                     }
                     var Grunt = new CachedSound("../../Content/Sounds/Grunt.mp3");
                     sManager.PlaySound(Grunt);
@@ -350,7 +349,7 @@
                             for (int i = 0; i < rng.Next(10, 20); i++)
                             {
                                 fragmentDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
-                                this.model.RPGFragments.Add(new Particle(gameObject.Position, fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection,gameObject));
+                                this.model.RPGFragments.Add(new Particle(gameObject.Position, fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection, gameObject));
                             }
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
@@ -359,7 +358,7 @@
                             fragmentSize = 0.0015f;
                             fragmentSpeed = (float)rng.NextDouble() - 0.2f;
                             fragmentHitpoints = 5f;
-                            this.model.Particles.Add(new Particle(gameObject.Position + (this.model.Bullets[j].Position - gameObject.Position), fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection,gameObject));
+                            this.model.Particles.Add(new Particle(gameObject.Position + (this.model.Bullets[j].Position - gameObject.Position), fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection, gameObject));
                         }
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;

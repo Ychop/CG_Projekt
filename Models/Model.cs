@@ -1,9 +1,9 @@
 ﻿namespace CG_Projekt
 {
-    using System;
-    using System.Collections.Generic;
     using CG_Projekt.Models;
     using OpenTK;
+    using System;
+    using System.Collections.Generic;
     internal class Model
     {
         private readonly Random rng = new Random();
@@ -97,12 +97,12 @@
                 Console.WriteLine("Obstacle " + (this.GameObjects.Count - 1) + ". erzeugt.");
             }
             //covers the level border edges
-          
+
             this.Obstacles.Add(new Obstacle(new Vector2(-0.6f, -0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
             this.Obstacles.Add(new Obstacle(new Vector2(0.6f, -0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
             this.Obstacles.Add(new Obstacle(new Vector2(0.6f, 0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
             this.Obstacles.Add(new Obstacle(new Vector2(-0.6f, 0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
-            
+
         }
 
         internal void GenerateEnemies()

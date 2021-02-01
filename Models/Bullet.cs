@@ -1,7 +1,7 @@
 ﻿namespace CG_Projekt.Models
 {
-    using System;
     using OpenTK;
+    using System;
     internal class Bullet : GameObject
     {
         internal Bullet(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_, Vector2 direction_)

@@ -1,9 +1,7 @@
 ﻿namespace CG_Projekt.Framework
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
 
     public static class Resource

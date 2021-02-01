@@ -1,10 +1,10 @@
 ﻿namespace CG_Projekt.Models
 {
-    using System;
-    using System.Collections.Generic;
     using CG_Projekt.Framework;
     using OpenTK;
     using OpenTK.Input;
+    using System;
+    using System.Collections.Generic;
 
     internal class Player : GameObject
     {
@@ -37,7 +37,7 @@
         internal float Rpm { get; set; }
         internal void MovePlayer(Player player, float deltaTime)
         {
-            var keyboard = Keyboard.GetState();       
+            var keyboard = Keyboard.GetState();
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
                 this.moveLR = 0;

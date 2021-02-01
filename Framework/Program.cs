@@ -1,6 +1,5 @@
 ﻿namespace CG_Projekt
 {
-    using CG_Projekt.Framework;
     using OpenTK;
 
     internal class Program
@@ -12,7 +11,7 @@
             var camera = new Camera();
             var model = new Model();
             var view = new View(camera);
-            var controller = new Controller(view, model);            
+            var controller = new Controller(view, model);
             window.Title = "Topdown-Shooter";
             window.MouseMove += (_, args) => controller.TranslateMouseCoordinates(args.X, window.Height - 1 - args.Y);
             window.KeyPress += (_, args) => controller.WepaonSelection(args.KeyChar);
