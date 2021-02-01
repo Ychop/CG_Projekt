@@ -417,7 +417,7 @@
         {
             float ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             float ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
-            obj.SpeedUp += 0.003f;
+            obj.SpeedUp += 0.006f;
             obj.Hitpoints += 0.0025f;
             obj.Damage += 0.004f;
             for (int i = 0; i < this.model.GameObjects.Count; i++)
