@@ -399,32 +399,23 @@ namespace CG_Projekt
                 if (particle.Id == 0)
                 {
                     GL.BindTexture(TextureTarget.Texture2D, this.texFragment);
-                    GL.Begin(PrimitiveType.Quads);
-                    // GL.Color3(Color.Red);
-                    GL.TexCoord2(new Vector2(0, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(0, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
-                    GL.End();
                 }
                 else
                 {
                     GL.BindTexture(TextureTarget.Texture2D, this.texBlood);
-                    GL.Begin(PrimitiveType.Quads);
-                    GL.TexCoord2(new Vector2(0, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(0, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
-                    GL.End();
                 }
+                GL.Begin(PrimitiveType.Quads);
+                // GL.Color3(Color.Red);
+                GL.TexCoord2(new Vector2(0, 0));
+                GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, -particle.RadiusDraw));
+                GL.TexCoord2(new Vector2(0, 1));
+                GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, -particle.RadiusDraw));
+                GL.TexCoord2(new Vector2(1, 1));
+                GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, particle.RadiusDraw));
+                GL.TexCoord2(new Vector2(1, 0));
+                GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
+                GL.End();
+
 
             }
             foreach (Particle paricleFrament in model.RPGFragments)

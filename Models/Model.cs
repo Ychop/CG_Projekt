@@ -44,7 +44,6 @@
                 y += 0.012f;
             }
         }
-
         internal void GenerateGameObjects()
         {
             // Generate Weapons
