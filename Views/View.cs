@@ -198,7 +198,7 @@
             GL.Clear(ClearBufferMask.ColorBufferBit);
             DrawFont($"Du bist gestorben.", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y, 0.2f * Camera.Scale);
             DrawFont($"Deine Kills waren:", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y - 0.25f * Camera.Scale, 0.2f * Camera.Scale);
-            DrawFont($"{model.Score:D}", Camera.Center.X - 0.01f, Camera.Center.Y - 0.45f * Camera.Scale, 0.2f * Camera.Scale);
+            DrawFont($"{model.Score:D}", Camera.Center.X - 0.02f, Camera.Center.Y - 0.45f * Camera.Scale, 0.2f * Camera.Scale);
         }
         internal void Resize(int width, int height)
         {
