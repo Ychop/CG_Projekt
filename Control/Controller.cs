@@ -305,7 +305,7 @@
                             this.model.PickUps.RemoveAt(i);
                             break;
                         case 3:
-                            this.player.AmmoShotgun += 10;
+                            this.player.AmmoShotgun += 20;
                             Console.WriteLine("Shotgun Ammo: +25");
                             this.model.PickUps.RemoveAt(i);
                             break;
@@ -417,7 +417,7 @@
         {
             float ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             float ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
-            obj.SpeedUp += 0.0025f;
+            obj.SpeedUp += 0.003f;
             obj.Hitpoints += 0.0025f;
             obj.Damage += 0.0025f;
             for (int i = 0; i < this.model.GameObjects.Count; i++)
