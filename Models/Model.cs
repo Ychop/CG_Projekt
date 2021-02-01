@@ -31,14 +31,14 @@
         internal float Time { get; private set; } = 0;
         internal void GenerateLevelGrid()
         {
-            float y = -0.6f;
+            float y = -0.588f;
             float x;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 99; i++)
             {
-                x = -0.6f;
-                for (int j = 0; j < 100; j++)
+                x = -0.588f;
+                for (int j = 0; j < 99; j++)
                 {
-                    this.LevelGrids.Add(new LevelGrid(new Vector2(x, y)));
+                    this.LevelGrids.Add(new LevelGrid(new Vector2(x, y), 0.012f));
                     x += 0.012f;
                 }
                 y += 0.012f;
@@ -97,6 +97,13 @@
                 this.GameObjects.Add(this.Obstacles[i]);
                 Console.WriteLine("Obstacle " + (this.GameObjects.Count - 1) + ". erzeugt.");
             }
+            //covers the level border edges
+          
+            this.Obstacles.Add(new Obstacle(new Vector2(-0.6f, -0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
+            this.Obstacles.Add(new Obstacle(new Vector2(0.6f, -0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
+            this.Obstacles.Add(new Obstacle(new Vector2(0.6f, 0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
+            this.Obstacles.Add(new Obstacle(new Vector2(-0.6f, 0.6f), 0.03f, 0.027f, 0f, 1000, GameObjects.Count - 1));
+            
         }
 
         internal void GenerateEnemies()

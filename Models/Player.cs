@@ -45,8 +45,8 @@
             }
             else
             {
-                this.moveLR = keyboard.IsKeyDown(Key.A) ? -0.15f : keyboard.IsKeyDown(Key.D) ? 0.15f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
-                this.moveUD = keyboard.IsKeyDown(Key.S) ? -0.15f : keyboard.IsKeyDown(Key.W) ? 0.15f : 0.0f;
+                this.moveLR = keyboard.IsKeyDown(Key.A) ? -0.18f : keyboard.IsKeyDown(Key.D) ? 0.18f : 0.0f; // 0.2f und - 0.2f Gibt an wie schnell sich der spieler in die entsprechende Richtung bewegen kann.
+                this.moveUD = keyboard.IsKeyDown(Key.S) ? -0.18f : keyboard.IsKeyDown(Key.W) ? 0.18f : 0.0f;
             }
             player.Position += deltaTime * new Vector2(moveLR, moveUD) * this.Velocity;
         }

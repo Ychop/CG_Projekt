@@ -153,9 +153,6 @@
     <EmbeddedResource Include="Content\Textures\nullptr_hq4x.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Textures\Blood_Bath.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\Textures\heart.png" />
   </ItemGroup>
   <ItemGroup>

@@ -1,15 +1,11 @@
-﻿using OpenTK.Input;
-
-namespace CG_Projekt
+﻿namespace CG_Projekt
 {
     using CG_Projekt.Framework;
     using CG_Projekt.Models;
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
     using GL = OpenTK.Graphics.OpenGL.GL;
-    using System.Linq;
     using System;
-    using OpenTK.Graphics;
 
     internal class View
     {
@@ -25,8 +21,7 @@ namespace CG_Projekt
         private int texHealth;
         private int texBlood;
         private int texFragment;
-        private int texfontScore;
-        private int texfontAmmo;
+        private int texfont;
         private int texHeartCollectible;
         private int texAmmoPistol;
         private int texAmmoUzi;
@@ -38,10 +33,9 @@ namespace CG_Projekt
         private int texRPG;
         private int texBullet;
         private int texHealthBackground;
-        private Random random = new Random();
-        public bool GameOver = false;
-        public bool GameStarted = false;
-        public bool TexturesLoaded = false;
+        private readonly Random random = new Random();
+        public bool GameOver, GameStarted, TexturesLoaded = false;
+        private int texture = 0;
 
         internal View(Camera camera)
         {
@@ -75,8 +69,7 @@ namespace CG_Projekt
             this.texUzi = Texture.Load(Resource.LoadStream(content + "Uzi.png"));
             this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
             this.texRPG = Texture.Load(Resource.LoadStream(content + "Rocketlauncher.png"));
-            this.texfontScore = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
-            this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "SilverFont.png"));
+            this.texfont = Texture.Load(Resource.LoadStream(content + "SilverFont.png"));
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.2f);
             GL.Enable(EnableCap.Texture2D);
@@ -84,13 +77,11 @@ namespace CG_Projekt
             GL.Enable(EnableCap.Blend);
             TexturesLoaded = true;
         }
-
         internal float change = -1f;
         internal Camera Camera { get; }
         internal void Draw(Model model)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
-
             this.Camera.Center = model.Player.Position;
             this.DrawLevel(model);
             this.DrawGameObjects(model);
@@ -104,10 +95,32 @@ namespace CG_Projekt
                 this.DrawGameOver(model);
             }
         }
+
+        internal void DrawObject(int tex_, Vector2 position_, float sizeX_, float sizeY_, float scale_, float offsetX_, float offsetY_)
+        {
+            //if no scale needed scale_ = 1
+            //if no offset needed offsetXY = 0
+            GL.BindTexture(TextureTarget.Texture2D, tex_);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(new Vector2(0, 0));
+            GL.Vertex2(position_ + scale_ * new Vector2(-sizeX_ + offsetX_, -sizeY_ + offsetY_));
+            GL.TexCoord2(new Vector2(1, 0));
+            GL.Vertex2(position_ + scale_ * new Vector2(sizeX_ + offsetX_, -sizeY_ + offsetY_));
+            GL.TexCoord2(new Vector2(1, 1));
+            GL.Vertex2(position_ + scale_ * new Vector2(sizeX_ + offsetX_, sizeY_ + offsetY_));
+            GL.TexCoord2(new Vector2(0, 1));
+            GL.Vertex2(position_ + scale_ * new Vector2(-sizeX_ + offsetX_, sizeY_ + offsetY_));
+            GL.End();
+        }
         internal void DrawLevel(Model model)
         {
-            this.DrawSea(model);
-            this.DrawLevelGrid(model);
+            //Draws the water Background
+            DrawObject(texWater, new Vector2(0, 0), 1, 1, 1, 0, 0);
+            //Draws the Gras
+            foreach (LevelGrid levelGrid in model.LevelGrids)
+            {
+                DrawObject(this.texGrass, levelGrid.Position, levelGrid.Size, levelGrid.Size, 1, 0, 0);
+            }
             this.Camera.Draw();
         }
         internal void DrawGameObjects(Model model)
@@ -125,129 +138,66 @@ namespace CG_Projekt
             Vector2 hudScaleOffset = new Vector2(-0.8f, -0.92f);
             Vector2 heathbarPosition = this.Camera.Center + (this.Camera.Scale * healthbarScaleOffset);
             Vector2 HUDPosition = this.Camera.Center + (this.Camera.Scale * hudScaleOffset);
-            DrawPlayerHealth(model, heathbarPosition);
-            DrawScore(model, heathbarPosition);
-            DrawWeaponSelected(model, HUDPosition);
+            //Draws player healthbar
+            DrawObject(this.texHealthBackground, heathbarPosition, 0.3f, 0.03f, 2 * this.Camera.Scale, 0, 0);
+            DrawObject(this.texHealth, heathbarPosition, 0.3f * model.Player.Hitpoints, 0.017f, 2 * this.Camera.Scale, 0, 0);
+            //Draws the Score
+            GL.BindTexture(TextureTarget.Texture2D, texfont);
+            DrawFont($"Kills={model.Score:D}", heathbarPosition.X + 0.6f * Camera.Scale, heathbarPosition.Y - 0.03f * Camera.Scale, Camera.Scale * 0.08f);
+            //Draws the selected weapon + the ammo
+            switch (model.weaponSelected)
+            {
+                case 1:
+                    texture = this.texPistol;
+                    break;
+                case 2:
+                    texture = this.texUzi;
+                    break;
+                case 3:
+                    texture = this.texShotgun;
+                    break;
+                case 4:
+                    texture = this.texRPG;
+                    break;
+            }
+            DrawObject(texture, HUDPosition, 0.1f, 0.05f, this.Camera.Scale, 0, 0);
+            switch (model.weaponSelected)
+            {
+                case 1:
+                    GL.BindTexture(TextureTarget.Texture2D, texfont);
+                    DrawFont($"{model.Player.AmmoPistol:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    break;
+                case 2:
+                    GL.BindTexture(TextureTarget.Texture2D, texfont);
+                    DrawFont($"{model.Player.AmmoUZI:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    break;
+                case 3:
+                    GL.BindTexture(TextureTarget.Texture2D, texfont);
+                    DrawFont($"{model.Player.AmmoShotgun:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    break;
+                case 4:
+                    GL.BindTexture(TextureTarget.Texture2D, texfont);
+                    DrawFont($"{model.Player.AmmoRPG:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    break;
+            }
         }
         internal void PressAnyKeyToStart()
         {
             if (change < 0)
             {
-                GL.BindTexture(TextureTarget.Texture2D, this.texStart);
+                texture = this.texStart;
                 change += 0.25f;
             }
             else
             {
-                GL.BindTexture(TextureTarget.Texture2D, this.texStartBlack);
+                texture = this.texStartBlack;
                 change = -1f;
             }
-
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(Camera.Center + new Vector2(-0.18f, -0.05f));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(Camera.Center + new Vector2(0.18f, -0.05f));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(Camera.Center + new Vector2(0.18f, 0.05f));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(Camera.Center + new Vector2(-0.18f, 0.05f));
-            GL.End();
-        }
-        internal void DrawSea(Model model)
-        {
-            GL.BindTexture(TextureTarget.Texture2D, this.texWater);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(-1, -1);
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(1, -1);
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(1, 1);
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(-1, 1);
-            GL.End();
-        }
-        internal void DrawPlayerHealth(Model model, Vector2 heathbarPosition)
-        {
-
-            GL.BindTexture(TextureTarget.Texture2D, this.texHealthBackground);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(-0.3f, -0.03f)));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(0.3f, -0.03f)));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(0.3f, 0.03f)));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(-0.3f, 0.03f)));
-            GL.End();
-            GL.BindTexture(TextureTarget.Texture2D, this.texHealth);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(-0.3f * model.Player.Hitpoints, -0.017f)));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(0.3f * model.Player.Hitpoints, -0.017f)));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(0.3f * model.Player.Hitpoints, 0.017f)));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(heathbarPosition + (2 * this.Camera.Scale * new Vector2(-0.3f * model.Player.Hitpoints, 0.017f)));
-            GL.End();
-        }
-        internal void DrawScore(Model model, Vector2 heathbarPosition)
-        {
-            GL.BindTexture(TextureTarget.Texture2D, texfontScore);
-            DrawFont($"Kills={model.Score:D}", heathbarPosition.X + 0.6f * Camera.Scale, heathbarPosition.Y - 0.03f * Camera.Scale, Camera.Scale * 0.08f);
-        }
-        internal void DrawWeaponSelected(Model model, Vector2 HUDPosition)
-        {
-            switch (model.weaponSelected)
-            {
-                case 1:
-                    GL.BindTexture(TextureTarget.Texture2D, texPistol);
-                    break;
-                case 2:
-                    GL.BindTexture(TextureTarget.Texture2D, texUzi);
-                    break;
-                case 3:
-                    GL.BindTexture(TextureTarget.Texture2D, texShotgun);
-                    break;
-                case 4:
-                    GL.BindTexture(TextureTarget.Texture2D, texRPG);
-                    break;
-            }
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(-0.1f, -0.05f)));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(0.1f, -0.05f)));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(0.1f, 0.05f)));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(HUDPosition + (this.Camera.Scale * new Vector2(-0.1f, 0.05f)));
-            GL.End();
-            switch (model.weaponSelected)
-            {
-                case 1:
-                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoPistol:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
-                    break;
-                case 2:
-                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoUZI:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
-                    break;
-                case 3:
-                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoShotgun:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
-                    break;
-                case 4:
-                    GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoRPG:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
-                    break;
-            }
+            DrawObject(texture, Camera.Center, 0.18f, 0.05f, 1, 0, 0);
         }
         internal void DrawGameOver(Model model)
         {
-            GL.BindTexture(TextureTarget.Texture2D, texfontScore);
+            GL.BindTexture(TextureTarget.Texture2D, texfont);
             GameOver = true;
             GL.Clear(ClearBufferMask.ColorBufferBit);
             DrawFont($"Du bist gestorben.", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y, 0.2f * Camera.Scale);
@@ -258,54 +208,28 @@ namespace CG_Projekt
         {
             this.Camera.Resize(width, height);
         }
-        internal void DrawLevelGrid(Model model)
-        {
-            foreach (LevelGrid levelGrid in model.LevelGrids)
-            {
-                GL.BindTexture(TextureTarget.Texture2D, this.texGrass);
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(levelGrid.Position);
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(levelGrid.Position + new Vector2(0.012f, 0));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(levelGrid.Position + new Vector2(0.012f, 0.012f));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(levelGrid.Position + new Vector2(0, 0.012f));
-                GL.End();
-            }
-        }
         internal void DrawPlayer(Model model)
         {
             GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
             switch (model.weaponSelected)
             {
                 case 1:
-                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerPistol);
+                    texture = this.texPlayerPistol;
                     break;
                 case 2:
-                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerUzi);
+                    texture = this.texPlayerUzi;
                     break;
                 case 3:
-                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerShotgun);
+                    texture = this.texPlayerShotgun;
                     break;
                 case 4:
-                    GL.BindTexture(TextureTarget.Texture2D, this.texPlayerShotgun);
+                    texture = this.texPlayerShotgun;
                     break;
             }
             GL.PushMatrix();
             GL.Translate(new Vector3(model.Player.Position.X, model.Player.Position.Y, 0));
-            GL.Rotate(model.Player.Angle, new Vector3d(0, 0, -1));
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(new Vector2(-model.Player.RadiusDraw, -model.Player.RadiusDraw));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(new Vector2(model.Player.RadiusDraw, -model.Player.RadiusDraw));
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(new Vector2(model.Player.RadiusDraw, model.Player.RadiusDraw));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(new Vector2(-model.Player.RadiusDraw, model.Player.RadiusDraw));
-            GL.End();
+            GL.Rotate(model.Player.Angle + 180, new Vector3d(0, 0, -1));
+            DrawObject(texture, new Vector2(0, 0), model.Player.RadiusDraw, model.Player.RadiusDraw, 1, 0, 0);
             GL.PopMatrix();
         }
         internal void DrawEnemyWalk(Model model)
@@ -334,34 +258,10 @@ namespace CG_Projekt
                 GL.End();
                 GL.PopMatrix();
                 GL.Enable(EnableCap.Blend);
-                EnemyHealth(enemy);
+                //Draws enemy helathbar
+                DrawObject(this.texHealthBackground, enemy.Position + new Vector2(0, enemy.RadiusDraw + 0.001f), enemy.RadiusDraw + 0.01f, enemy.RadiusDraw, 0.6f, 0, 0);
+                DrawObject(this.texHealth, enemy.Position + new Vector2(0, enemy.RadiusDraw + 0.001f), (enemy.RadiusDraw + 0.01f) * enemy.Hitpoints, enemy.RadiusDraw, 0.6f, 0, 0);
             }
-        }
-
-        internal void EnemyHealth(Enemy enemy)
-        {
-            GL.BindTexture(TextureTarget.Texture2D, this.texHealthBackground);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.RadiusDraw, enemy.RadiusDraw + 0.0025f));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.RadiusDraw, enemy.RadiusDraw + 0.0025f));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.RadiusDraw, -enemy.RadiusDraw + 0.02f));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.RadiusDraw, -enemy.RadiusDraw + 0.02f));
-            GL.End();
-            GL.BindTexture(TextureTarget.Texture2D, this.texHealth);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(new Vector2(0, 0));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.RadiusDraw * enemy.Hitpoints, enemy.RadiusDraw + 0.0025f));
-            GL.TexCoord2(new Vector2(1, 0));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.RadiusDraw * enemy.Hitpoints, enemy.RadiusDraw + 0.0025f));
-            GL.TexCoord2(new Vector2(1, 1));
-            GL.Vertex2(enemy.Position + new Vector2(enemy.RadiusDraw * enemy.Hitpoints, -enemy.RadiusDraw + 0.02f));
-            GL.TexCoord2(new Vector2(0, 1));
-            GL.Vertex2(enemy.Position + new Vector2(-enemy.RadiusDraw * enemy.Hitpoints, -enemy.RadiusDraw + 0.02f));
-            GL.End();
         }
         internal void DrawBullets(Model model)
         {
@@ -370,25 +270,16 @@ namespace CG_Projekt
                 Vector2 bulletOffset = new Vector2(0, -0.007f);
                 if (model.weaponSelected == 4)
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, this.texMissile);
+                    texture = this.texMissile;
                 }
                 else
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, this.texBullet);
+                    texture = this.texBullet;
                 }
                 GL.PushMatrix();
                 GL.Translate(new Vector3(bullet.Position.X, bullet.Position.Y, 0));
                 GL.Rotate(bullet.Angle, new Vector3d(0, 0, -1));
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(bulletOffset + new Vector2(-bullet.RadiusDraw, -bullet.RadiusDraw));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(bulletOffset + new Vector2(bullet.RadiusDraw, -bullet.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(bulletOffset + new Vector2(bullet.RadiusDraw, bullet.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(bulletOffset + new Vector2(-bullet.RadiusDraw, bullet.RadiusDraw));
-                GL.End();
+                DrawObject(texture, bulletOffset, bullet.RadiusDraw, bullet.RadiusDraw, 1, 0, 0); ;
                 GL.PopMatrix();
             }
         }
@@ -398,65 +289,24 @@ namespace CG_Projekt
             {
                 if (particle.Id == 0)
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, this.texFragment);
-                    GL.Begin(PrimitiveType.Quads);
-                    // GL.Color3(Color.Red);
-                    GL.TexCoord2(new Vector2(0, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(0, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
-                    GL.End();
+                    texture = this.texFragment;
                 }
                 else
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, this.texBlood);
-                    GL.Begin(PrimitiveType.Quads);
-                    GL.TexCoord2(new Vector2(0, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(0, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, -particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 1));
-                    GL.Vertex2(particle.Position + new Vector2(particle.RadiusDraw, particle.RadiusDraw));
-                    GL.TexCoord2(new Vector2(1, 0));
-                    GL.Vertex2(particle.Position + new Vector2(-particle.RadiusDraw, particle.RadiusDraw));
-                    GL.End();
+                    texture = this.texBlood;
                 }
-
+                DrawObject(texture, particle.Position, particle.RadiusDraw, particle.RadiusDraw, 1, 0, 0);
             }
             foreach (Particle paricleFrament in model.RPGFragments)
             {
-                GL.BindTexture(TextureTarget.Texture2D, this.texFragment);
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(paricleFrament.Position + new Vector2(-paricleFrament.RadiusDraw, -paricleFrament.RadiusDraw));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(paricleFrament.Position + new Vector2(paricleFrament.RadiusDraw, -paricleFrament.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(paricleFrament.Position + new Vector2(paricleFrament.RadiusDraw, paricleFrament.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(paricleFrament.Position + new Vector2(-paricleFrament.RadiusDraw, paricleFrament.RadiusDraw));
-                GL.End();
+                DrawObject(this.texFragment, paricleFrament.Position, paricleFrament.RadiusDraw, paricleFrament.RadiusDraw, 1, 0, 0);
             }
         }
         internal void DrawObstacles(Model model)
         {
             foreach (Obstacle obstacle in model.Obstacles)
             {
-                GL.BindTexture(TextureTarget.Texture2D, this.texObstacle);
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.RadiusDraw, -obstacle.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(obstacle.Position + new Vector2(obstacle.RadiusDraw, -obstacle.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(obstacle.Position + new Vector2(obstacle.RadiusDraw, obstacle.RadiusDraw));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(obstacle.Position + new Vector2(-obstacle.RadiusDraw, obstacle.RadiusDraw));
-                GL.End();
+                DrawObject(this.texObstacle, obstacle.Position, obstacle.RadiusDraw, obstacle.RadiusDraw, 1, 0, 0);
             }
         }
         internal void DrawPickups(Model model)
@@ -466,32 +316,23 @@ namespace CG_Projekt
                 switch (pickup.Type)
                 {
                     case 0:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texHeartCollectible);
+                        texture = this.texHeartCollectible;
                         break;
                     case 1:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoPistol);
+                        texture = this.texAmmoPistol;
                         break;
                     case 2:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoUzi);
+                        texture = this.texAmmoUzi;
                         break;
                     case 3:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texAmmoShotgun);
+                        texture = this.texAmmoShotgun;
                         break;
                     case 4:
-                        GL.BindTexture(TextureTarget.Texture2D, this.texMissile);
+                        texture = this.texMissile;
                         break;
                 }
                 GL.Disable(EnableCap.Blend);
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(new Vector2(0, 0));
-                GL.Vertex2(pickup.Position + new Vector2(-pickup.RadiusDraw, -pickup.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 0));
-                GL.Vertex2(pickup.Position + new Vector2(pickup.RadiusDraw, -pickup.RadiusDraw));
-                GL.TexCoord2(new Vector2(1, 1));
-                GL.Vertex2(pickup.Position + new Vector2(pickup.RadiusDraw, pickup.RadiusDraw));
-                GL.TexCoord2(new Vector2(0, 1));
-                GL.Vertex2(pickup.Position + new Vector2(-pickup.RadiusDraw, pickup.RadiusDraw));
-                GL.End();
+                DrawObject(texture, pickup.Position, pickup.RadiusDraw, pickup.RadiusDraw, 1, 0, 0);
                 GL.Enable(EnableCap.Blend);
             }
         }
@@ -508,7 +349,7 @@ namespace CG_Projekt
                 rect.MinX += rect.SizeX;
             }
         }
-        private static void DrawRect(IReadOnlyRectangle rectangle, IReadOnlyRectangle texCoords)
+        internal static void DrawRect(IReadOnlyRectangle rectangle, IReadOnlyRectangle texCoords)
         {
             GL.Begin(PrimitiveType.Quads);
             GL.TexCoord2(texCoords.MinX, texCoords.MinY);
