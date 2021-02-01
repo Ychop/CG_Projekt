@@ -147,9 +147,9 @@
                     this.PlaceNewEnemy(enemy);
                     enemy.Hitpoints = 1f;
                 }
-                if (enemy.SpeedUp > 0.8f)
+                if (enemy.SpeedUp > 0.1f)
                 {
-                    enemy.SpeedUp = 0.8f;
+                    enemy.SpeedUp = 0.1f;
                 }
                 if (enemy.Hitpoints > 3f)
                 {
@@ -296,7 +296,7 @@
                             break;
                         case 1:
                             this.player.AmmoPistol += 25;
-                            Console.WriteLine("Pistol Ammo: +50");
+                            Console.WriteLine("Pistol Ammo: +25");
                             this.model.PickUps.RemoveAt(i);
                             break;
                         case 2:
@@ -306,12 +306,12 @@
                             break;
                         case 3:
                             this.player.AmmoShotgun += 20;
-                            Console.WriteLine("Shotgun Ammo: +25");
+                            Console.WriteLine("Shotgun Ammo: +20");
                             this.model.PickUps.RemoveAt(i);
                             break;
                         case 4:
                             this.player.AmmoRPG += 3;
-                            Console.WriteLine("RPG Ammo: +5");
+                            Console.WriteLine("RPG Ammo: +3");
                             this.model.PickUps.RemoveAt(i);
                             break;
                         default:
@@ -419,7 +419,7 @@
             float ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             obj.SpeedUp += 0.003f;
             obj.Hitpoints += 0.0025f;
-            obj.Damage += 0.0025f;
+            obj.Damage += 0.004f;
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);

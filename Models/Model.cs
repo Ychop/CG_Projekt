@@ -110,7 +110,7 @@
             float enemySizeDraw = 0.015f;
             float enemySizeColl = 0.011f;
             float enemyHitpoints = 1f;
-            float enemyVelocity = 0.01f;
+            float enemyVelocity = 0.05f;
             var minDistanceEnemyPlayer = 0.3f;
             for (int i = 0; i < 50; i++)
             {

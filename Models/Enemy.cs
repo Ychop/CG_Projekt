@@ -18,8 +18,8 @@
             AnimationLength = animationLength;
         }
         internal double AngleToPlayer { get; set; }
-        internal float SpeedUp { get; set; } = 0.02f;
-        internal float Damage { get; set; } = 0.01f;
+        internal float SpeedUp { get; set; } = 0.03f;
+        internal float Damage { get; set; } = 0.025f;
         internal float NormalizedAnimationTime { get; set; } = 0f;
         public float AnimationLength { get; }
         public void AnimationUpdate(float deltaTime)
