@@ -8,13 +8,10 @@
 
     internal class Player : GameObject
     {
-
         internal float moveLR;
         internal float moveUD;
         public Vector2 direction;
-        private SoundManager sManager;
-
-
+        private readonly SoundManager sManager;
         public Player(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
             : base(position_, radiusDraw_, radiusColl_, velocity_, hitpoints_, id_)
         {
@@ -31,33 +28,16 @@
             this.Rpm = 0.4f; // could change with diffrent Weapons, also the Damage.
             this.sManager = new SoundManager();
         }
-
         internal double Angle { get; set; }
         internal int SelectedWeapon { get; set; }
-
         internal int AmmoPistol { get; set; }
-
         internal int AmmoUZI { get; set; }
-
         internal int AmmoShotgun { get; set; }
-
         internal int AmmoRPG { get; set; }
-
         internal float Rpm { get; set; }
-        internal float Spm { get; set; }
-
         internal void MovePlayer(Player player, float deltaTime)
         {
-            var keyboard = Keyboard.GetState();
-            var walkingSound = new CachedSound("../../Content/Sounds/PlayerWalk.mp3");
-            Spm = 0.4f;
-            this.Spm -= deltaTime;
-            if (keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D) && this.Spm < 0)
-            {
-           //     this.sManager.PlaySound(walkingSound);
-                this.Spm = 0.4f;
-            }
-
+            var keyboard = Keyboard.GetState();       
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
                 this.moveLR = 0;
@@ -78,12 +58,6 @@
             double angleRad = Math.Atan2(this.direction.Y, -this.direction.X);
             this.Angle = angleRad * (180 / Math.PI);
         }
-
-        internal void Walkanimation(float deltaTime)
-        {
-
-        }
-
         internal void Shoot(List<Bullet> bullets, float deltaTime, Weapon weapon_)
         {
             var mouse = Mouse.GetState();

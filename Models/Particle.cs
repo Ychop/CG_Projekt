@@ -17,8 +17,6 @@ namespace CG_Projekt.Models
             RanDir = ranDir_;
             OriginObj = originObj_;
             RanDir.Normalize();
-
-
         }
     }
 }

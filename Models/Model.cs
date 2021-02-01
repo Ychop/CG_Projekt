@@ -73,9 +73,9 @@
         internal void GenerateObstacles()
         {
             float obstacleVelocity = 0f;
-            float maxSize = 0.08f;
+            float maxSize = 0.06f;
             float obstacleHitpoints = 1000f;
-            var collideRadDiff = 0.008f;
+            var collideRadDiff = 0.005f;
             this.ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             this.ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
             for (int i = 0; i < this.objectsLimit; i++)
