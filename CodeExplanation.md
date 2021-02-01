@@ -49,15 +49,21 @@ Classes:
     The Gameobject.cs class contents the blueprint for all other gameobjects that are created.
     - public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
     When creating a Gameobject it is necessary to pass at least:
-    - <Vector2 position_>   The position of the obj. on the map 
-    - <float radiusDraw_>   The Drawsize of the obj.
-    - <float radiusColl_>   The radius size of the circle collider for each obj.
-    - <float velocity_>     The velocity of the obj. (if it has any, otherwise pass 0f)
-    - <float hitpoints_>    The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
-    - <int id_>             The unique id of the obj. to identify it in the List in which it is added
+    - #### Vector2 position_
+        The position of the obj. on the map 
+    - #### float radiusDraw_
+        The Drawsize of the obj.
+    - #### float radiusColl_
+        The radius size of the circle collider for each obj.
+    - #### float velocity_    
+        The velocity of the obj. (if it has any, otherwise pass 0f)
+    - #### float hitpoints_
+        The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
+    - #### int id_ 
+        The unique id of the obj. to identify it in the List in which it is added
         
-    #### Notice:
-    Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
+    #### Notice: <Color:Red>
+        Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
 
 2. Player.cs:
     Here the player is implemented with the functions to move the player (internal void MovePlayer(Player player, float deltaTime)) and  to align the players facing direction to the mouse cursor (internal void AglignPlayer(Vector2 mousePosition))
