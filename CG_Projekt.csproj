@@ -198,9 +198,6 @@
     <EmbeddedResource Include="Content\Sounds\RPGSound.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Sounds\PlayerWalk.mp3" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\Sounds\UZISound.mp3" />
   </ItemGroup>
   <ItemGroup>

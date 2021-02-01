@@ -49,15 +49,6 @@
         internal void MovePlayer(Player player, float deltaTime)
         {
             var keyboard = Keyboard.GetState();
-            var walkingSound = new CachedSound("../../Content/Sounds/PlayerWalk.mp3");
-            Spm = 0.4f;
-            this.Spm -= deltaTime;
-            if (keyboard.IsKeyDown(Key.W) || keyboard.IsKeyDown(Key.A) || keyboard.IsKeyDown(Key.S) || keyboard.IsKeyDown(Key.D) && this.Spm < 0)
-            {
-           //     this.sManager.PlaySound(walkingSound);
-                this.Spm = 0.4f;
-            }
-
             if ((keyboard.IsKeyDown(Key.A) && keyboard.IsKeyDown(Key.D)) || keyboard.IsKeyDown(Key.S) && keyboard.IsKeyDown(Key.W))
             {
                 this.moveLR = 0;
