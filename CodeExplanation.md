@@ -24,7 +24,7 @@
     Before calling the PlaySound(CachedSound sound) just create an object of type Cachedsound sound and pass it to the function.
 2. Ressource.cs:  
     Helper class to load images into Memory as Bytestream
-    Only functtion to use is public static Stream LoadStream(string name). the "name" is the desired files path as a String. Find an example below in the [`Texture.cs`](#### Texture.cs) <Texture.cs> explanation
+    Only functtion to use is public static Stream LoadStream(string name). the "name" is the desired files path as a String. Find an example below in the [`Texture.cs`](3. #### Texture.cs) <Texture.cs> explanation
 
 3. #### Texture.cs:
 Here is a helper class to easily load textures into the memory without the need to set the repeating values over and over again for each Texture. (Like setting the pixelformat and the TexParameters, generating a MipMap...) Simply call Texture.Load(Stream stream)
