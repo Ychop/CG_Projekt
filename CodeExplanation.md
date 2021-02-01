@@ -1,23 +1,23 @@
 # Which module does what?
 
-### Content:
-Here you find the embedded Sounds and Textures used for the Game
+### Content:  
+    Here you find the embedded Sounds and Textures used for the Game
 
-### Control:
-In this folder, there are 2 classes:
-1. Controller.cs:
-This includes the code for controlling all the other classes like calling the functions to interact with the player and the environment and how the Game objects interact with each other (the Intersections).
-2. Intersection.cs:
-In this class the intersections between the game objects are handled. the funtions get called in the controller class as mentioned above.
-### Framework:
-In this folder you will find several modules where different "Managers" are implemented.
-1. Soundmanager.cs:
-Here the sound handling is implemented. There are some helper classes as well to make the loading and unloading of the soundeffects easier.
-The only function we need call from this class is public void PlaySound(CachedSound sound)
-#### Important Notice !!!
-The sample rate of all used sound files must be 44100Khz.
-The helper Classes are:
-- CachedSound.cs
+### Control:  
+    In this folder, there are 2 classes:
+1. Controller.cs:  
+    This includes the code for controlling all the other classes like calling the functions to interact with the player and the environment and how the Game objects interact with each other (the Intersections).
+2. Intersection.cs:  
+    In this class the intersections between the game objects are handled. the funtions get called in the controller class as mentioned above.
+### Framework:  
+    In this folder you will find several modules where different "Managers" are implemented.  
+1. Soundmanager.cs:  
+    Here the sound handling is implemented. There are some helper classes as well to make the loading and unloading of the soundeffects easier.  
+    The only function we need call from this class is public void PlaySound(CachedSound sound)
+#### Important Notice !!!  
+    The sample rate of all used sound files must be 44100Khz.  
+    The helper Classes are:
+- CachedSound.cs:  
     Here we load the soundeffect file into the memory once so we don`t need to reload it every time the sound gets played which saves much computation time!
 - CachedSoundSampleProvider.cs
     The CachedSoundSampleProvider takes the loaded CachedSound and transforms it into a Sample the mixer can actually play!
