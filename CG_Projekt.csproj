@@ -222,9 +222,6 @@
     <EmbeddedResource Include="Content\Sounds\Grunt.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\Textures\enemyhitanimationNew.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\Textures\enemywalkanimation.png" />
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Textures\PlayerUzi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Textures\SilverFont.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
