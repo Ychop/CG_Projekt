@@ -251,7 +251,7 @@
                     {
                         particleSpeed = (float)rng.NextDouble() - 0.2f;
                         particleDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
-                        this.model.Particles.Add(new Particle(player.Position, particleSize, particleSize, particleSpeed, particleHitpoints, particleId, particleDirection));
+                        this.model.Particles.Add(new Particle(player.Position, particleSize, particleSize, particleSpeed, particleHitpoints, particleId, particleDirection,player));
                     }
                     var Grunt = new CachedSound("../../Content/Sounds/Grunt.mp3");
                     sManager.PlaySound(Grunt);
@@ -327,7 +327,6 @@
             var fragmentSize = 0.002f;
             var fragmentSpeed = 0.5f;
             var fragmentHitpoints = 2f;
-            var fragmentID = 0;
             var weaponIsRocket = 4;
             Vector2 fragmentDirection;
             foreach (GameObject gameObject in model.GameObjects)
@@ -351,7 +350,7 @@
                             for (int i = 0; i < rng.Next(10, 20); i++)
                             {
                                 fragmentDirection = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1);
-                                this.model.RPGFragments.Add(new Particle(gameObject.Position, fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, fragmentID, fragmentDirection));
+                                this.model.RPGFragments.Add(new Particle(gameObject.Position, fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection,gameObject));
                             }
                         }
                         for (int i = 0; i < rng.Next(10, 20); i++)
@@ -360,7 +359,7 @@
                             fragmentSize = 0.0015f;
                             fragmentSpeed = (float)rng.NextDouble() - 0.2f;
                             fragmentHitpoints = 5f;
-                            this.model.Particles.Add(new Particle(gameObject.Position + (this.model.Bullets[j].Position - gameObject.Position), fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection));
+                            this.model.Particles.Add(new Particle(gameObject.Position + (this.model.Bullets[j].Position - gameObject.Position), fragmentSize, fragmentSize, fragmentSpeed, fragmentHitpoints, isBlood, fragmentDirection,gameObject));
                         }
                         this.model.Bullets.RemoveAt(j);
                         gameObject.Hitpoints -= this.weapon.Damage;
@@ -375,7 +374,7 @@
             {
                 foreach (Particle fragment in model.RPGFragments)
                 {
-                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject) && gameObject.Id != playerID)
+                    if (this.Intersection.IsIntersectingCircle(fragment, gameObject) && gameObject.Id != playerID && gameObject.Id != fragment.OriginObj.Id)
                     {
                         gameObject.Hitpoints -= this.weapon.Damage;
                     }
@@ -399,9 +398,9 @@
                 }
             }
             // Check Enemy with Obstacle Collision
-           foreach(Enemy enemy in model.Enemies)
+            foreach (Enemy enemy in model.Enemies)
             {
-               foreach(Obstacle obstacle in model.Obstacles)
+                foreach (Obstacle obstacle in model.Obstacles)
                 {
                     if (this.Intersection.IsIntersectingCircle(enemy, obstacle))
                     {
@@ -424,7 +423,7 @@
             for (int i = 0; i < this.model.GameObjects.Count; i++)
             {
                 obj.Position = new Vector2(ranX, ranY);
-                if (this.Intersection.IntersectsAny(model.GameObjects,obj))
+                if (this.Intersection.IntersectsAny(model.GameObjects, obj))
                 {
                     ranX = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;
                     ranY = ((float)this.rng.NextDouble() * 1.2f) - 0.6f;

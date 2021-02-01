@@ -15,19 +15,19 @@
                     break;
                 case 2:
                     this.RPM = 0.1f;
-                    this.Damage = 0.05f;
+                    this.Damage = 0.07f;
                     this.Size = 0.0016f;
                     this.Velocity = 0.6f;
                     break;
                 case 3:
                     this.RPM = 0.6f;
-                    this.Damage = 0.12f;
+                    this.Damage = 0.2f;
                     this.Size = 0.0015f;
                     this.Velocity = 0.3f;
                     break;
                 case 4:
                     this.RPM = 0.8f;
-                    this.Damage = 0.8f;
+                    this.Damage = 1.1f;
                     this.Size = 0.006f;
                     this.Velocity = 0.3f;
                     break;

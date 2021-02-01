@@ -119,7 +119,6 @@
     <Compile Include="Framework\SoundManager.cs" />
     <Compile Include="Framework\SpritesheetTools.cs" />
     <Compile Include="Framework\Texture.cs" />
-    <Compile Include="Models\Button.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Models\Particle.cs" />
@@ -146,9 +145,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Textures\rocks.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\Textures\enemyNew.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Textures\healthbar.png" />
