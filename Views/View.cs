@@ -118,7 +118,6 @@ namespace CG_Projekt
             this.DrawEnemyWalk(model);
             this.DrawPlayer(model);
             this.DrawPickups(model);
-
         }
         internal void DrawHUD(Model model)
         {
@@ -315,7 +314,6 @@ namespace CG_Projekt
             const uint spritesPerRow = 4;
             foreach (Enemy enemy in model.Enemies)
             {
-
                 GL.BindTexture(TextureTarget.Texture2D, texEnemyWalk);
                 //NormalizedAnimationTime ist 0 am anfang der animation und nahe bei 1 am ende
                 var spriteId = (uint)Math.Round(enemy.NormalizedAnimationTime * (spritesPerRow * spritesPerColumn - 1));        //Zahl zwischen 0 und 7
@@ -364,8 +362,6 @@ namespace CG_Projekt
             GL.TexCoord2(new Vector2(0, 1));
             GL.Vertex2(enemy.Position + new Vector2(-enemy.RadiusDraw * enemy.Hitpoints, -enemy.RadiusDraw + 0.02f));
             GL.End();
-
-
         }
         internal void DrawBullets(Model model)
         {
@@ -439,7 +435,6 @@ namespace CG_Projekt
         }
         internal void DrawObstacles(Model model)
         {
-
             foreach (Obstacle obstacle in model.Obstacles)
             {
                 GL.BindTexture(TextureTarget.Texture2D, this.texObstacle);
@@ -493,7 +488,6 @@ namespace CG_Projekt
         }
         private void DrawFont(string text, float x, float y, float size)
         {
-            GL.Color4(Color4.White);
             const uint firstCharacter = 32; // the ASCII code of the first character stored in the bitmap font
             const uint charactersPerColumn = 10; // how many characters are in each column
             const uint charactersPerRow = 10; // how many characters are in each row
@@ -505,7 +499,6 @@ namespace CG_Projekt
                 rect.MinX += rect.SizeX;
             }
         }
-
         private static void DrawRect(IReadOnlyRectangle rectangle, IReadOnlyRectangle texCoords)
         {
             GL.Begin(PrimitiveType.Quads);

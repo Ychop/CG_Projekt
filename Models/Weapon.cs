@@ -9,19 +9,19 @@
             {
                 case 1:
                     this.RPM = 0.4f;
-                    this.Damage = 0.1f;
+                    this.Damage = 0.11f;
                     this.Size = 0.002f;
                     this.Velocity = 0.5f;
                     break;
                 case 2:
                     this.RPM = 0.1f;
-                    this.Damage = 0.07f;
+                    this.Damage = 0.071f;
                     this.Size = 0.0016f;
                     this.Velocity = 0.6f;
                     break;
                 case 3:
                     this.RPM = 0.6f;
-                    this.Damage = 0.2f;
+                    this.Damage = 0.21f;
                     this.Size = 0.0015f;
                     this.Velocity = 0.3f;
                     break;
@@ -35,16 +35,10 @@
                     break;
             }
         }
-
-
         internal int Type { get; }
-
         internal float RPM { get; }
-
         internal float Damage { get; }
-
         internal float Size { get; }
-
         internal float Velocity { get; }
     }
 }
