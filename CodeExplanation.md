@@ -62,7 +62,7 @@ Classes:
     - #### int id_ 
         The unique id of the obj. to identify it in the List in which it is added
         
-    #### Notice: <Color:Red>
+    #### Notice:
         Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
 
 2. Player.cs:
