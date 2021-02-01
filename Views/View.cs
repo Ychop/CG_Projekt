@@ -4,9 +4,7 @@
     using CG_Projekt.Models;
     using OpenTK;
     using OpenTK.Graphics.OpenGL;
-    using GL = OpenTK.Graphics.OpenGL.GL;
     using System;
-
     internal class View
     {
         private int texPlayerPistol;
@@ -41,7 +39,6 @@
         {
             this.Camera = camera;
             this.Loadtextures();
-
         }
         internal void Loadtextures()
         {
@@ -95,7 +92,6 @@
                 this.DrawGameOver(model);
             }
         }
-
         internal void DrawObject(int tex_, Vector2 position_, float sizeX_, float sizeY_, float scale_, float offsetX_, float offsetY_)
         {
             //if no scale needed scale_ = 1

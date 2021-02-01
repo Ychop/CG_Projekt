@@ -27,10 +27,5 @@
 
             return stream;
         }
-        public static IEnumerable<string> Matches(string text)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            return assembly.GetManifestResourceNames().Where(name => name.Contains(text));
-        }
     }
 }
