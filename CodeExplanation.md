@@ -66,32 +66,33 @@ Classes:
         Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
 
 2. Player.cs:
-    Here the player is implemented with the functions to move the player (internal void MovePlayer(Player player, float deltaTime)) and  to align the players facing direction to the mouse cursor (internal void AglignPlayer(Vector2 mousePosition))
+Here the player is implemented with the functions to move the player (internal void MovePlayer(Player player, float deltaTime)) and  to align the players facing direction to the mouse cursor (internal void AglignPlayer(Vector2 mousePosition))
 3. Enemy.cs:
-    Here the enemy is implemented with its function to make the enemies chase towards the player when entering the "Aggro Range". The function gets called in the update()function of the controller.cs class (internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
+Here the enemy is implemented with its function to make the enemies chase towards the player when entering the "Aggro Range". The function gets called in the update()function of the controller.cs class (internal void EnemyAI(Enemy enemy, Player player, float deltaTime)
 4. Obstacle.cs:
-    Here lies the obstacle "blueprint" for creating obstacles of a desired size.
+Here lies the obstacle "blueprint" for creating obstacles of a desired size.
 5. Bullet.cs:
-    Here the bullets are created and the Movement function is implemented for moving the bullets after beeing fired.
+Here the bullets are created and the Movement function is implemented for moving the bullets after beeing fired.
 6. LevelGrid.cs:
-    Here the Levelgrid is defined for creating the Level Grid and determining the Level Size.
+Here the Levelgrid is defined for creating the Level Grid and determining the Level Size.
 7. Particle.cs:
      Here the particles are created
 8. Pickup.cs:
-    Here the different pickups are created
+Here the different pickups are created
 9. Weapon.cs:
-    Here the different weapons are created
-    Each weapon is of a unique type which is used to identify the weapon and determine the stats like how many rounds per minute can be fired (float RPM), how much damage the weapon deals (float Damage) and how fast the bullet speed is (float Velocity).
+Here the different weapons are created
+Each weapon is of a unique type which is used to identify the weapon and determine the stats like how many rounds per minute can be fired (float RPM), how much damage the weapon deals (float Damage) and how fast the bullet speed is (float Velocity).
 10. Transformation.cs:
-    This class is used to transform several matrices from their origin to a new coordinate system for example.
-    It is a helper class to easily and fast transform different matrices. 
-    #### Example:
-    It is used in the view.cs view for resizing the aspect ratio of the picture size to the window size with public void Camera.Resize(int width_, int height_)
+This class is used to transform several matrices from their origin to a new coordinate system for example.
+It is a helper class to easily and fast transform different matrices. 
+#### Example:
+It is used in the view.cs view for resizing the aspect ratio of the picture size to the window size with 
+    public void Camera.Resize(int width_, int height_)
 11. Model.cs:
-    In here we create every gameobject and add it to the Gameobject list which is then drawn in the view.cs class. 
+In here we create every gameobject and add it to the Gameobject list which is then drawn in the view.cs class. 
 
 ### Views:
 1. Camera.cs:
-    The camera class handles the zoom function of the game with the Scale function and focuses thhe viewpoint always on the player
+The camera class handles the zoom function of the game with the Scale function and focuses thhe viewpoint always on the player
 2. View.cs:
-    Here all the gameobjects are Drawn after beeing created in the Model.cs and all the textures and Animations are added.
+Here all the gameobjects are Drawn after beeing created in the Model.cs and all the textures and Animations are added.
