@@ -76,7 +76,7 @@ namespace CG_Projekt
             this.texShotgun = Texture.Load(Resource.LoadStream(content + "Shotgun.png"));
             this.texRPG = Texture.Load(Resource.LoadStream(content + "Rocketlauncher.png"));
             this.texfontScore = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
-            this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "Blood_Bath.png"));
+            this.texfontAmmo = Texture.Load(Resource.LoadStream(content + "SilverFont.png"));
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Greater, 0.2f);
             GL.Enable(EnableCap.Texture2D);
@@ -115,8 +115,8 @@ namespace CG_Projekt
             this.DrawBullets(model);
             this.DrawParticle(model);
             this.DrawObstacles(model);
-            this.DrawEnemy(model);
-            this.DrawPlayer(model);          
+            this.DrawEnemyWalk(model);
+            this.DrawPlayer(model);
             this.DrawPickups(model);
         }
         internal void DrawHUD(Model model)
@@ -229,24 +229,25 @@ namespace CG_Projekt
             {
                 case 1:
                     GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoPistol:D}", HUDPosition.X - 0.3f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    DrawFont($"{model.Player.AmmoPistol:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
                     break;
                 case 2:
                     GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoUZI:D}", HUDPosition.X - 0.3f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    DrawFont($"{model.Player.AmmoUZI:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
                     break;
                 case 3:
                     GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoShotgun:D}", HUDPosition.X - 0.3f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    DrawFont($"{model.Player.AmmoShotgun:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
                     break;
                 case 4:
                     GL.BindTexture(TextureTarget.Texture2D, texfontAmmo);
-                    DrawFont($"{model.Player.AmmoRPG:D}", HUDPosition.X - 0.3f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
+                    DrawFont($"{model.Player.AmmoRPG:D}", HUDPosition.X - 0.35f * Camera.Scale, HUDPosition.Y - 0.012f * Camera.Scale, Camera.Scale * 0.08f);
                     break;
             }
         }
         internal void DrawGameOver(Model model)
         {
+            GL.BindTexture(TextureTarget.Texture2D, texfontScore);
             GameOver = true;
             GL.Clear(ClearBufferMask.ColorBufferBit);
             DrawFont($"Du bist gestorben.", Camera.Center.X - 1.8f * Camera.Scale, Camera.Center.Y, 0.2f * Camera.Scale);
@@ -307,7 +308,7 @@ namespace CG_Projekt
             GL.End();
             GL.PopMatrix();
         }
-        internal void DrawEnemy(Model model)
+        internal void DrawEnemyWalk(Model model)
         {
             const uint spritesPerColumn = 2;
             const uint spritesPerRow = 4;
