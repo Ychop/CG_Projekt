@@ -41,20 +41,20 @@ In this folder you will find several modules where different "Managers" are impl
     (internal static IEnumerable<uint> StringToSpriteIds(string text, uint firstCharacter))
 
 ### Models:
-    In the Models folder all interactable and non-interactable gameobjects are implemented with their own unique functions for interacting with the environment.
-    Every model has the same base object from which it inherits wich is called  <GameObject.cs>.
-    Also the gamesounds are added in the respective gameobject class.
+In the Models folder all interactable and non-interactable gameobjects are implemented with their own unique functions for interacting with the environment.
+Every model has the same base object from which it inherits wich is called  <GameObject.cs>.
+Also the gamesounds are added in the respective gameobject class.
 Classes:
 1. Gameobject.cs:
     The Gameobject.cs class contents the blueprint for all other gameobjects that are created.
-    public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
+    - public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
     When creating a Gameobject it is necessary to pass at least:
-        - <Vector2 position_>   The position of the obj. on the map 
-        - <float radiusDraw_>   The Drawsize of the obj.
-        - <float radiusColl_>   The radius size of the circle collider for each obj.
-        - <float velocity_>     The velocity of the obj. (if it has any, otherwise pass 0f)
-        - <float hitpoints_>    The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
-        - <int id_>             The unique id of the obj. to identify it in the List in which it is added
+    - <Vector2 position_>   The position of the obj. on the map 
+    - <float radiusDraw_>   The Drawsize of the obj.
+    - <float radiusColl_>   The radius size of the circle collider for each obj.
+    - <float velocity_>     The velocity of the obj. (if it has any, otherwise pass 0f)
+    - <float hitpoints_>    The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
+    - <int id_>             The unique id of the obj. to identify it in the List in which it is added
         
     #### Notice:
     Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
