@@ -123,14 +123,14 @@
     <Compile Include="Models\Bullet.cs" />
     <Compile Include="Models\Particle.cs" />
     <Compile Include="Models\Weapon.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Framework\Program.cs" />
     <Compile Include="Models\Enemy.cs" />
     <Compile Include="Models\LevelGrid.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Obstacle.cs" />
     <Compile Include="Models\PickUp.cs" />
     <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\Transformation.cs" />
+    <Compile Include="Framework\Transformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Camera.cs" />
     <Compile Include="Views\View.cs" />
