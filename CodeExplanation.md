@@ -41,7 +41,8 @@ Here is a helper class to easily load textures into the memory without the need 
     (internal static IEnumerable<uint> StringToSpriteIds(string text, uint firstCharacter))
 
 ### Models:  
-    In the Models folder all interactable and non-interactable gameobjects are implemented with their own unique functions for interacting with the environment.
+    In the Models folder all interactable and non-interactable gameobjects are implemented 
+    with their own unique functions for interacting with the environment.
     Every model has the same base object from which it inherits wich is called  <GameObject.cs>.
     Also the gamesounds are added in the respective gameobject class.
 ##### Classes:  
