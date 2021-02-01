@@ -5,32 +5,32 @@ Here you find the embedded Sounds and Textures used for the Game
 
 ### Control:
 In this folder, there are 2 classes:
-1. Controller.cs: 
-    This includes the code for controlling all the other classes like calling the functions to interact with the player and the environment and how the Game objects interact with each other (the Intersections).
+1. Controller.cs:
+This includes the code for controlling all the other classes like calling the functions to interact with the player and the environment and how the Game objects interact with each other (the Intersections).
 2. Intersection.cs:
-    In this class the intersections between the game objects are handled. the funtions get called in the controller class as mentioned above.
+In this class the intersections between the game objects are handled. the funtions get called in the controller class as mentioned above.
 ### Framework:
 In this folder you will find several modules where different "Managers" are implemented.
 1. Soundmanager.cs:
-    Here the sound handling is implemented. There are some helper classes as well to make the loading and unloading of the soundeffects easier.
-    The only function we need call from this class is public void PlaySound(CachedSound sound)
-    #### Important Notice !!!
-    The sample rate of all used sound files must be 44100Khz.
-    The helper Classes are:
-        - CachedSound.cs
-            Here we load the soundeffect file into the memory once so we don`t need to reload it every time the sound gets played which saves much computation time!
-        - CachedSoundSampleProvider.cs
-        The CachedSoundSampleProvider takes the loaded CachedSound and transforms it into a Sample the mixer can actually play!
-        Before calling the PlaySound(CachedSound sound) just create an object of type Cachedsound sound and pass it to the function.
+Here the sound handling is implemented. There are some helper classes as well to make the loading and unloading of the soundeffects easier.
+The only function we need call from this class is public void PlaySound(CachedSound sound)
+#### Important Notice !!!
+The sample rate of all used sound files must be 44100Khz.
+The helper Classes are:
+- CachedSound.cs
+    Here we load the soundeffect file into the memory once so we don`t need to reload it every time the sound gets played which saves much computation time!
+- CachedSoundSampleProvider.cs
+    The CachedSoundSampleProvider takes the loaded CachedSound and transforms it into a Sample the mixer can actually play!
+    Before calling the PlaySound(CachedSound sound) just create an object of type Cachedsound sound and pass it to the function.
 2. Ressource.cs:
-    Helper class to load images into Memory as Bytestream
-    Only functtion to use is public static Stream LoadStream(string name). the "name" is the desired files path as a String. Find an example below in the <Texture.cs> explanation
+Helper class to load images into Memory as Bytestream
+Only functtion to use is public static Stream LoadStream(string name). the "name" is the desired files path as a String. Find an example below in the <Texture.cs> explanation
 
 3. Texture.cs:
-    Here is a helper class to easily load textures into the memory without the need to set the repeating values over and over again for each Texture. (Like setting the pixelformat and the TexParameters, generating a MipMap...) Simply call Texture.Load(Stream stream)
-    #### Example       
-        private int texImage;
-        texImage = Texture.Load(Resource.LoadStream(<FilePath>));
+Here is a helper class to easily load textures into the memory without the need to set the repeating values over and over again for each Texture. (Like setting the pixelformat and the TexParameters, generating a MipMap...) Simply call Texture.Load(Stream stream)
+#### Example       
+    private int texImage;
+    texImage = Texture.Load(Resource.LoadStream(<FilePath>));
 
 4. The Rect.cs and IReadOnlyRectangle.cs Interface:
     A helper class to define the rectangle and simply draw it in any desired size for any Gameobject.
@@ -46,24 +46,24 @@ Every model has the same base object from which it inherits wich is called  <Gam
 Also the gamesounds are added in the respective gameobject class.
 Classes:
 1. Gameobject.cs:
-    The Gameobject.cs class contents the blueprint for all other gameobjects that are created.
-    - public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
-    When creating a Gameobject it is necessary to pass at least:
-    - #### Vector2 position_
-        The position of the obj. on the map 
-    - #### float radiusDraw_
-        The Drawsize of the obj.
-    - #### float radiusColl_
-        The radius size of the circle collider for each obj.
-    - #### float velocity_    
-        The velocity of the obj. (if it has any, otherwise pass 0f)
-    - #### float hitpoints_
-        The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
-    - #### int id_ 
-        The unique id of the obj. to identify it in the List in which it is added
+The Gameobject.cs class contents the blueprint for all other gameobjects that are created.
+- public GameObject(Vector2 position_, float radiusDraw_, float radiusColl_, float velocity_, float hitpoints_, int id_)
+When creating a Gameobject it is necessary to pass at least:
+- #### Vector2 position_
+    The position of the obj. on the map 
+- #### float radiusDraw_
+    The Drawsize of the obj.
+- #### float radiusColl_
+    The radius size of the circle collider for each obj.
+- #### float velocity_    
+    The velocity of the obj. (if it has any, otherwise pass 0f)
+- #### float hitpoints_
+    The amount of hitpoints of the obj. (if it has any, otherwise pass 0f)
+- #### int id_ 
+    The unique id of the obj. to identify it in the List in which it is added
         
-    #### Notice:
-        Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
+#### Notice:
+    Some gameobjects can and might have more values that need to be passed! (e.g. the enemy.cs object)
 
 2. Player.cs:
 Here the player is implemented with the functions to move the player (internal void MovePlayer(Player player, float deltaTime)) and  to align the players facing direction to the mouse cursor (internal void AglignPlayer(Vector2 mousePosition))
